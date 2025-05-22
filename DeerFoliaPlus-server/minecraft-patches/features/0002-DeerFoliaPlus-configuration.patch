@@ -1,0 +1,20 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: zhangyuheng <zhangyuheng@lunadeer.cn>
+Date: Thu, 22 May 2025 13:17:17 +0800
+Subject: [PATCH] DeerFoliaPlus configuration
+
+
+diff --git a/net/minecraft/server/dedicated/DedicatedServer.java b/net/minecraft/server/dedicated/DedicatedServer.java
+index 5859aed8d09dbce2975a066bbf661002a450944c..f08d38495b7154fabf8a03560dee3e26d3bc83d1 100644
+--- a/net/minecraft/server/dedicated/DedicatedServer.java
++++ b/net/minecraft/server/dedicated/DedicatedServer.java
+@@ -215,6 +215,9 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+         // DeerFolia start - initialize config
+         cn.lunadeer.mc.deerfolia.DeerFoliaConfiguration.load();
+         // DeerFolia end - initialize config
++        // DeerFoliaPlus start - initialize config
++        cn.lunadeer.mc.deerfoliaplus.DeerFoliaPlusConfiguration.load();
++        // DeerFoliaPlus end - initialize config
+         this.server.spark.enableEarlyIfRequested(); // Paper - spark
+         // Paper start - fix converting txt to json file; convert old users earlier after PlayerList creation but before file load/save
+         if (this.convertOldUsers()) {

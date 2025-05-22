@@ -4,7 +4,7 @@ DeerFoliaPlus 相比于 DeerFolia 引入了更多额外功能，这些功能并�
 
 ## 此分支特性
 
-- [FakePlayer (Leaves)]
+- FakePlayer (Leaves/Lumina)
 
 ## 额外配置
 

@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: zhangyuheng <zhangyuheng@lunadeer.cn>
+Date: Thu, 22 May 2025 09:32:28 +0800
+Subject: [PATCH] Rebranding
+
+
+diff --git a/net/minecraft/CrashReport.java b/net/minecraft/CrashReport.java
+index a86cd46f9af4853f5959c9ef71facb3544e436f9..190988e2f45320e31653202cfcc9604b524977ad 100644
+--- a/net/minecraft/CrashReport.java
++++ b/net/minecraft/CrashReport.java
+@@ -30,7 +30,7 @@ public class CrashReport {
+     private boolean trackingStackTrace = true;
+     private StackTraceElement[] uncategorizedStackTrace = new StackTraceElement[0];
+     private final SystemReport systemReport = new SystemReport();
+-    private final List<String> extraInfo = List.of("", "DO NOT REPORT THIS TO PAPER/FOLIA! REPORT TO DEERFOLIA INSTEAD!", ""); // DeerFolia - Rebrand
++    private final List<String> extraInfo = List.of("", "DO NOT REPORT THIS TO PAPER/FOLIA! REPORT TO DEERFOLIAPLUS INSTEAD!", ""); // DeerFoliaPlus - Rebrand
+ 
+     public CrashReport(String title, Throwable exception) {
+         io.papermc.paper.util.StacktraceDeobfuscator.INSTANCE.deobfuscateThrowable(exception); // Paper
+diff --git a/net/minecraft/world/level/chunk/storage/RegionFileStorage.java b/net/minecraft/world/level/chunk/storage/RegionFileStorage.java
+index 9afd049f1e98ef04fa63088127bec01ef50b6c43..b49ff4508da596c413bd7cf1aba7162d2f33917b 100644
+--- a/net/minecraft/world/level/chunk/storage/RegionFileStorage.java
++++ b/net/minecraft/world/level/chunk/storage/RegionFileStorage.java
+@@ -283,7 +283,7 @@ public class RegionFileStorage implements AutoCloseable, ca.spottedleaf.moonrise
+ 
+     // Paper start
+     private static void printOversizedLog(String msg, Path file, int x, int z) {
+-        org.apache.logging.log4j.LogManager.getLogger().fatal(msg + " (" + file.toString().replaceAll(".+[\\\\/]", "") + " - " + x + "," + z + ") Go clean it up to remove this message. /minecraft:tp " + (x<<4)+" 128 "+(z<<4) + " - DO NOT REPORT THIS TO DEERFOLIA - You may ask for help on Discord, but do not file an issue. These error messages can not be removed."); // DeerFolia - Rebrand
++        org.apache.logging.log4j.LogManager.getLogger().fatal(msg + " (" + file.toString().replaceAll(".+[\\\\/]", "") + " - " + x + "," + z + ") Go clean it up to remove this message. /minecraft:tp " + (x<<4)+" 128 "+(z<<4) + " - DO NOT REPORT THIS TO DEERFOLIAPLUS - You may ask for help on Discord, but do not file an issue. These error messages can not be removed."); // DeerFoliaPlus - Rebrand
+     }
+ 
+     private static CompoundTag readOversizedChunk(RegionFile regionfile, ChunkPos chunkCoordinate) throws IOException {

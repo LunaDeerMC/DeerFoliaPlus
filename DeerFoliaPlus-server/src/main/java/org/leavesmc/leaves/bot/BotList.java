@@ -185,8 +185,10 @@ public class BotList {
             }
 
             if (event.shouldSave()) {
+                BotList.LOGGER.info("Saving fake player: {}[{}]", bot.getName().getString(), bot.getUUID());
                 Bukkit.getAsyncScheduler().runNow(MinecraftInternalPlugin.INSTANCE, (t) -> playerIO.save(bot));
             } else {
+                BotList.LOGGER.info("Removing fake player: {}[{}]", bot.getName().getString(), bot.getUUID());
                 bot.dropAll();
             }
 
@@ -237,10 +239,16 @@ public class BotList {
         return true;
     }
 
-    public void removeAll() {
+    /**
+     * This is synchronous, so it should be called in the main thread.
+     * Only called on server closed.
+     */
+    public void saveAll() {
+        BotList.LOGGER.info("Saving all fake players...");
         for (ServerBot bot : this.bots) {
             bot.resume = DeerFoliaPlusConfiguration.fakePlayer.residentBot;
-            this.removeBot(bot, BotRemoveEvent.RemoveReason.INTERNAL, null, bot.resume);
+            this.dataStorage.save(bot);
+            BotList.LOGGER.info("Saved fake player: {}[{}]", bot.getName().getString(), bot.getUUID());
         }
     }
 

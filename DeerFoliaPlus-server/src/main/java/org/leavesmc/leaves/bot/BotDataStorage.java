@@ -66,7 +66,7 @@ public class BotDataStorage implements IPlayerDataStorage {
             nbt.putString("name", bot.createState.name());
             nbt.putUUID("uuid", bot.getUUID());
             nbt.putBoolean("resume", bot.resume);
-            nbt.putUUID("creator", bot.createPlayer);
+            if (bot.createPlayer != null ) nbt.putUUID("creator", bot.createPlayer);
             this.savedBotList.put(bot.createState.realName(), nbt);
             this.saveBotList();
         }

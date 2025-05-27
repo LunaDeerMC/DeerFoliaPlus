@@ -56,7 +56,7 @@ index faf72dd6dff74296c73cb058aaabd1f9f475a072..ebe66802dc46278ae3f3a0031a7d94e3
  
          LOGGER.info("Stopping server");
          Commands.COMMAND_SENDING_POOL.shutdownNow(); // Paper - Perf: Async command map building; Shutdown and don't bother finishing
-+        this.getBotList().removeAll(); // Leaves - save or remove bot
++        this.getBotList().saveAll(); // Leaves - save or remove bot
          // CraftBukkit start
          if (this.server != null) {
              this.server.spark.disable(); // Paper - spark

@@ -79,6 +79,8 @@ public class ServerBot extends ServerPlayer {
 
     private Vec3 knockback = Vec3.ZERO;
 
+    private long botTickCount = 0;
+
     public ServerBot(MinecraftServer server, ServerLevel world, GameProfile profile) {
         super(server, world, profile, ClientInformation.createDefault());
         this.entityData.set(Player.DATA_PLAYER_MODE_CUSTOMISATION, (byte) -2);
@@ -181,12 +183,13 @@ public class ServerBot extends ServerPlayer {
             return;
         }
         super.tick();
+        this.botTickCount++;
 
         if (this.getConfigValue(Configs.SPAWN_PHANTOM)) {
             notSleepTicks++;
         }
 
-        if (DeerFoliaPlusConfiguration.fakePlayer.regenAmount > 0.0 && server.getTickCount() % 20 == 0) {
+        if (DeerFoliaPlusConfiguration.fakePlayer.regenAmount > 0.0 && this.botTickCount % 20 == 0) {
             float health = getHealth();
             float maxHealth = getMaxHealth();
             float regenAmount = (float) (DeerFoliaPlusConfiguration.fakePlayer.regenAmount * 20);

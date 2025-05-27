@@ -1,6 +1,6 @@
 package org.leavesmc.leaves.bot;
 
-import cn.lunadeer.mc.deerfoliaplus.DeerFoliaPlusConfiguration;
+import cn.lunadeer.mc.deerfoliaplus.configurations.DeerFoliaPlusConfiguration;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.authlib.GameProfile;
 import com.mojang.logging.LogUtils;
@@ -98,6 +98,8 @@ public class ServerBot extends ServerPlayer {
 
         this.notSleepTicks = 0;
         this.fauxSleeping = DeerFoliaPlusConfiguration.fakePlayer.skipSleepCheck;
+
+        this.setInvulnerable(DeerFoliaPlusConfiguration.fakePlayer.invulnerable);
     }
 
     public void sendPlayerInfo(ServerPlayer player) {

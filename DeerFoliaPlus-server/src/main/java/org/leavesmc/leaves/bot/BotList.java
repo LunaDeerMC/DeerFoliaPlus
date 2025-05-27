@@ -1,6 +1,6 @@
 package org.leavesmc.leaves.bot;
 
-import cn.lunadeer.mc.deerfoliaplus.DeerFoliaPlusConfiguration;
+import cn.lunadeer.mc.deerfoliaplus.configurations.DeerFoliaPlusConfiguration;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.logging.LogUtils;
@@ -29,6 +29,9 @@ import org.slf4j.Logger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
+
+import static net.kyori.adventure.text.Component.text;
 
 public class BotList {
 
@@ -51,8 +54,12 @@ public class BotList {
     }
 
     public ServerBot createNewBot(BotCreateState state) {
+        if (!isCreateLegal(state.name())) {
+            state.creator().sendMessage(text("Bot name is illegal or already exists!").color(NamedTextColor.RED));
+            return null;
+        }
+
         BotCreateEvent event = new BotCreateEvent(state.name(), state.skinName(), state.location(), state.createReason(), state.creator());
-        event.setCancelled(!isCreateLegal(state.name()));
         this.server.server.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {
@@ -72,17 +79,18 @@ public class BotList {
         return this.placeNewBot(bot, world, location, null);
     }
 
-    public ServerBot loadNewBot(String realName) {
-        return this.loadNewBot(realName, this.dataStorage);
+    public void loadNewBot(Consumer<ServerBot> consumer, String realName) {
+        this.loadNewBot(consumer, realName, this.dataStorage);
     }
 
-    public ServerBot loadNewBot(String realName, IPlayerDataStorage playerIO) {
+    public void loadNewBot(Consumer<ServerBot> consumer, String realName, IPlayerDataStorage playerIO) {
         UUID uuid = BotUtil.getBotUUID(realName);
 
         BotLoadEvent event = new BotLoadEvent(realName, uuid);
         this.server.server.getPluginManager().callEvent(event);
         if (event.isCancelled()) {
-            return null;
+            consumer.accept(null);
+            return;
         }
 
         ServerBot bot = new ServerBot(this.server, this.server.getLevel(Level.OVERWORLD), new GameProfile(uuid, realName));
@@ -90,7 +98,8 @@ public class BotList {
         Optional<CompoundTag> optional = playerIO.load(bot);
 
         if (optional.isEmpty()) {
-            return null;
+            consumer.accept(null);
+            return;
         }
 
         ResourceKey<Level> resourcekey = null;
@@ -101,11 +110,15 @@ public class BotList {
             }
         }
         if (resourcekey == null) {
-            return null;
+            consumer.accept(null);
+            return;
         }
 
         ServerLevel world = this.server.getLevel(resourcekey);
-        return this.placeNewBot(bot, world, bot.getLocation(), optional.get());
+        Bukkit.getRegionScheduler().run(MinecraftInternalPlugin.INSTANCE, bot.getLocation(), (t) -> {
+            ServerBot newBot = this.placeNewBot(bot, world, bot.getLocation(), optional.get());
+            consumer.accept(newBot);
+        });
     }
 
     public ServerBot placeNewBot(ServerBot bot, ServerLevel world, Location location, @Nullable CompoundTag nbt) {
@@ -236,7 +249,8 @@ public class BotList {
             for (String realName : this.getSavedBotList().getAllKeys()) {
                 CompoundTag nbt = this.getSavedBotList().getCompound(realName);
                 if (nbt.getBoolean("resume")) {
-                    this.loadNewBot(realName);
+                    this.loadNewBot(serverBot -> {
+                    }, realName);
                 }
             }
         }

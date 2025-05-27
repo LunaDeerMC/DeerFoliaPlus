@@ -1,4 +1,4 @@
-package cn.lunadeer.mc.deerfoliaplus;
+package cn.lunadeer.mc.deerfoliaplus.configurations;
 
 import cn.lunadeer.mc.deerfolia.utils.configuration.ConfigurationFile;
 import cn.lunadeer.mc.deerfolia.utils.configuration.ConfigurationManager;
@@ -7,7 +7,6 @@ import cn.lunadeer.mc.deerfolia.utils.configuration.PostProcess;
 import com.mojang.logging.LogUtils;
 import io.papermc.paper.configuration.PaperConfigurations;
 import net.minecraft.server.MinecraftServer;
-import org.leavesmc.leaves.bot.FakePlayerConfig;
 import org.leavesmc.leaves.bot.agent.Actions;
 import org.slf4j.Logger;
 
@@ -26,7 +25,7 @@ public class DeerFoliaPlusConfiguration extends ConfigurationFile {
         }
     }
 
-    public static FakePlayerConfig fakePlayer = new FakePlayerConfig();
+    public static FakePlayerConfiguration fakePlayer = new FakePlayerConfiguration();
 
     @PostProcess
     public void registerFakePlayerCommand() {

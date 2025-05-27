@@ -1,6 +1,7 @@
 package org.leavesmc.leaves.bot;
 
-import cn.lunadeer.mc.deerfoliaplus.DeerFoliaPlusConfiguration;
+import cn.lunadeer.mc.deerfoliaplus.configurations.DeerFoliaPlusConfiguration;
+import com.mojang.logging.LogUtils;
 import net.minecraft.server.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -103,8 +104,9 @@ public record BotCreateState(String realName, String name, String skinName, Stri
             Bukkit.getAsyncScheduler().runNow(MinecraftInternalPlugin.INSTANCE, (task) -> {
                 this.mojangAPISkin();
                 Bukkit.getRegionScheduler().run(MinecraftInternalPlugin.INSTANCE, location, (t) -> {
+                    LogUtils.getClassLogger().info("Spawning bot {} at {}, skin: {}", this.realName, this.location, this.skinName);
                     CraftBot bot = this.spawn();
-                    if (bot != null && consumer != null) {
+                    if (consumer != null) {
                         consumer.accept(bot);
                     }
                 });

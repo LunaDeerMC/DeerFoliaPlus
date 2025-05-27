@@ -3,10 +3,7 @@ package org.leavesmc.leaves.bot.agent;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.leavesmc.leaves.bot.agent.configs.AlwaysSendDataConfig;
-import org.leavesmc.leaves.bot.agent.configs.SimulationDistanceConfig;
-import org.leavesmc.leaves.bot.agent.configs.SkipSleepConfig;
-import org.leavesmc.leaves.bot.agent.configs.SpawnPhantomConfig;
+import org.leavesmc.leaves.bot.agent.configs.*;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,6 +17,7 @@ public class Configs<E> {
     public static final Configs<Boolean> ALWAYS_SEND_DATA = register(new AlwaysSendDataConfig());
     public static final Configs<Boolean> SPAWN_PHANTOM = register(new SpawnPhantomConfig());
     public static final Configs<Integer> SIMULATION_DISTANCE = register(new SimulationDistanceConfig());
+    public static final Configs<Boolean> INVULNERABLE = register(new InvulnerableConfig());
 
     public final BotConfig<E> config;
 

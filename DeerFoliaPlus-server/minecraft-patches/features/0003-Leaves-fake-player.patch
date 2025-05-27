@@ -218,7 +218,7 @@ index 8a192bb24abca6d2ea90d70e12f14733658ed27b..0101421d9ee0439510f2cf6c3c59c562
                  this.lastSentFood = -1;
  
 +                // Leaves start - bot support
-+                if (cn.lunadeer.mc.deerfoliaplus.DeerFoliaPlusConfiguration.fakePlayer.enable) {
++                if (cn.lunadeer.mc.deerfoliaplus.configurations.DeerFoliaPlusConfiguration.fakePlayer.enable) {
 +                    this.server.getBotList().bots.forEach(bot -> bot.sendFakeDataIfNeed(this, true)); // Leaves - render bot
 +                }
 +                // Leaves end - bot support
@@ -251,7 +251,7 @@ index 751b011701d6ae373099226ea63ffbafcd24ce6a..3c9b04d14c662644c615ad7c6ec0a7d7
          }
  
 +        // Leaves start - bot support
-+        if (cn.lunadeer.mc.deerfoliaplus.DeerFoliaPlusConfiguration.fakePlayer.enable) {
++        if (cn.lunadeer.mc.deerfoliaplus.configurations.DeerFoliaPlusConfiguration.fakePlayer.enable) {
 +            ServerBot bot = this.server.getBotList().getBotByName(player.getScoreboardName());
 +            if (bot != null) {
 +                this.server.getBotList().removeBot(bot, org.leavesmc.leaves.event.bot.BotRemoveEvent.RemoveReason.INTERNAL, player.getBukkitEntity(), false);
@@ -271,7 +271,7 @@ index 751b011701d6ae373099226ea63ffbafcd24ce6a..3c9b04d14c662644c615ad7c6ec0a7d7
          // Paper end - Add PlayerPostRespawnEvent
  
 +        // Leaves start - bot support
-+        if (cn.lunadeer.mc.deerfoliaplus.DeerFoliaPlusConfiguration.fakePlayer.enable) {
++        if (cn.lunadeer.mc.deerfoliaplus.configurations.DeerFoliaPlusConfiguration.fakePlayer.enable) {
 +            this.server.getBotList().bots.forEach(bot -> bot.sendFakeDataIfNeed(player, true)); // Leaves - render bot
 +        }
 +        // Leaves end - bot support

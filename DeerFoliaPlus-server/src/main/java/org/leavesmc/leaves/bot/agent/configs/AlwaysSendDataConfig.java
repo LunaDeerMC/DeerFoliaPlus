@@ -1,6 +1,6 @@
 package org.leavesmc.leaves.bot.agent.configs;
 
-import cn.lunadeer.mc.deerfoliaplus.DeerFoliaPlusConfiguration;
+import cn.lunadeer.mc.deerfoliaplus.configurations.DeerFoliaPlusConfiguration;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 import org.leavesmc.leaves.bot.agent.BotConfig;

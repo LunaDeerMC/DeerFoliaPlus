@@ -1,6 +1,6 @@
 package org.leavesmc.leaves.bot;
 
-import cn.lunadeer.mc.deerfoliaplus.DeerFoliaPlusConfiguration;
+import cn.lunadeer.mc.deerfoliaplus.configurations.DeerFoliaPlusConfiguration;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 

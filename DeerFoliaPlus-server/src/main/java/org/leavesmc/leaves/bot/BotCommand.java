@@ -1,6 +1,6 @@
 package org.leavesmc.leaves.bot;
 
-import cn.lunadeer.mc.deerfoliaplus.DeerFoliaPlusConfiguration;
+import cn.lunadeer.mc.deerfoliaplus.configurations.DeerFoliaPlusConfiguration;
 import com.mojang.logging.LogUtils;
 import io.papermc.paper.command.CommandUtil;
 import net.kyori.adventure.text.Component;
@@ -33,7 +33,10 @@ import org.leavesmc.leaves.plugin.MinecraftInternalPlugin;
 import org.slf4j.Logger;
 
 import java.util.*;
+import java.util.function.Consumer;
 
+import static cn.lunadeer.mc.deerfoliaplus.bot.BotAssert.assertAmount;
+import static cn.lunadeer.mc.deerfoliaplus.bot.BotAssert.assertControl;
 import static net.kyori.adventure.text.Component.text;
 
 public class BotCommand extends Command {
@@ -161,6 +164,7 @@ public class BotCommand extends Command {
     }
 
     private void onCreate(CommandSender sender, String @NotNull [] args) {
+        if (!assertAmount(sender)) return;
         if (args.length < 2) {
             sender.sendMessage(text("Use /bot create <name> [skin_name] to create a fakeplayer", NamedTextColor.RED));
             return;
@@ -189,10 +193,21 @@ public class BotCommand extends Command {
                     } catch (Exception e) {
                         LOGGER.warn("Can't build location", e);
                     }
+                } else {
+                    sender.sendMessage(text("Use /bot create <name> <skin_name> <world> <x> <y> <z> to create a fakeplayer in console", NamedTextColor.RED));
+                    return;
                 }
             }
 
-            builder.spawnWithSkin(null);
+            Consumer<Bot> consumer = bot -> {
+                if (bot != null) {
+                    sender.sendMessage(text("Create fake player " + bot.getName() + " successfully", NamedTextColor.GREEN));
+                } else {
+                    sender.sendMessage(text("Create fake player failed", NamedTextColor.RED));
+                }
+            };
+
+            builder.spawnWithSkin(consumer);
         }
     }
 
@@ -224,6 +239,7 @@ public class BotCommand extends Command {
             sender.sendMessage(text("This fakeplayer is not in server", NamedTextColor.RED));
             return;
         }
+        if (!assertControl(sender, args[1])) return;
 
         if (args.length > 2) {
             if (args[2].equals("cancel")) {
@@ -296,6 +312,7 @@ public class BotCommand extends Command {
             sender.sendMessage(text("This fakeplayer is not in server", NamedTextColor.RED));
             return;
         }
+        if (!assertControl(sender, args[1])) return;
 
         if (args[2].equals("list")) {
             sender.sendMessage(bot.getScoreboardName() + "'s action list:");
@@ -376,7 +393,9 @@ public class BotCommand extends Command {
                 newAction = action.create();
                 newAction.loadCommand(player.getHandle(), action.getArgument().parse(0, realArgs));
             }
-        } catch (IllegalArgumentException ignore) {
+        } catch (IllegalArgumentException e) {
+            sender.sendMessage(text("Action create error " + e.getMessage() + ", please check your arguments", NamedTextColor.RED));
+            return;
         }
 
         if (newAction == null) {
@@ -402,13 +421,14 @@ public class BotCommand extends Command {
             sender.sendMessage(text("This fakeplayer is not in server", NamedTextColor.RED));
             return;
         }
+        if (!assertControl(sender, args[1])) return;
 
         if (!acceptConfig.contains(args[2])) {
             sender.sendMessage(text("This config is not accept", NamedTextColor.RED));
             return;
         }
 
-        BotConfig<?> config = Objects.requireNonNull(Configs.getConfig(args[2])).config;
+        BotConfig<?> config = bot.getConfig(Configs.getConfig(args[2]));
         if (args.length < 4) {
             config.getMessage().forEach(sender::sendMessage);
         } else {
@@ -445,6 +465,7 @@ public class BotCommand extends Command {
             sender.sendMessage(text("This fakeplayer is not in server", NamedTextColor.RED));
             return;
         }
+        if (!assertControl(sender, args[1])) return;
 
         if (botList.removeBot(bot, BotRemoveEvent.RemoveReason.COMMAND, sender, true)) {
             sender.sendMessage(bot.getScoreboardName() + " saved to " + bot.createState.realName());
@@ -452,21 +473,30 @@ public class BotCommand extends Command {
     }
 
     private void onLoad(CommandSender sender, String @NotNull [] args) {
+        if (!assertAmount(sender)) return;
         if (args.length < 2) {
-            sender.sendMessage(text("Use /bot save <name> to save a fakeplayer", NamedTextColor.RED));
+            sender.sendMessage(text("Use /bot save <name> to save a fake player", NamedTextColor.RED));
             return;
         }
 
+        if (!assertControl(sender, args[1])) return;
         String realName = args[1];
         BotList botList = BotList.INSTANCE;
         if (!botList.getSavedBotList().contains(realName)) {
-            sender.sendMessage(text("This fakeplayer is not saved", NamedTextColor.RED));
+            sender.sendMessage(text("This fake player is not saved", NamedTextColor.RED));
             return;
         }
 
-        if (botList.loadNewBot(realName) == null) {
-            sender.sendMessage(text("Can't load bot, please check", NamedTextColor.RED));
-        }
+        Consumer<ServerBot> consumer = bot -> {
+            if (bot != null) {
+                sender.sendMessage(text("Load fake player " + bot.getName() + " successfully", NamedTextColor.GREEN));
+            } else {
+                sender.sendMessage(text("Load fake player failed", NamedTextColor.RED));
+            }
+        };
+        Bukkit.getAsyncScheduler().runNow(MinecraftInternalPlugin.INSTANCE, (task) -> {
+            botList.loadNewBot(consumer, realName);
+        });
     }
 
     private void onList(CommandSender sender, String @NotNull [] args) {

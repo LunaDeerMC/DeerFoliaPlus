@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  devcontainer:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ../..:/workspaces:cached
+      - gradle-cache:/home/vscode/.gradle
+    ports:
+      - "25565:25565"  # Minecraft Server
+      - "25575:25575"  # RCON
+      - "8080:8080"    # Web Interface
+    environment:
+      - GRADLE_OPTS=-Xmx4g -Dfile.encoding=UTF-8
+      - JAVA_OPTS=-Xmx4g
+    command: sleep infinity
+
+volumes:
+  gradle-cache:

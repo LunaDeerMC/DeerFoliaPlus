@@ -1,0 +1,79 @@
+{
+	"name": "DeerFoliaPlus Development Environment",
+	"image": "mcr.microsoft.com/devcontainers/java:1-21-bullseye",
+
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/devcontainers/features/node:1": {
+			"nodeGypDependencies": true,
+			"version": "lts"
+		}
+	},
+
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"vscjava.vscode-java-pack",
+				"vscjava.vscode-gradle",
+				"redhat.java",
+				"vscjava.vscode-java-debug",
+				"vscjava.vscode-java-test",
+				"vscjava.vscode-maven",
+				"ms-vscode.vscode-json",
+				"ms-vscode.vscode-yaml",
+				"GitHub.copilot",
+				"GitHub.copilot-chat",
+				"eamodio.gitlens"
+			],
+			"settings": {
+				"java.home": "/usr/local/sdkman/candidates/java/current",
+				"java.configuration.runtimes": [
+					{
+						"name": "JavaSE-21",
+						"path": "/usr/local/sdkman/candidates/java/current"
+					}
+				],
+				"java.compile.nullAnalysis.mode": "automatic",
+				"java.server.launchMode": "Standard",
+				"gradle.nestedProjects": true,
+				"gradle.java.home": "/usr/local/sdkman/candidates/java/current"
+			}
+		}
+	},
+
+	"forwardPorts": [25565, 25575, 8080],
+	"portsAttributes": {
+		"25565": {
+			"label": "Minecraft Server",
+			"onAutoForward": "notify"
+		},
+		"25575": {
+			"label": "RCON Port",
+			"onAutoForward": "silent"
+		},
+		"8080": {
+			"label": "Web Interface",
+			"onAutoForward": "openPreview"
+		}
+	},
+
+	"postCreateCommand": "chmod +x gradlew && ./gradlew --version",
+
+	"remoteUser": "vscode",
+
+	"mounts": [
+		"source=${localWorkspaceFolder}/.gradle,target=/home/vscode/.gradle,type=bind,consistency=cached"
+	],
+
+	"containerEnv": {
+		"GRADLE_OPTS": "-Xmx4g -Dfile.encoding=UTF-8",
+		"JAVA_OPTS": "-Xmx4g",
+		"MAVEN_OPTS": "-Xmx2g"
+	},
+
+	"runArgs": [
+		"--memory=6g",
+		"--cpus=4"
+	]
+}

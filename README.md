@@ -51,7 +51,7 @@ DeerFoliaPlus 相比于 DeerFolia 引入了更多额外功能，这些功能并�
    - **确保添加了 `--amend` 选项** 否则将会创建一个新补丁而不是修改原补丁。
    - 此处提交时也可以修改补丁信息。
 5. 终端执行 `git rebase --continue` 应用更新；
-6. 再在跟项目目录执行 `./gradlew rebuildPatches` 生成新的补丁；
+6. 再在跟项目目录执行 `./gradlew rebuildAllServerPatches` 生成新的补丁；
 
 ### 方法二
 

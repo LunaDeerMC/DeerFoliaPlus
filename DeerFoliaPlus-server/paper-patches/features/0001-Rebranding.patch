@@ -91,6 +91,19 @@ index 03858588a5da20ecd5bb824c39f4cea68c25ae4c..c28a19e1487a01f1e8802cc77d9f6a45
                  // We don't need to parse pending
                  // (async tasks must live with race-conditions if they attempt to cancel between these few lines of code)
              }
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
+index 287183c78b30b850c368aa243730009253c32158..0cb7a779d29be03d88a10d926fa05fc02b933cb4 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
+@@ -11,7 +11,7 @@ public final class Versioning {
+     public static String getBukkitVersion() {
+         String result = "Unknown-Version";
+ 
+-        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/cn.lunadeer/DeerFolia-api/pom.properties"); // Folia // DeerFolia
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/cn.lunadeer/DeerFoliaPlus-api/pom.properties"); // Folia // DeerFolia // DeerFoliaPlus
+         Properties properties = new Properties();
+ 
+         if (stream != null) {
 diff --git a/src/main/java/org/spigotmc/WatchdogThread.java b/src/main/java/org/spigotmc/WatchdogThread.java
 index 08cb8fe37b66e49e0b76388c9139062f803cc26d..c9ff1a430f77210d5e97e1f1ec60a4b375095024 100644
 --- a/src/main/java/org/spigotmc/WatchdogThread.java

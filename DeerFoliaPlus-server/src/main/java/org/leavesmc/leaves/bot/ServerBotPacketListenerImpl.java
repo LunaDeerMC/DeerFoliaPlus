@@ -17,10 +17,6 @@ public class ServerBotPacketListenerImpl extends ServerGamePacketListenerImpl {
     }
 
     @Override
-    public void sendPacket(@NotNull Packet<?> packet) {
-    }
-
-    @Override
     public void send(@NotNull Packet<?> packet) {
     }
 

@@ -23,10 +23,10 @@ public class UseItemOnAction extends AbstractTimerAction<UseItemOnAction> {
     public boolean doTick(@NotNull ServerBot bot) {
         HitResult result = bot.getRayTrace(5, ClipContext.Fluid.NONE);
         if (result instanceof BlockHitResult blockHitResult) {
-            BlockState state = bot.serverLevel().getBlockState(blockHitResult.getBlockPos());
+            BlockState state = bot.level().getBlockState(blockHitResult.getBlockPos());
             bot.swing(InteractionHand.MAIN_HAND);
             if (state.getBlock() == Blocks.TRAPPED_CHEST) {
-                BlockEntity entity = bot.serverLevel().getBlockEntity(blockHitResult.getBlockPos());
+                BlockEntity entity = bot.level().getBlockEntity(blockHitResult.getBlockPos());
                 if (entity instanceof TrappedChestBlockEntity chestBlockEntity) {
                     chestBlockEntity.startOpen(bot);
                     Bukkit.getScheduler().runTaskLater(MinecraftInternalPlugin.INSTANCE, () -> chestBlockEntity.stopOpen(bot), 1);

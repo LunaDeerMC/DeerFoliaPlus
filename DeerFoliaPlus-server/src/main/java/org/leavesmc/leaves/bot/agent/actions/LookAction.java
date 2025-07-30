@@ -2,6 +2,8 @@ package org.leavesmc.leaves.bot.agent.actions;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,7 +38,7 @@ public class LookAction extends BotAction<LookAction> {
 
     @Override
     @NotNull
-    public CompoundTag save(@NotNull CompoundTag nbt) {
+    public ValueOutput save(@NotNull ValueOutput nbt) {
         super.save(nbt);
         nbt.putDouble("x", this.pos.getX());
         nbt.putDouble("y", this.pos.getY());
@@ -45,9 +47,9 @@ public class LookAction extends BotAction<LookAction> {
     }
 
     @Override
-    public void load(@NotNull CompoundTag nbt) {
+    public void load(@NotNull ValueInput nbt) {
         super.load(nbt);
-        this.setPos(new Vector(nbt.getDouble("x"), nbt.getDouble("y"), nbt.getDouble("z")));
+        this.setPos(new Vector(nbt.getDoubleOr("x", 0.0), nbt.getDoubleOr("y", 0.0), nbt.getDoubleOr("z", 0.0)));
     }
 
     public LookAction setPos(Vector pos) {

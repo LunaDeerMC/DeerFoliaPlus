@@ -4,9 +4,9 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.storage.LevelResource;
-import net.minecraft.world.level.storage.LevelStorageSource;
+import net.minecraft.world.level.storage.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -43,8 +43,11 @@ public class BotDataStorage implements IPlayerDataStorage {
     @Override
     public void save(Player player) {
         boolean flag = true;
-        try {
-            CompoundTag nbt = player.saveWithoutId(new CompoundTag());
+        try (ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(player.problemPath(), LOGGER)) {
+            TagValueOutput tagValueOutput = TagValueOutput.createWithContext(scopedCollector, player.registryAccess());
+
+            player.saveWithoutId(tagValueOutput);
+            CompoundTag nbt = tagValueOutput.buildResult();
             File file = new File(this.botDir, player.getStringUUID() + ".dat");
 
             if (file.exists() && file.isFile()) {
@@ -64,19 +67,20 @@ public class BotDataStorage implements IPlayerDataStorage {
         if (flag && player instanceof ServerBot bot) {
             CompoundTag nbt = new CompoundTag();
             nbt.putString("name", bot.createState.name());
-            nbt.putUUID("uuid", bot.getUUID());
+            nbt.putString("uuid", bot.getUUID().toString());
             nbt.putBoolean("resume", bot.resume);
-            if (bot.createPlayer != null ) nbt.putUUID("creator", bot.createPlayer);
+            if (bot.createPlayer != null) nbt.putString("creator", bot.createPlayer.toString());
             this.savedBotList.put(bot.createState.realName(), nbt);
             this.saveBotList();
         }
     }
 
     @Override
-    public Optional<CompoundTag> load(Player player) {
+    public Optional<ValueInput> load(Player player, ProblemReporter problemReporter) {
         return this.load(player.getScoreboardName(), player.getStringUUID()).map((nbt) -> {
-            player.load(nbt);
-            return nbt;
+            ValueInput valueInput = TagValueInput.create(problemReporter, player.registryAccess(), nbt);
+            player.load(valueInput);
+            return valueInput;
         });
     }
 

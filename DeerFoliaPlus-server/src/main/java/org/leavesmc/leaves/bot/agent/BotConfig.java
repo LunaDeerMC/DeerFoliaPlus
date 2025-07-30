@@ -1,6 +1,8 @@
 package org.leavesmc.leaves.bot.agent;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.leavesmc.leaves.bot.ServerBot;
 import org.leavesmc.leaves.command.CommandArgument;
@@ -53,10 +55,10 @@ public abstract class BotConfig<E> {
     }
 
     @NotNull
-    public CompoundTag save(@NotNull CompoundTag nbt) {
+    public ValueOutput save(@NotNull ValueOutput nbt) {
         nbt.putString("configName", this.name);
         return nbt;
     }
 
-    public abstract void load(@NotNull CompoundTag nbt);
+    public abstract void load(@NotNull ValueInput nbt);
 }

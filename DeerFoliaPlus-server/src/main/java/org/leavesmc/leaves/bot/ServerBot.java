@@ -4,12 +4,10 @@ import cn.lunadeer.mc.deerfoliaplus.configurations.DeerFoliaPlusConfiguration;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.authlib.GameProfile;
 import com.mojang.logging.LogUtils;
+import com.mojang.serialization.Codec;
 import io.papermc.paper.adventure.PaperAdventure;
 import io.papermc.paper.event.entity.EntityKnockbackEvent;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
@@ -35,6 +33,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.bukkit.Bukkit;
@@ -136,7 +136,7 @@ public class ServerBot extends ServerPlayer {
     }
 
     public void renderAll() {
-        this.server.getPlayerList().getPlayers().forEach(
+        this.getServer().getPlayerList().getPlayers().forEach(
                 player -> {
                     this.sendPlayerInfo(player);
                     this.sendFakeDataIfNeed(player, false);
@@ -145,16 +145,16 @@ public class ServerBot extends ServerPlayer {
     }
 
     private void sendPacket(Packet<?> packet) {
-        this.server.getPlayerList().getPlayers().forEach(player -> player.connection.send(packet));
+        this.getServer().getPlayerList().getPlayers().forEach(player -> player.connection.send(packet));
     }
 
     @Override
     public void die(@NotNull DamageSource damageSource) {
-        boolean flag = this.serverLevel().getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES);
+        boolean flag = this.level().getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES);
         Component defaultMessage = this.getCombatTracker().getDeathMessage();
 
         BotDeathEvent event = new BotDeathEvent(this.getBukkitEntity(), PaperAdventure.asAdventure(defaultMessage), flag);
-        this.server.server.getPluginManager().callEvent(event);
+        this.getServer().server.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {
             if (this.getHealth() <= 0) {
@@ -167,10 +167,10 @@ public class ServerBot extends ServerPlayer {
 
         net.kyori.adventure.text.Component deathMessage = event.deathMessage();
         if (event.isSendDeathMessage() && deathMessage != null && !deathMessage.equals(net.kyori.adventure.text.Component.empty())) {
-            this.server.getPlayerList().broadcastSystemMessage(PaperAdventure.asVanilla(deathMessage), false);
+            this.getServer().getPlayerList().broadcastSystemMessage(PaperAdventure.asVanilla(deathMessage), false);
         }
 
-        this.server.getBotList().removeBot(this, BotRemoveEvent.RemoveReason.DEATH, null, false);
+        this.getServer().getBotList().removeBot(this, BotRemoveEvent.RemoveReason.DEATH, null, false);
     }
 
     public void removeTab() {
@@ -215,12 +215,12 @@ public class ServerBot extends ServerPlayer {
         ItemStack item = this.getItemInHand(hand);
 
         if (!item.isEmpty()) {
-            BotUtil.replenishment(item, getInventory().items);
+            BotUtil.replenishment(item, getInventory().getNonEquipmentItems());
             if (BotUtil.isDamage(item, 10)) {
                 BotUtil.replaceTool(hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, this);
             }
         }
-        this.detectEquipmentUpdatesPublic();
+        this.detectEquipmentUpdates();
     }
 
     @Override
@@ -231,7 +231,7 @@ public class ServerBot extends ServerPlayer {
     @Override
     public void checkFallDamage(double heightDifference, boolean onGround, @NotNull BlockState state, @NotNull BlockPos landedPosition) {
         if (onGround && this.fallDistance > 0.0F) {
-            this.onChangedBlock(this.serverLevel(), landedPosition);
+            this.onChangedBlock(this.level(), landedPosition);
             double d1 = this.getAttributeValue(Attributes.SAFE_FALL_DISTANCE);
 
             if ((double) this.fallDistance > d1 && !state.isAir()) {
@@ -273,7 +273,7 @@ public class ServerBot extends ServerPlayer {
 
     @Override
     public void doTick() {
-        this.absMoveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
+        this.absSnapTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
 
         if (this.takeXpDelay > 0) {
             --this.takeXpDelay;
@@ -286,7 +286,7 @@ public class ServerBot extends ServerPlayer {
                 this.notSleepTicks = 0;
             }
 
-            if (!this.level().isClientSide && this.level().isDay()) {
+            if (!this.level().isClientSide && !this.level().isDarkOutside()) {
                 this.stopSleepInBed(false, true);
             }
         } else if (this.sleepCounter > 0) {
@@ -349,71 +349,66 @@ public class ServerBot extends ServerPlayer {
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
+    public void addAdditionalSaveData(@NotNull ValueOutput nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putBoolean("isShiftKeyDown", this.isShiftKeyDown());
 
-        CompoundTag createNbt = new CompoundTag();
+        ValueOutput createNbt = nbt.child("createStatus");
         createNbt.putString("realName", this.createState.realName());
         createNbt.putString("name", this.createState.name());
-
         createNbt.putString("skinName", this.createState.skinName());
         if (this.createState.skin() != null) {
-            ListTag skin = new ListTag();
+            ValueOutput.TypedOutputList<String> skin = createNbt.list("skin", Codec.STRING);
             for (String s : this.createState.skin()) {
-                skin.add(StringTag.valueOf(s));
+                skin.add(s);
             }
-            createNbt.put("skin", skin);
         }
 
-        nbt.put("createStatus", createNbt);
-
         if (!this.actions.isEmpty()) {
-            ListTag actionNbt = new ListTag();
+            ValueOutput.ValueOutputList actions = nbt.childrenList("actions");
             for (BotAction<?> action : this.actions) {
-                actionNbt.add(action.save(new CompoundTag()));
+                action.save(actions.addChild());
             }
-            nbt.put("actions", actionNbt);
         }
 
         if (!this.configs.isEmpty()) {
-            ListTag configNbt = new ListTag();
+            ValueOutput.ValueOutputList configs = nbt.childrenList("configs");
             for (BotConfig<?> config : this.configs.values()) {
-                configNbt.add(config.save(new CompoundTag()));
+                config.save(configs.addChild());
             }
-            nbt.put("configs", configNbt);
         }
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
+    public void readAdditionalSaveData(@NotNull ValueInput nbt) {
         super.readAdditionalSaveData(nbt);
-        this.setShiftKeyDown(nbt.getBoolean("isShiftKeyDown"));
+        this.setShiftKeyDown(nbt.getBooleanOr("isShiftKeyDown", false));
 
-        CompoundTag createNbt = nbt.getCompound("createStatus");
-        BotCreateState.Builder createBuilder = BotCreateState.builder(createNbt.getString("realName"), null).name(createNbt.getString("name"));
-
+        // createStatus
+        ValueInput createNbt = nbt.childOrEmpty("createStatus");
+        BotCreateState.Builder createBuilder = BotCreateState.builder(
+                createNbt.getStringOr("realName", ""), null);
+        createBuilder.name(createNbt.getStringOr("name", ""));
         String[] skin = null;
-        if (createNbt.contains("skin")) {
-            ListTag skinTag = createNbt.getList("skin", 8);
-            skin = new String[skinTag.size()];
-            for (int i = 0; i < skinTag.size(); i++) {
-                skin[i] = skinTag.getString(i);
+        if (createNbt.list("skin", Codec.STRING).isPresent()) {
+            ValueInput.TypedInputList<String> createSkin = createNbt.list("skin", Codec.STRING).get();
+            skin = new String[Math.toIntExact(createSkin.stream().count())];
+            for (int i = 0; i < skin.length; i++) {
+                skin[i] = createSkin.iterator().next();
             }
         }
-
-        createBuilder.skinName(createNbt.getString("skinName")).skin(skin);
+        createBuilder.skinName(createNbt.getStringOr("skinName", "Steve")).skin(skin);
         createBuilder.createReason(BotCreateEvent.CreateReason.INTERNAL).creator(null);
 
         this.createState = createBuilder.build();
         this.gameProfile = new BotList.CustomGameProfile(this.getUUID(), this.createState.name(), this.createState.skin());
 
-
-        if (nbt.contains("actions")) {
-            ListTag actionNbt = nbt.getList("actions", 10);
-            for (int i = 0; i < actionNbt.size(); i++) {
-                CompoundTag actionTag = actionNbt.getCompound(i);
-                BotAction<?> action = Actions.getForName(actionTag.getString("actionName"));
+        // actions
+        if (nbt.childrenList("actions").isPresent()) {
+            ValueInput.ValueInputList actionNbt = nbt.childrenList("actions").get();
+            for (int i = 0; i < actionNbt.stream().count(); i++) {
+                ValueInput actionTag = actionNbt.iterator().next();
+                BotAction<?> action = Actions.getForName(actionTag.getStringOr("actionName", ""));
                 if (action != null) {
                     BotAction<?> newAction = action.create();
                     newAction.load(actionTag);
@@ -422,11 +417,12 @@ public class ServerBot extends ServerPlayer {
             }
         }
 
-        if (nbt.contains("configs")) {
-            ListTag configNbt = nbt.getList("configs", 10);
-            for (int i = 0; i < configNbt.size(); i++) {
-                CompoundTag configTag = configNbt.getCompound(i);
-                Configs<?> configKey = Configs.getConfig(configTag.getString("configName"));
+        // configs
+        if (nbt.childrenList("configs").isPresent()) {
+            ValueInput.ValueInputList configNbt = nbt.childrenList("configs").get();
+            for (int i = 0; i < configNbt.stream().count(); i++) {
+                ValueInput configTag = configNbt.iterator().next();
+                Configs<?> configKey = Configs.getConfig(configTag.getStringOr("configName", ""));
                 if (configKey != null) {
                     this.configs.get(configKey).load(configTag);
                 }
@@ -474,7 +470,7 @@ public class ServerBot extends ServerPlayer {
 
     public void dropAll() {
         this.getInventory().dropAll();
-        this.detectEquipmentUpdatesPublic();
+        this.detectEquipmentUpdates();
     }
 
     private void runAction() {

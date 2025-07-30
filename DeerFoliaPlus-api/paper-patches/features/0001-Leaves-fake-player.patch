@@ -5,10 +5,10 @@ Subject: [PATCH] Leaves fake player
 
 
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
-index 64694483664c5a7380b1ce7846f2eef59004762f..1c8527e4fcdfd53393d6e25f77d217215ff75a75 100644
+index 85b778980e762835ac278528087e91b2e3effb43..bbe8d941bc5869fe20a9a259d6d96d22409d564b 100644
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
-@@ -3032,4 +3032,16 @@ public final class Bukkit {
+@@ -3052,4 +3052,16 @@ public final class Bukkit {
      public static void restart() {
          server.restart();
      }
@@ -26,10 +26,10 @@ index 64694483664c5a7380b1ce7846f2eef59004762f..1c8527e4fcdfd53393d6e25f77d21721
 +    // Leaves end - Bot API
  }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index a0922805fbee8e064a74115fbf93e9e8a98772cb..787b0c0ad631997a8a62e3cafd15d722f8c2376d 100644
+index a0540d7de5c2536aed5231f9e67b73345817921d..761d49c774ce6900bc980c6287a41d90b54bb867 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -2683,6 +2683,15 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+@@ -2708,6 +2708,15 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
      public boolean isGlobalTickThread();
      // Paper end - Folia region threading API
  

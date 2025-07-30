@@ -5,10 +5,10 @@ Subject: [PATCH] Rebranding
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
-index 705a14c7fa568478061a9a12eb940a2c49a73623..553d3aea56adc92212403001466a880b25450e68 100644
+index 412eb073b2662fe645cdd15faca2d78c50c28fd9..f54240de6a57b1dc8a8c2fc1360fbbdd690da1df 100644
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
 +++ b/src/main/java/com/destroystokyo/paper/Metrics.java
-@@ -592,11 +592,11 @@ public class Metrics {
+@@ -593,11 +593,11 @@ public class Metrics {
              boolean logFailedRequests = config.getBoolean("logFailedRequests", false);
              // Only start Metrics, if it's enabled in the config
              if (config.getBoolean("enabled", true)) {
@@ -23,7 +23,7 @@ index 705a14c7fa568478061a9a12eb940a2c49a73623..553d3aea56adc92212403001466a880b
                  metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
                      String minecraftVersion = Bukkit.getVersion();
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index 214a246ffff71cc8acdc1ea38848908d70dedd31..35c27b8cf9cac1e4f3e14e3ccab59eadac3fc566 100644
+index 167466e2978387b807717d2d2ca37ce1536859df..9c1bd2b6d99273c90d624d457a36151d060e0d5b 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 @@ -35,7 +35,7 @@ public class PaperVersionFetcher implements VersionFetcher {
@@ -36,7 +36,7 @@ index 214a246ffff71cc8acdc1ea38848908d70dedd31..35c27b8cf9cac1e4f3e14e3ccab59ead
      public long getCacheTime() {
          return 720000;
 @@ -45,10 +45,10 @@ public class PaperVersionFetcher implements VersionFetcher {
-     public Component getVersionMessage(final String serverVersion) {
+     public Component getVersionMessage() {
          final Component updateMessage;
          final ServerBuildInfo build = ServerBuildInfo.buildInfo();
 -        // DeerFolia start - Disable update check
@@ -63,7 +63,7 @@ index 8fd162b6441ca1a6ee779d898ee854dc5b1343c5..cd522106e68c4614f1cf4b8e42eefa69
                  .completer(new ConsoleCommandCompleter(this.server))
                  .option(LineReader.Option.COMPLETE_IN_WORD, true);
 diff --git a/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java b/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java
-index d9229cd25c2f3ba698cbf73b259a6de50f5a3418..1e5c1eaa83fef0b4335ea0a7850c127ced96068f 100644
+index 8cda5d0a6d5ff1d6a1b22f41c5e91b684a21f5a1..c51771360a05e69adbf8a6356bf2d2acb0db5704 100644
 --- a/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java
 +++ b/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java
 @@ -42,9 +42,9 @@ public record ServerBuildInfoImpl(
@@ -74,9 +74,9 @@ index d9229cd25c2f3ba698cbf73b259a6de50f5a3418..1e5c1eaa83fef0b4335ea0a7850c127c
 +                .orElse(Key.key("lunadeer", "deerfoliaplus")), // Folia // deerfoliaplus - Rebrand
              getManifestAttribute(manifest, ATTRIBUTE_BRAND_NAME)
 -                .orElse("DeerFolia"), // Folia  // DeerFolia - Rebrand
-+                .orElse("DeerFoliaPlus"), // Folia  // DeerFoliaPlus - Rebrand
-             SharedConstants.getCurrentVersion().getId(),
-             SharedConstants.getCurrentVersion().getName(),
++                    .orElse("DeerFoliaPlus"), // Folia  // DeerFoliaPlus - Rebrand
+             SharedConstants.getCurrentVersion().id(),
+             SharedConstants.getCurrentVersion().name(),
              getManifestAttribute(manifest, ATTRIBUTE_BUILD_NUMBER)
 diff --git a/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java b/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java
 index 03858588a5da20ecd5bb824c39f4cea68c25ae4c..c28a19e1487a01f1e8802cc77d9f6a4518ab272b 100644
@@ -92,7 +92,7 @@ index 03858588a5da20ecd5bb824c39f4cea68c25ae4c..c28a19e1487a01f1e8802cc77d9f6a45
                  // (async tasks must live with race-conditions if they attempt to cancel between these few lines of code)
              }
 diff --git a/src/main/java/org/spigotmc/WatchdogThread.java b/src/main/java/org/spigotmc/WatchdogThread.java
-index cdaa6e8fab6423f8692ea8218f502c04e7a1453c..7f02a30ca79ed3645afaf7ebb17e5c8ee6ea5d7c 100644
+index 08cb8fe37b66e49e0b76388c9139062f803cc26d..c9ff1a430f77210d5e97e1f1ec60a4b375095024 100644
 --- a/src/main/java/org/spigotmc/WatchdogThread.java
 +++ b/src/main/java/org/spigotmc/WatchdogThread.java
 @@ -25,7 +25,7 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
@@ -103,10 +103,12 @@ index cdaa6e8fab6423f8692ea8218f502c04e7a1453c..7f02a30ca79ed3645afaf7ebb17e5c8e
 +        super("DeerFoliaPlus Watchdog Thread"); // DeerFoliaPlus - Rebrand
          this.timeoutTime = timeoutTime;
          this.restart = restart;
-         this.earlyWarningEvery = Math.min(GlobalConfiguration.get().watchdog.earlyWarningEvery, timeoutTime); // Paper
-@@ -77,14 +77,14 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
+         this.earlyWarningEvery = Math.min(GlobalConfiguration.get().watchdog.earlyWarningEvery, timeoutTime);
+@@ -74,15 +74,16 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
+                     continue; // Don't spam early watchdog warnings during shutdown, we'll come back to this...
+                 this.lastEarlyWarning = currentTime;
                  if (isLongTimeout) {
-                     // Paper end
++                    // Paper end
                      logger.log(Level.SEVERE, "------------------------------");
 -                    logger.log(Level.SEVERE, "The server has stopped responding! This is (probably) not a DeerFolia bug."); // DeerFolia
 +                    logger.log(Level.SEVERE, "The server has stopped responding! This is (probably) not a DeerFoliaPlus bug."); // DeerFoliaPlus
@@ -114,15 +116,15 @@ index cdaa6e8fab6423f8692ea8218f502c04e7a1453c..7f02a30ca79ed3645afaf7ebb17e5c8e
                      logger.log(Level.SEVERE, "\t *Especially* if it looks like HTTP or MySQL operations are occurring");
                      logger.log(Level.SEVERE, "If you see a world save or edit, then it means you did far more than your server can handle at once");
                      logger.log(Level.SEVERE, "\t If this is the case, consider increasing timeout-time in spigot.yml but note that this will replace the crash with LARGE lag spikes");
--                    logger.log(Level.SEVERE, "If you are unsure or still think this is a DeerFolia bug, please report this email to zhangyuheng@lunadeer.cn"); // DeerFolia
-+                    logger.log(Level.SEVERE, "If you are unsure or still think this is a DeerFoliaPlus bug, please report this email to zhangyuheng@lunadeer.cn"); // DeerFoliaPlus
+-                    logger.log(Level.SEVERE, "If you are unsure or still think this is a DeerFolia bug, please report this to https://github.com/LunaDeerMC/DeerFolia zhangyuheng@lunadeer.cn");
++                    logger.log(Level.SEVERE, "If you are unsure or still think this is a DeerFoliaPlus bug, please report this to https://github.com/LunaDeerMC/DeerFoliaPlus zhangyuheng@lunadeer.cn"); // DeerFoliaPlus
                      logger.log(Level.SEVERE, "Be sure to include ALL relevant console errors and Minecraft crash reports");
 -                    logger.log(Level.SEVERE, "DeerFolia version: " + Bukkit.getServer().getVersion());
 +                    logger.log(Level.SEVERE, "DeerFoliaPlus version: " + Bukkit.getServer().getVersion());
  
                      if (net.minecraft.world.level.Level.lastPhysicsProblem != null) {
                          logger.log(Level.SEVERE, "------------------------------");
-@@ -104,12 +104,12 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
+@@ -102,12 +103,12 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
                      }
                      // Paper end
                  } else {
@@ -135,9 +137,9 @@ index cdaa6e8fab6423f8692ea8218f502c04e7a1453c..7f02a30ca79ed3645afaf7ebb17e5c8e
 -                logger.log(Level.SEVERE, "Server thread dump (Look for plugins here before reporting to DeerFolia!):"); // DeerFolia
 +                logger.log(Level.SEVERE, "Server thread dump (Look for plugins here before reporting to DeerFoliaPlus!):"); // DeerFoliaPlus
                  FeatureHooks.dumpAllChunkLoadInfo(MinecraftServer.getServer(), isLongTimeout); // Paper - log detailed tick information
-                 WatchdogThread.dumpThread(ManagementFactory.getThreadMXBean().getThreadInfo(MinecraftServer.getServer().serverThread.getId(), Integer.MAX_VALUE), logger);
+                 WatchdogThread.dumpThread(ManagementFactory.getThreadMXBean().getThreadInfo(MinecraftServer.getServer().serverThread.threadId(), Integer.MAX_VALUE), logger);
                  logger.log(Level.SEVERE, "------------------------------");
-@@ -122,7 +122,7 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
+@@ -120,7 +121,7 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
                          WatchdogThread.dumpThread(thread, logger);
                      }
                  } else {

@@ -1,9 +1,9 @@
 --- a/DeerFolia-server/build.gradle.kts
 +++ b/DeerFolia-server/build.gradle.kts
-@@ -53,7 +_,23 @@
+@@ -56,7 +_,21 @@
+             outputDir = rootDirectory.dir("folia-server")
          }
      }
- 
 -    activeFork = deerFolia
 +    val deerFoliaPlus = forks.register("DeerFoliaPlus") {
 +        forks = deerFolia
@@ -12,7 +12,6 @@
 +            patchesDir = rootDirectory.dir("DeerFoliaPlus-server/paper-patches")
 +            outputDir = rootDirectory.dir("paper-server")
 +        }
-+
 +        upstream.patchDir("DeerFoliaServer") {
 +            upstreamPath = "DeerFolia-server"
 +            excludes = setOf("src/minecraft", "paper-patches", "minecraft-patches", "build.gradle.kts", "build.gradle.kts.patch")
@@ -20,14 +19,13 @@
 +            outputDir = rootDirectory.dir("DeerFolia-server")
 +        }
 +    }
-+
 +    activeFork = deerFoliaPlus
  
+ 
      spigot {
-         buildDataRef = "3edaf46ec1eed4115ce1b18d2846cded42577e42"
-@@ -139,10 +_,14 @@
+@@ -144,10 +_,14 @@
      main {
-         java { srcDir("../paper-server/src/main/java") }
+         java { srcDir("../paper-server/src/main/java"); srcDir("../paper-server/src/generated/java") }
          resources { srcDir("../paper-server/src/main/resources") }
 +        java { srcDir("../DeerFolia-server/src/main/java") }
 +        resources { srcDir("../DeerFolia-server/src/main/resources") }
@@ -39,8 +37,8 @@
 +        resources { srcDir("../DeerFolia-server/src/test/resources") }
      }
  }
- 
-@@ -166,7 +_,7 @@
+ val log4jPlugins = sourceSets.create("log4jPlugins") {
+@@ -174,7 +_,7 @@
  }
  
  dependencies {
@@ -49,7 +47,7 @@
      implementation("ca.spottedleaf:concurrentutil:0.0.3")
      implementation("org.jline:jline-terminal-ffm:3.27.1") // use ffm on java 22+
      implementation("org.jline:jline-terminal-jni:3.27.1") // fall back to jni on java 21
-@@ -239,14 +_,14 @@
+@@ -253,14 +_,14 @@
          val gitBranch = git.exec(providers, "rev-parse", "--abbrev-ref", "HEAD").get().trim()
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",

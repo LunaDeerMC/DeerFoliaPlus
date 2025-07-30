@@ -1,7 +1,8 @@
 package org.leavesmc.leaves.bot.agent.actions;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.leavesmc.leaves.bot.ServerBot;
@@ -29,7 +30,7 @@ public class RotateAction extends BotAction<RotateAction> {
 
     @Override
     @NotNull
-    public CompoundTag save(@NotNull CompoundTag nbt) {
+    public ValueOutput save(@NotNull ValueOutput nbt) {
         super.save(nbt);
         nbt.putString("actionName", "look"); // to player loc
         nbt.putDouble("x", player.getX());
@@ -39,7 +40,7 @@ public class RotateAction extends BotAction<RotateAction> {
     }
 
     @Override
-    public void load(@NotNull CompoundTag nbt) {
+    public void load(@NotNull ValueInput nbt) {
         throw new UnsupportedOperationException("Not supported.");
     }
 

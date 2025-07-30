@@ -1,6 +1,8 @@
 package org.leavesmc.leaves.bot.agent.configs;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.leavesmc.leaves.bot.agent.BotConfig;
 import org.leavesmc.leaves.command.CommandArgument;
@@ -27,16 +29,16 @@ public class InvulnerableConfig extends BotConfig<Boolean>  {
     }
 
     @Override
-    public @NotNull CompoundTag save(@NotNull CompoundTag nbt) {
+    public @NotNull ValueOutput save(@NotNull ValueOutput nbt) {
         super.save(nbt);
         nbt.putBoolean("invulnerable", this.getValue());
         return nbt;
     }
 
     @Override
-    public void load(@NotNull CompoundTag nbt) {
+    public void load(@NotNull ValueInput nbt) {
         this.setValue(new CommandArgumentResult(new ArrayList<>() {{
-            add(nbt.getBoolean("invulnerable"));
+            add(nbt.getBooleanOr("invulnerable", true));
         }}));
     }
 }

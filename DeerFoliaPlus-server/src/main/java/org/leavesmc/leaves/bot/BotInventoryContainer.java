@@ -29,9 +29,12 @@ public class BotInventoryContainer extends SimpleContainer {
 
     public BotInventoryContainer(ServerBot player) {
         this.player = player;
-        this.items = this.player.getInventory().items;
-        this.armor = this.player.getInventory().armor;
-        this.offhand = this.player.getInventory().offhand;
+//        this.items = this.player.getInventory().items;
+//        this.armor = this.player.getInventory().armor;
+//        this.offhand = this.player.getInventory().offhand;
+        this.items = NonNullList.withSize(36, ItemStack.EMPTY);
+        this.armor = NonNullList.withSize(4, ItemStack.EMPTY);
+        this.offhand = NonNullList.withSize(1, ItemStack.EMPTY);
         this.compartments = ImmutableList.of(this.items, this.armor, this.offhand, this.buttons);
         createButton();
     }
@@ -118,7 +121,7 @@ public class BotInventoryContainer extends SimpleContainer {
         }
         if (list != null && !list.get(slot).isEmpty()) {
             itemStack = ContainerHelper.removeItem(list, slot, amount);
-            player.detectEquipmentUpdatesPublic();
+            player.detectEquipmentUpdates();
         }
         return itemStack;
     }
@@ -150,7 +153,7 @@ public class BotInventoryContainer extends SimpleContainer {
         }
         if (list != null) {
             list.set(slot, stack);
-            player.detectEquipmentUpdatesPublic();
+            player.detectEquipmentUpdates();
         }
     }
 

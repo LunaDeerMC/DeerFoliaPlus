@@ -1,10 +1,11 @@
 package org.leavesmc.leaves.bot.agent.actions;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.leavesmc.leaves.bot.ServerBot;
 
@@ -26,7 +27,7 @@ public class FishAction extends AbstractTimerAction<FishAction> {
 
     @Override
     @NotNull
-    public CompoundTag save(@NotNull CompoundTag nbt) {
+    public ValueOutput save(@NotNull ValueOutput nbt) {
         super.save(nbt);
         nbt.putInt("fishDelay", this.delay);
         nbt.putInt("fishNowDelay", this.nowDelay);
@@ -34,10 +35,10 @@ public class FishAction extends AbstractTimerAction<FishAction> {
     }
 
     @Override
-    public void load(@NotNull CompoundTag nbt) {
+    public void load(@NotNull ValueInput nbt) {
         super.load(nbt);
-        this.delay = nbt.getInt("fishDelay");
-        this.nowDelay = nbt.getInt("fishNowDelay");
+        this.delay = nbt.getIntOr("fishDelay", 0);
+        this.nowDelay = nbt.getIntOr("fishNowDelay", 0);
     }
 
     @Override

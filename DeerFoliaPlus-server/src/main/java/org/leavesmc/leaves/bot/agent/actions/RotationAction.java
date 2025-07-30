@@ -2,6 +2,8 @@ package org.leavesmc.leaves.bot.agent.actions;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.leavesmc.leaves.bot.ServerBot;
@@ -44,7 +46,7 @@ public class RotationAction extends BotAction<RotateAction> {
 
     @Override
     @NotNull
-    public CompoundTag save(@NotNull CompoundTag nbt) {
+    public ValueOutput save(@NotNull ValueOutput nbt) {
         super.save(nbt);
         nbt.putFloat("yaw", this.yaw);
         nbt.putFloat("pitch", this.pitch);
@@ -52,9 +54,9 @@ public class RotationAction extends BotAction<RotateAction> {
     }
 
     @Override
-    public void load(@NotNull CompoundTag nbt) {
+    public void load(@NotNull ValueInput nbt) {
         super.load(nbt);
-        this.setYaw(nbt.getFloat("yaw")).setPitch(nbt.getFloat("pitch"));
+        this.setYaw(nbt.getFloatOr("yaw", 0.0f)).setPitch(nbt.getFloatOr("pitch", 0.0f));
     }
 
     @Override

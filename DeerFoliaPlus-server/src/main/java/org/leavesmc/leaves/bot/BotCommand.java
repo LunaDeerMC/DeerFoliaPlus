@@ -76,7 +76,7 @@ public class BotCommand extends Command {
                 case "remove", "action", "config", "save" ->
                         list.addAll(botList.bots.stream().map(e -> e.getName().getString()).toList());
                 case "list" -> list.addAll(Bukkit.getWorlds().stream().map(WorldInfo::getName).toList());
-                case "load" -> list.addAll(botList.getSavedBotList().getAllKeys());
+                case "load" -> list.addAll(botList.getSavedBotList().keySet());
             }
         }
 

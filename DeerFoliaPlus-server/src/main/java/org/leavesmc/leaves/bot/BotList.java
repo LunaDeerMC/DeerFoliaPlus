@@ -14,8 +14,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -95,7 +97,7 @@ public class BotList {
 
         ServerBot bot = new ServerBot(this.server, this.server.getLevel(Level.OVERWORLD), new GameProfile(uuid, realName));
         bot.connection = new ServerBotPacketListenerImpl(this.server, bot);
-        Optional<CompoundTag> optional = playerIO.load(bot);
+        Optional<ValueInput> optional = playerIO.load(bot, ProblemReporter.DISCARDING);
 
         if (optional.isEmpty()) {
             consumer.accept(null);
@@ -103,8 +105,10 @@ public class BotList {
         }
 
         ResourceKey<Level> resourcekey = null;
-        if (optional.get().contains("WorldUUIDMost") && optional.get().contains("WorldUUIDLeast")) {
-            org.bukkit.World bWorld = Bukkit.getServer().getWorld(new UUID(optional.get().getLong("WorldUUIDMost"), optional.get().getLong("WorldUUIDLeast")));
+        if (optional.get().getLong("WorldUUIDMost").isPresent() && optional.get().getLong("WorldUUIDLeast").isPresent()) {
+            org.bukkit.World bWorld = Bukkit.getServer().getWorld(
+                    new UUID(optional.get().getLongOr("WorldUUIDMost", 0), optional.get().getLongOr("WorldUUIDLeast", 0))
+            );
             if (bWorld != null) {
                 resourcekey = ((CraftWorld) bWorld).getHandle().dimension();
             }
@@ -121,8 +125,8 @@ public class BotList {
         });
     }
 
-    public ServerBot placeNewBot(ServerBot bot, ServerLevel world, Location location, @Nullable CompoundTag nbt) {
-        Optional<CompoundTag> optional = Optional.ofNullable(nbt);
+    public ServerBot placeNewBot(ServerBot bot, ServerLevel world, Location location, @Nullable ValueInput value) {
+        Optional<ValueInput> optional = Optional.ofNullable(value);
 
         bot.isRealPlayer = true;
         bot.connection = new ServerBotPacketListenerImpl(this.server, bot);
@@ -144,8 +148,11 @@ public class BotList {
 
         bot.supressTrackerForLogin = true;
         world.addNewPlayer(bot);
-        bot.loadAndSpawnEnderpearls(optional);
-        bot.loadAndSpawnParentVehicle(optional);
+
+        optional.ifPresent(valueInput -> {
+            bot.loadAndSpawnEnderPearls(valueInput);
+            bot.loadAndSpawnParentVehicle(valueInput);
+        });
 
         BotJoinEvent event1 = new BotJoinEvent(bot.getBukkitEntity(), PaperAdventure.asAdventure(Component.translatable("multiplayer.player.joined", bot.getDisplayName())).style(Style.style(NamedTextColor.YELLOW)));
         this.server.server.getPluginManager().callEvent(event1);
@@ -157,8 +164,8 @@ public class BotList {
 
         bot.renderAll();
         bot.supressTrackerForLogin = false;
-        bot.serverLevel().getChunkSource().chunkMap.addEntity(bot);
-        BotList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", bot.getName().getString(), "Local", bot.getId(), bot.serverLevel().serverLevelData.getLevelName(), bot.getX(), bot.getY(), bot.getZ());
+        bot.level().getChunkSource().chunkMap.addEntity(bot);
+        BotList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", bot.getName().getString(), "Local", bot.getId(), bot.level().serverLevelData.getLevelName(), bot.getX(), bot.getY(), bot.getZ());
         return bot;
     }
 
@@ -209,7 +216,7 @@ public class BotList {
             }
 
             bot.unRide();
-            bot.serverLevel().removePlayerImmediately(bot, Entity.RemovalReason.UNLOADED_WITH_PLAYER);
+            bot.level().removePlayerImmediately(bot, Entity.RemovalReason.UNLOADED_WITH_PLAYER);
             this.bots.remove(bot);
             this.botsByName.remove(bot.getScoreboardName().toLowerCase(Locale.ROOT));
 
@@ -219,7 +226,7 @@ public class BotList {
                 this.botsByUUID.remove(uuid);
             }
             bot.removeTab();
-            for (ServerPlayer player : bot.serverLevel().players()) {
+            for (ServerPlayer player : bot.level().players()) {
                 if (!(player instanceof ServerBot) && !bot.needSendFakeData(player)) {
                     player.getBukkitEntity().taskScheduler.schedule(
                             (entity) -> player.connection.send(new ClientboundRemoveEntitiesPacket(bot.getId())),
@@ -254,9 +261,10 @@ public class BotList {
 
     public void loadResume() {
         if (DeerFoliaPlusConfiguration.fakePlayer.enable && DeerFoliaPlusConfiguration.fakePlayer.residentBot) {
-            for (String realName : this.getSavedBotList().getAllKeys()) {
-                CompoundTag nbt = this.getSavedBotList().getCompound(realName);
-                if (nbt.getBoolean("resume")) {
+            for (String realName : this.getSavedBotList().keySet()) {
+                if (this.getSavedBotList().getCompound(realName).isEmpty()) continue;
+                CompoundTag nbt = this.getSavedBotList().getCompound(realName).get();
+                if (nbt.getBooleanOr("resume", false)) {
                     this.loadNewBot(serverBot -> {
                     }, realName);
                 }

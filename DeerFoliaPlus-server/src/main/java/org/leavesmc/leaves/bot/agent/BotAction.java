@@ -1,7 +1,8 @@
 package org.leavesmc.leaves.bot.agent;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.leavesmc.leaves.bot.ServerBot;
@@ -138,10 +139,10 @@ public abstract class BotAction<E extends BotAction<E>> {
     }
 
     @NotNull
-    public CompoundTag save(@NotNull CompoundTag nbt) {
+    public ValueOutput save(@NotNull ValueOutput nbt) {
         if (!this.cancel) {
             nbt.putString("actionName", this.name);
-            nbt.putUUID("actionUUID", this.uuid);
+            nbt.putString("actionUUID", this.uuid.toString());
 
             nbt.putInt("canDoNumber", this.canDoNumber);
             nbt.putInt("needWaitTick", this.needWaitTick);
@@ -150,11 +151,11 @@ public abstract class BotAction<E extends BotAction<E>> {
         return nbt;
     }
 
-    public void load(@NotNull CompoundTag nbt) {
-        this.tickDelay = nbt.getInt("tickDelay");
-        this.needWaitTick = nbt.getInt("needWaitTick");
-        this.canDoNumber = nbt.getInt("canDoNumber");
-        this.uuid = nbt.getUUID("actionUUID");
+    public void load(@NotNull ValueInput nbt) {
+        this.tickDelay = nbt.getIntOr("tickDelay", 0);
+        this.needWaitTick = nbt.getIntOr("needWaitTick", 0);
+        this.canDoNumber = nbt.getIntOr("canDoNumber", 0);
+        this.uuid = UUID.fromString(nbt.getStringOr("actionUUID", ""));
     }
 
     public abstract void loadCommand(@Nullable ServerPlayer player, @NotNull CommandArgumentResult result);

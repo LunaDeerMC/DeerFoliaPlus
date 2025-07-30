@@ -32,7 +32,7 @@ public class BotAssert {
         if (player.isOp()) return true;
         ServerBot bot = BotList.INSTANCE.getBotByName(botName);
         if (bot == null) {
-            UUID creator = BotList.INSTANCE.getSavedBotList().getCompound(botName).getUUID("creator");
+            UUID creator = UUID.fromString(BotList.INSTANCE.getSavedBotList().getCompound(botName).get().getStringOr("creator", ""));
             if (!creator.equals(player.getUniqueId())) {
                 sender.sendMessage("You do not have permission to control this bot: " + botName);
                 return false;

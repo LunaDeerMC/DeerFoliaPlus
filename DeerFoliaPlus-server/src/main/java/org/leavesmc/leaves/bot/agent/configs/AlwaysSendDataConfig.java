@@ -2,6 +2,8 @@ package org.leavesmc.leaves.bot.agent.configs;
 
 import cn.lunadeer.mc.deerfoliaplus.configurations.DeerFoliaPlusConfiguration;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.leavesmc.leaves.bot.agent.BotConfig;
 import org.leavesmc.leaves.command.CommandArgument;
@@ -31,14 +33,14 @@ public class AlwaysSendDataConfig extends BotConfig<Boolean> {
 
     @Override
     @NotNull
-    public CompoundTag save(@NotNull CompoundTag nbt) {
+    public ValueOutput save(@NotNull ValueOutput nbt) {
         super.save(nbt);
         nbt.putBoolean("always_send_data", this.getValue());
         return nbt;
     }
 
     @Override
-    public void load(@NotNull CompoundTag nbt) {
-        this.value = nbt.getBoolean("always_send_data");
+    public void load(@NotNull ValueInput nbt) {
+        this.value = nbt.getBooleanOr("always_send_data", false);
     }
 }

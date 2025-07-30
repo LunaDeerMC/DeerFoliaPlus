@@ -1,6 +1,8 @@
 package org.leavesmc.leaves.bot.agent.configs;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.leavesmc.leaves.bot.agent.BotConfig;
 import org.leavesmc.leaves.command.CommandArgument;
@@ -32,16 +34,16 @@ public class SimulationDistanceConfig extends BotConfig<Integer> {
 
     @Override
     @NotNull
-    public CompoundTag save(@NotNull CompoundTag nbt) {
+    public ValueOutput save(@NotNull ValueOutput nbt) {
         super.save(nbt);
         nbt.putInt("simulation_distance", this.getValue());
         return nbt;
     }
 
     @Override
-    public void load(@NotNull CompoundTag nbt) {
+    public void load(@NotNull ValueInput nbt) {
         this.setValue(new CommandArgumentResult(new ArrayList<>() {{
-            add(nbt.getInt("simulation_distance"));
+            add(nbt.getIntOr("simulation_distance", 8));
         }}));
     }
 }

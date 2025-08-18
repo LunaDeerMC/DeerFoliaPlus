@@ -5,10 +5,10 @@ Subject: [PATCH] Leaves fake player
 
 
 diff --git a/io/papermc/paper/threadedregions/RegionizedServer.java b/io/papermc/paper/threadedregions/RegionizedServer.java
-index 8e91ec81128bdbd5f78e1f04fe17bcbd6e5dc280..5ef86dfacc3c8e73e250155e39a709551cb6e1d4 100644
+index e1842ab8f20271a8b20ab8462b09a4745a612a9a..7499f00488134fb0a512133a49ce398c0d794ddb 100644
 --- a/io/papermc/paper/threadedregions/RegionizedServer.java
 +++ b/io/papermc/paper/threadedregions/RegionizedServer.java
-@@ -326,6 +326,9 @@ public final class RegionizedServer {
+@@ -327,6 +327,9 @@ public final class RegionizedServer {
  
          // player list
          MinecraftServer.getServer().getPlayerList().tick();
@@ -31,7 +31,7 @@ index a82d84283632342bd30bc3449983431ba43583e0..f59526f6bfa1b4af5b474f0b438513c9
          Set<CriterionTrigger.Listener<T>> set = (Set) advancements.criterionData.get(this); // Paper - fix PlayerAdvancements leak
          if (set != null && !set.isEmpty()) {
 diff --git a/net/minecraft/server/MinecraftServer.java b/net/minecraft/server/MinecraftServer.java
-index 8e69876debfdbab3965fb93fe79d1125f4f21636..1d5ea43c1bc45e49ceda8accd0041189926a33bc 100644
+index 0238bce5c050808798f092dc07a0206502704bc9..b54ebf814f3163675b11e745f7b965975fb9ad53 100644
 --- a/net/minecraft/server/MinecraftServer.java
 +++ b/net/minecraft/server/MinecraftServer.java
 @@ -347,6 +347,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -60,7 +60,7 @@ index 8e69876debfdbab3965fb93fe79d1125f4f21636..1d5ea43c1bc45e49ceda8accd0041189
          // CraftBukkit start
          if (this.server != null) {
              this.server.spark.disable(); // Paper - spark
-@@ -2929,6 +2934,16 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -2933,6 +2938,16 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
          return 0;
      }
  
@@ -169,7 +169,7 @@ index 78a7a4b379e0b469ebde381efe748278e6d69a5a..df73319916ccd288e2a27ed33a7545b1
                  ServerLevel.this.updateSleepingPlayerList();
              }
 diff --git a/net/minecraft/server/level/ServerPlayer.java b/net/minecraft/server/level/ServerPlayer.java
-index 4e868da7fb3dc6e033b83f55ec250d85e0b74f02..d57c22e8317644badf2e57749cc1e4d0ebc0f1e9 100644
+index 0f62eb1483838bb1c01d908c095ad76ef999040d..22de35b11183bc9c7ce0d4ad80ff2e1d53600b96 100644
 --- a/net/minecraft/server/level/ServerPlayer.java
 +++ b/net/minecraft/server/level/ServerPlayer.java
 @@ -65,7 +65,6 @@ import net.minecraft.network.protocol.game.ClientboundHorseScreenOpenPacket;
@@ -189,8 +189,8 @@ index 4e868da7fb3dc6e033b83f55ec250d85e0b74f02..d57c22e8317644badf2e57749cc1e4d0
      private final PlayerAdvancements advancements;
      private final ServerStatsCounter stats;
      private float lastRecordedHealthAndAbsorption = Float.MIN_VALUE;
-@@ -986,11 +985,14 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
-             this.containerMenu.broadcastChanges();
+@@ -924,11 +923,14 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+             }
              this.containerUpdateDelay = this.level().paperConfig().tickRates.containerUpdate;
          }
 +        // Leaves start - skip bot
@@ -204,7 +204,7 @@ index 4e868da7fb3dc6e033b83f55ec250d85e0b74f02..d57c22e8317644badf2e57749cc1e4d0
  
          Entity camera = this.getCamera();
          if (camera != this) {
-@@ -1016,7 +1018,7 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+@@ -954,7 +956,7 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
              }
          }
  
@@ -213,7 +213,7 @@ index 4e868da7fb3dc6e033b83f55ec250d85e0b74f02..d57c22e8317644badf2e57749cc1e4d0
          if (this.levitationStartPos != null) {
              CriteriaTriggers.LEVITATION.trigger(this, this.levitationStartPos, this.tickCount - this.levitationStartTime);
          }
-@@ -1994,6 +1996,11 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+@@ -1941,6 +1943,11 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
                  this.lastSentExp = -1;
                  this.lastSentHealth = -1.0F;
                  this.lastSentFood = -1;
@@ -226,7 +226,7 @@ index 4e868da7fb3dc6e033b83f55ec250d85e0b74f02..d57c22e8317644badf2e57749cc1e4d0
                  // CraftBukkit start
                  org.bukkit.event.player.PlayerChangedWorldEvent changeEvent = new org.bukkit.event.player.PlayerChangedWorldEvent(this.getBukkitEntity(), serverLevel.getWorld());
 diff --git a/net/minecraft/server/players/PlayerList.java b/net/minecraft/server/players/PlayerList.java
-index dd68471549096b86ea82f2add3d3886fb054e78b..935cfade582b9ae5b738ed759d92fc6c3b41360f 100644
+index 976a8982a0b0a9ae459cf08e13d69031d4238eca..82564a30de2767468525d4f5879b56e830badb4d 100644
 --- a/net/minecraft/server/players/PlayerList.java
 +++ b/net/minecraft/server/players/PlayerList.java
 @@ -1,7 +1,6 @@
@@ -266,7 +266,7 @@ index dd68471549096b86ea82f2add3d3886fb054e78b..935cfade582b9ae5b738ed759d92fc6c
              final net.kyori.adventure.text.Component jm = playerJoinEvent.joinMessage();
  
              if (jm != null && !jm.equals(net.kyori.adventure.text.Component.empty())) { // Paper - Adventure
-@@ -939,6 +953,12 @@ public abstract class PlayerList {
+@@ -906,6 +920,12 @@ public abstract class PlayerList {
          }
          // Paper end - Add PlayerPostRespawnEvent
  
@@ -279,7 +279,7 @@ index dd68471549096b86ea82f2add3d3886fb054e78b..935cfade582b9ae5b738ed759d92fc6c
          // CraftBukkit end
  
          return serverPlayer;
-@@ -1043,12 +1063,18 @@ public abstract class PlayerList {
+@@ -1010,12 +1030,18 @@ public abstract class PlayerList {
  
      public String[] getPlayerNamesArray() {
          List<ServerPlayer> players = new java.util.ArrayList<>(this.players); // Folia - region threading
@@ -299,7 +299,7 @@ index dd68471549096b86ea82f2add3d3886fb054e78b..935cfade582b9ae5b738ed759d92fc6c
          return strings;
      }
  
-@@ -1137,7 +1163,13 @@ public abstract class PlayerList {
+@@ -1121,7 +1147,13 @@ public abstract class PlayerList {
  
      @Nullable
      public ServerPlayer getPlayerByName(String username) {
@@ -314,7 +314,7 @@ index dd68471549096b86ea82f2add3d3886fb054e78b..935cfade582b9ae5b738ed759d92fc6c
      }
  
      public void broadcast(@Nullable Player except, double x, double y, double z, double radius, ResourceKey<Level> dimension, Packet<?> packet) {
-@@ -1474,7 +1506,13 @@ public abstract class PlayerList {
+@@ -1458,7 +1490,13 @@ public abstract class PlayerList {
  
      @Nullable
      public ServerPlayer getPlayer(UUID playerUUID) {
@@ -330,7 +330,7 @@ index dd68471549096b86ea82f2add3d3886fb054e78b..935cfade582b9ae5b738ed759d92fc6c
  
      public boolean canBypassPlayerLimit(GameProfile profile) {
 diff --git a/net/minecraft/world/entity/Entity.java b/net/minecraft/world/entity/Entity.java
-index d5dbe66f6575da5edeb0c34587fddf354a67af9a..eb23aa28c7eb1ef10d0b46e169c614e7dcc0a7b9 100644
+index dcd1536511f5e42699a3a31f16075e3bb152283a..f2f1e4be4e33773933147f0cda487dc1764eb600 100644
 --- a/net/minecraft/world/entity/Entity.java
 +++ b/net/minecraft/world/entity/Entity.java
 @@ -1503,7 +1503,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
@@ -343,7 +343,7 @@ index d5dbe66f6575da5edeb0c34587fddf354a67af9a..eb23aa28c7eb1ef10d0b46e169c614e7
          final boolean yZero = movement.y == 0.0;
          final boolean zZero = movement.z == 0.0;
 diff --git a/net/minecraft/world/entity/player/Player.java b/net/minecraft/world/entity/player/Player.java
-index 73d1557f2d7d60a9a2ad2c3f710b0969c4c5cf40..196ce53141a2c458b9442858cfe8093a713ccbf1 100644
+index 6de2b7702b07edd89784a5554fee4f7a75c521f8..38e51cd95b89dcc7b434fb54b06681cf59d5906d 100644
 --- a/net/minecraft/world/entity/player/Player.java
 +++ b/net/minecraft/world/entity/player/Player.java
 @@ -205,7 +205,7 @@ public abstract class Player extends LivingEntity {
@@ -391,10 +391,10 @@ index 7760ab1fe365b4bf1ab6c2ff953e8659a28008a8..76f6b0932633bc5670a1cdc76ff78b3b
      public int timeUntilHooked;
      public float fishAngle;
 diff --git a/net/minecraft/world/inventory/AbstractContainerMenu.java b/net/minecraft/world/inventory/AbstractContainerMenu.java
-index f4548edae77eb86e54ba499acbb20613fd60d7bd..4a7507072bd1df3a37b8b8652c5836cacade3dfa 100644
+index 06846950348954328c07f64cd9b3359e79a1a468..450c3339be359b822393906b399bffc7e4c15014 100644
 --- a/net/minecraft/world/inventory/AbstractContainerMenu.java
 +++ b/net/minecraft/world/inventory/AbstractContainerMenu.java
-@@ -376,6 +376,9 @@ public abstract class AbstractContainerMenu {
+@@ -400,6 +400,9 @@ public abstract class AbstractContainerMenu {
  
      private void doClick(int slotId, int button, ClickType clickType, Player player) {
          Inventory inventory = player.getInventory();
@@ -404,7 +404,7 @@ index f4548edae77eb86e54ba499acbb20613fd60d7bd..4a7507072bd1df3a37b8b8652c5836ca
          if (clickType == ClickType.QUICK_CRAFT) {
              int i = this.quickcraftStatus;
              this.quickcraftStatus = getQuickcraftHeader(button);
-@@ -652,6 +655,22 @@ public abstract class AbstractContainerMenu {
+@@ -674,6 +677,22 @@ public abstract class AbstractContainerMenu {
          }
      }
  

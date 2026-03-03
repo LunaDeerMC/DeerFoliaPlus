@@ -119,10 +119,14 @@ public class BotList {
         }
 
         ServerLevel world = this.server.getLevel(resourcekey);
-        Bukkit.getRegionScheduler().run(MinecraftInternalPlugin.INSTANCE, bot.getLocation(), (t) -> {
-            ServerBot newBot = this.placeNewBot(bot, world, bot.getLocation(), optional.get());
+        // DeerFoliaPlus start - fix thread safety: use the correct world for region scheduling
+        Location botLocation = bot.getLocation();
+        botLocation.setWorld(world.getWorld());
+        Bukkit.getRegionScheduler().run(MinecraftInternalPlugin.INSTANCE, botLocation, (t) -> {
+            ServerBot newBot = this.placeNewBot(bot, world, botLocation, optional.get());
             consumer.accept(newBot);
         });
+        // DeerFoliaPlus end - fix thread safety: use the correct world for region scheduling
     }
 
     public ServerBot placeNewBot(ServerBot bot, ServerLevel world, Location location, @Nullable ValueInput value) {

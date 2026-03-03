@@ -59,10 +59,10 @@ index 8cda5d0a6d5ff1d6a1b22f41c5e91b684a21f5a1..8d625887763d9063ef24a88214a6d751
              getManifestAttribute(manifest, ATTRIBUTE_BRAND_ID)
                  .map(Key::key)
 -                .orElse(Key.key("lunadeer", "deerfolia")), // Folia // DeerFolia - Rebrand
-+                .orElse(Key.key("lunadeer", "DEERFOLIAPLUSPLUS")), // Folia // DEERFOLIAPLUSPLUSPlus - Rebrand
++                .orElse(Key.key("lunadeer", "deerfoliaplus")), // Folia // deerfoliaplus - Rebrand
              getManifestAttribute(manifest, ATTRIBUTE_BRAND_NAME)
 -                .orElse("DeerFolia"), // Folia  // DeerFolia - Rebrand
-+                .orElse("DEERFOLIAPLUSPLUSPlus"), // Folia  // DEERFOLIAPLUSPLUSPlus - Rebrand
++                .orElse("DeerFoliaPlus"), // Folia  // DeerFoliaPlus - Rebrand
              SharedConstants.getCurrentVersion().id(),
              SharedConstants.getCurrentVersion().name(),
              getManifestAttribute(manifest, ATTRIBUTE_BUILD_NUMBER)

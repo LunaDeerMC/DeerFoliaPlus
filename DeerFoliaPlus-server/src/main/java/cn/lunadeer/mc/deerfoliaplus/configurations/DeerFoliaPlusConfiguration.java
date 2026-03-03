@@ -1,9 +1,6 @@
 package cn.lunadeer.mc.deerfoliaplus.configurations;
 
-import cn.lunadeer.mc.deerfolia.utils.configuration.ConfigurationFile;
-import cn.lunadeer.mc.deerfolia.utils.configuration.ConfigurationManager;
-import cn.lunadeer.mc.deerfolia.utils.configuration.HandleManually;
-import cn.lunadeer.mc.deerfolia.utils.configuration.PostProcess;
+import cn.lunadeer.mc.deerfolia.utils.configuration.*;
 import com.mojang.logging.LogUtils;
 import io.papermc.paper.configuration.PaperConfigurations;
 import net.minecraft.server.MinecraftServer;
@@ -32,6 +29,18 @@ public class DeerFoliaPlusConfiguration extends ConfigurationFile {
         MinecraftServer.getServer().server.getCommandMap().register("bot", "deerfoliaplus", new org.leavesmc.leaves.bot.BotCommand("bot"));
         MinecraftServer.getServer().server.syncCommands();
         Actions.registerAll();
+    }
+
+    @Comments("Bedrock-style Stronghold Generation - Random unlimited distribution instead of 128 in rings")
+    public static BedrockStrongholdGeneration bedrockStrongholdGeneration = new BedrockStrongholdGeneration();
+
+    public static class BedrockStrongholdGeneration extends ConfigurationPart {
+        @Comments("Enable Bedrock-style random stronghold distribution (default: false)")
+        public boolean enabled = false;
+        @Comments("Average distance between strongholds in chunks (default: 48)")
+        public int spacing = 48;
+        @Comments("Minimum distance between strongholds in chunks, must be less than spacing (default: 12)")
+        public int separation = 12;
     }
 
 }

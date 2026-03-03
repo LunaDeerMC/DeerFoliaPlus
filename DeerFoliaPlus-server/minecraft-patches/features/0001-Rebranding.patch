@@ -5,7 +5,7 @@ Subject: [PATCH] Rebranding
 
 
 diff --git a/net/minecraft/CrashReport.java b/net/minecraft/CrashReport.java
-index a86cd46f9af4853f5959c9ef71facb3544e436f9..190988e2f45320e31653202cfcc9604b524977ad 100644
+index 5b7ef319c3eda1aa2562e06ae75f95e49cda5f70..853791b39f089bf0b986a0ca0ef258fd3c7f7051 100644
 --- a/net/minecraft/CrashReport.java
 +++ b/net/minecraft/CrashReport.java
 @@ -30,7 +30,7 @@ public class CrashReport {
@@ -16,12 +16,12 @@ index a86cd46f9af4853f5959c9ef71facb3544e436f9..190988e2f45320e31653202cfcc9604b
 +    private final List<String> extraInfo = List.of("", "DO NOT REPORT THIS TO PAPER/FOLIA! REPORT TO DEERFOLIAPLUS INSTEAD!", ""); // DeerFoliaPlus - Rebrand
  
      public CrashReport(String title, Throwable exception) {
-         io.papermc.paper.util.StacktraceDeobfuscator.INSTANCE.deobfuscateThrowable(exception); // Paper
+         this.title = title;
 diff --git a/net/minecraft/world/level/chunk/storage/RegionFileStorage.java b/net/minecraft/world/level/chunk/storage/RegionFileStorage.java
-index e2656d6899601e1b9ddadb6690b1158c60cc1b3c..a58ff8821982c7bebc1a10983ac1ceb8d51f93d3 100644
+index 9171fedb498d468ce8136239d63eed569850e44a..12de965a1d415d15e63686ff6070432ef997abc5 100644
 --- a/net/minecraft/world/level/chunk/storage/RegionFileStorage.java
 +++ b/net/minecraft/world/level/chunk/storage/RegionFileStorage.java
-@@ -308,7 +308,7 @@ public class RegionFileStorage implements AutoCloseable, ca.spottedleaf.moonrise
+@@ -309,7 +309,7 @@ public class RegionFileStorage implements AutoCloseable, ca.spottedleaf.moonrise
  
      // Paper start
      private static void printOversizedLog(String msg, Path file, int x, int z) {

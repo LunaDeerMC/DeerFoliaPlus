@@ -30,7 +30,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.ValueInput;
@@ -136,7 +136,7 @@ public class ServerBot extends ServerPlayer {
     }
 
     public void renderAll() {
-        this.getServer().getPlayerList().getPlayers().forEach(
+        this.level().getServer().getPlayerList().getPlayers().forEach(
                 player -> {
                     this.sendPlayerInfo(player);
                     this.sendFakeDataIfNeed(player, false);
@@ -145,16 +145,16 @@ public class ServerBot extends ServerPlayer {
     }
 
     private void sendPacket(Packet<?> packet) {
-        this.getServer().getPlayerList().getPlayers().forEach(player -> player.connection.send(packet));
+        this.level().getServer().getPlayerList().getPlayers().forEach(player -> player.connection.send(packet));
     }
 
     @Override
     public void die(@NotNull DamageSource damageSource) {
-        boolean flag = this.level().getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES);
+        boolean flag = this.level().getGameRules().get(GameRules.SHOW_DEATH_MESSAGES);
         Component defaultMessage = this.getCombatTracker().getDeathMessage();
 
         BotDeathEvent event = new BotDeathEvent(this.getBukkitEntity(), PaperAdventure.asAdventure(defaultMessage), flag);
-        this.getServer().server.getPluginManager().callEvent(event);
+        this.level().getServer().server.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {
             if (this.getHealth() <= 0) {
@@ -167,10 +167,10 @@ public class ServerBot extends ServerPlayer {
 
         net.kyori.adventure.text.Component deathMessage = event.deathMessage();
         if (event.isSendDeathMessage() && deathMessage != null && !deathMessage.equals(net.kyori.adventure.text.Component.empty())) {
-            this.getServer().getPlayerList().broadcastSystemMessage(PaperAdventure.asVanilla(deathMessage), false);
+            this.level().getServer().getPlayerList().broadcastSystemMessage(PaperAdventure.asVanilla(deathMessage), false);
         }
 
-        this.getServer().getBotList().removeBot(this, BotRemoveEvent.RemoveReason.DEATH, null, false);
+        this.level().getServer().getBotList().removeBot(this, BotRemoveEvent.RemoveReason.DEATH, null, false);
     }
 
     public void removeTab() {
@@ -286,7 +286,7 @@ public class ServerBot extends ServerPlayer {
                 this.notSleepTicks = 0;
             }
 
-            if (!this.level().isClientSide && !this.level().isDarkOutside()) {
+            if (!this.level().isClientSide() && !this.level().isDarkOutside()) {
                 this.stopSleepInBed(false, true);
             }
         } else if (this.sleepCounter > 0) {
@@ -332,7 +332,7 @@ public class ServerBot extends ServerPlayer {
         if (strength > 0.0D) {
             Vec3 vec3d = this.getDeltaMovement();
             Vec3 vec3d1 = (new Vec3(x, 0.0D, z)).normalize().scale(strength);
-            this.hasImpulse = true;
+            this.hurtMarked = true;
             this.knockback = new Vec3(vec3d.x / 2.0D - vec3d1.x, this.onGround() ? Math.min(0.4D, vec3d.y / 2.0D + strength) : vec3d.y, vec3d.z / 2.0D - vec3d1.z).subtract(vec3d);
         }
     }
@@ -401,7 +401,7 @@ public class ServerBot extends ServerPlayer {
         createBuilder.createReason(BotCreateEvent.CreateReason.INTERNAL).creator(null);
 
         this.createState = createBuilder.build();
-        this.gameProfile = new BotList.CustomGameProfile(this.getUUID(), this.createState.name(), this.createState.skin());
+        this.gameProfile = BotList.createGameProfile(this.getUUID(), this.createState.name(), this.createState.skin());
 
         // actions
         if (nbt.childrenList("actions").isPresent()) {

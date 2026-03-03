@@ -1,5 +1,6 @@
 package org.leavesmc.leaves.bot;
 
+import com.google.gson.JsonElement;
 import com.mojang.datafixers.DataFixer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.ServerStatsCounter;
@@ -7,14 +8,14 @@ import net.minecraft.stats.Stat;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
+import java.nio.file.Path;
 
 public class BotStatsCounter extends ServerStatsCounter {
 
-    private static final File UNKOWN_FILE = new File("BOT_STATS_REMOVE_THIS");
+    private static final Path UNKOWN_PATH = Path.of("BOT_STATS_REMOVE_THIS");
 
     public BotStatsCounter(MinecraftServer server) {
-        super(server, UNKOWN_FILE);
+        super(server, UNKOWN_PATH);
     }
 
     @Override
@@ -26,7 +27,7 @@ public class BotStatsCounter extends ServerStatsCounter {
     }
 
     @Override
-    public void parseLocal(@NotNull DataFixer dataFixer, @NotNull String json) {
+    public void parse(@NotNull DataFixer dataFixer, @NotNull JsonElement json) {
     }
 
     @Override

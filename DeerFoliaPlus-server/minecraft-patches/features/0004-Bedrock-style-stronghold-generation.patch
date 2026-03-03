@@ -5,14 +5,14 @@ Subject: [PATCH] Bedrock-style stronghold generation
 
 
 diff --git a/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java b/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java
-index 619b98e42e254c0c260c171a26a2472ddf59b885..c8647ae07c836c8223f88b865245db03b8c5b281 100644
+index 784d9de7abecd0816b2a5a6b256ad4e275791fff..41717c1d48cde52a7215fc28f5f5c9792632c5cc 100644
 --- a/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java
 +++ b/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java
 @@ -73,6 +73,21 @@ public class ChunkGeneratorStructureState {
          return list.stream().map((holder) -> {
              StructureSet structureset = holder.value();
              final Holder<StructureSet> newHolder; // Paper - Add missing structure set seed configs
-+            // DeerFolia start - Bedrock-style stronghold generation
++            // DeerFoliaPlus start - Bedrock-style stronghold generation
 +            if (structureset.placement() instanceof ConcentricRingsStructurePlacement concentricConfig
 +                    && holder.unwrapKey().isPresent()
 +                    && holder.unwrapKey().get().equals(net.minecraft.world.level.levelgen.structure.BuiltinStructureSets.STRONGHOLDS)
@@ -22,11 +22,11 @@ index 619b98e42e254c0c260c171a26a2472ddf59b885..c8647ae07c836c8223f88b865245db03
 +                                cn.lunadeer.mc.deerfoliaplus.configurations.DeerFoliaPlusConfiguration.bedrockStrongholdGeneration.spacing,
 +                                cn.lunadeer.mc.deerfoliaplus.configurations.DeerFoliaPlusConfiguration.bedrockStrongholdGeneration.separation,
 +                                net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType.LINEAR,
-+                                10387319 // DeerFolia - unique salt for random stronghold placement
++                                10387319 // DeerFoliaPlus - unique salt for random stronghold placement
 +                        ));
 +                newHolder = Holder.direct(structureset);
 +            } else
-+            // DeerFolia end - Bedrock-style stronghold generation
-             if (structureset.placement() instanceof net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement randomConfig && holder.unwrapKey().orElseThrow().location().getNamespace().equals(net.minecraft.resources.ResourceLocation.DEFAULT_NAMESPACE)) { // Paper - Add missing structure set seed configs; check namespace cause datapacks could add structure sets with the same path
-                 String name = holder.unwrapKey().orElseThrow().location().getPath();
++            // DeerFoliaPlus end - Bedrock-style stronghold generation
+             if (structureset.placement() instanceof net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement randomConfig && holder.unwrapKey().orElseThrow().identifier().getNamespace().equals(net.minecraft.resources.Identifier.DEFAULT_NAMESPACE)) { // Paper - Add missing structure set seed configs; check namespace cause datapacks could add structure sets with the same path
+                 String name = holder.unwrapKey().orElseThrow().identifier().getPath();
                  int seed = randomConfig.salt;

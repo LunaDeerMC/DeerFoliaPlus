@@ -71,7 +71,7 @@ public class BotList {
         Location location = event.getCreateLocation();
         ServerLevel world = ((CraftWorld) location.getWorld()).getHandle();
 
-        CustomGameProfile profile = new CustomGameProfile(BotUtil.getBotUUID(state), state.name(), state.skin());
+        GameProfile profile = createGameProfile(BotUtil.getBotUUID(state), state.name(), state.skin());
         ServerBot bot = new ServerBot(this.server, world, profile);
         bot.createState = state;
         if (event.getCreator() instanceof org.bukkit.entity.Player player) {
@@ -146,7 +146,7 @@ public class BotList {
         this.botsByName.put(bot.getScoreboardName().toLowerCase(Locale.ROOT), bot);
         this.botsByUUID.put(bot.getUUID(), bot);
 
-        bot.supressTrackerForLogin = true;
+        bot.suppressTrackerForLogin = true;
         world.addNewPlayer(bot);
 
         optional.ifPresent(valueInput -> {
@@ -163,7 +163,7 @@ public class BotList {
         }
 
         bot.renderAll();
-        bot.supressTrackerForLogin = false;
+        bot.suppressTrackerForLogin = false;
         bot.level().getChunkSource().chunkMap.addEntity(bot);
         BotList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", bot.getName().getString(), "Local", bot.getId(), bot.level().serverLevelData.getLevelName(), bot.getX(), bot.getY(), bot.getZ());
         return bot;
@@ -204,7 +204,7 @@ public class BotList {
                 if (entity.hasExactlyOnePlayerPassenger()) {
                     bot.stopRiding();
                     entity.getPassengersAndSelf().forEach((entity1) -> {
-                        if (entity1 instanceof net.minecraft.world.entity.npc.AbstractVillager villager) {
+                        if (entity1 instanceof net.minecraft.world.entity.npc.villager.AbstractVillager villager) {
                             final net.minecraft.world.entity.player.Player human = villager.getTradingPlayer();
                             if (human != null) {
                                 villager.setTradingPlayer(null);
@@ -301,17 +301,15 @@ public class BotList {
         return Bukkit.getPlayerExact(name) == null && this.getBotByName(name) == null;
     }
 
-    public static class CustomGameProfile extends GameProfile {
+    public static GameProfile createGameProfile(UUID uuid, String name, String[] skin) {
+        GameProfile profile = new GameProfile(uuid, name);
+        setSkin(profile, skin);
+        return profile;
+    }
 
-        public CustomGameProfile(UUID uuid, String name, String[] skin) {
-            super(uuid, name);
-            this.setSkin(skin);
-        }
-
-        public void setSkin(String[] skin) {
-            if (skin != null) {
-                this.getProperties().put("textures", new Property("textures", skin[0], skin[1]));
-            }
+    public static void setSkin(GameProfile profile, String[] skin) {
+        if (skin != null) {
+            profile.properties().put("textures", new Property("textures", skin[0], skin[1]));
         }
     }
 }

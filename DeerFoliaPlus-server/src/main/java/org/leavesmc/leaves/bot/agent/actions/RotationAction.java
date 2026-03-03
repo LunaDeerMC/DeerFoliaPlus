@@ -14,10 +14,10 @@ import org.leavesmc.leaves.command.CommandArgumentType;
 
 import java.util.List;
 
-public class RotationAction extends BotAction<RotateAction> {
+public class RotationAction extends BotAction<RotationAction> {
 
     public RotationAction() {
-        super("rotation", CommandArgument.of(CommandArgumentType.FLOAT, CommandArgumentType.FLOAT), RotateAction::new);
+        super("rotation", CommandArgument.of(CommandArgumentType.FLOAT, CommandArgumentType.FLOAT), RotationAction::new);
         this.setTabComplete(0, List.of("<yaw>"));
         this.setTabComplete(1, List.of("<pitch>"));
     }

@@ -29,7 +29,9 @@ public class UseItemOnOffhandAction extends AbstractTimerAction<UseItemOnOffhand
                 BlockEntity entity = bot.level().getBlockEntity(blockHitResult.getBlockPos());
                 if (entity instanceof TrappedChestBlockEntity chestBlockEntity) {
                     chestBlockEntity.startOpen(bot);
-                    Bukkit.getScheduler().runTaskLater(MinecraftInternalPlugin.INSTANCE, () -> chestBlockEntity.stopOpen(bot), 1);
+                    // DeerFoliaPlus start - use entity scheduler for Folia compatibility
+                    bot.getBukkitEntity().getScheduler().runDelayed(MinecraftInternalPlugin.INSTANCE, (task) -> chestBlockEntity.stopOpen(bot), null, 1);
+                    // DeerFoliaPlus end - use entity scheduler for Folia compatibility
                     return true;
                 }
             } else {

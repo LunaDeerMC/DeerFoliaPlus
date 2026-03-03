@@ -181,10 +181,12 @@ public class BotList {
             return event.isCancelled();
         }
 
-        if (bot.removeTaskId != -1) {
-            Bukkit.getScheduler().cancelTask(bot.removeTaskId);
-            bot.removeTaskId = -1;
+        // DeerFoliaPlus start - use Folia compatible scheduler
+        if (bot.removeTask != null) {
+            bot.removeTask.cancel();
+            bot.removeTask = null;
         }
+        // DeerFoliaPlus end - use Folia compatible scheduler
 
         bot.getBukkitEntity().taskScheduler.schedule((e) -> {
             if (this.server.isSameThread()) {
@@ -301,9 +303,13 @@ public class BotList {
         return Bukkit.getPlayerExact(name) == null && this.getBotByName(name) == null;
     }
 
+    // DeerFoliaPlus start - use MutablePropertyMap to allow skin property insertion
     public static GameProfile createGameProfile(UUID uuid, String name, String[] skin) {
-        GameProfile profile = new GameProfile(uuid, name);
-        setSkin(profile, skin);
+        io.papermc.paper.profile.MutablePropertyMap properties = new io.papermc.paper.profile.MutablePropertyMap();
+        if (skin != null) {
+            properties.put("textures", new Property("textures", skin[0], skin[1]));
+        }
+        GameProfile profile = new GameProfile(uuid, name, properties);
         return profile;
     }
 
@@ -312,4 +318,5 @@ public class BotList {
             profile.properties().put("textures", new Property("textures", skin[0], skin[1]));
         }
     }
+    // DeerFoliaPlus end - use MutablePropertyMap to allow skin property insertion
 }

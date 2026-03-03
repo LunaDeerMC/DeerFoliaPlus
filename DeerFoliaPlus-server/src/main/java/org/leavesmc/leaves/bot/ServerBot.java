@@ -75,7 +75,7 @@ public class ServerBot extends ServerPlayer {
 
     public int notSleepTicks;
 
-    public int removeTaskId = -1;
+    public io.papermc.paper.threadedregions.scheduler.ScheduledTask removeTask = null; // DeerFoliaPlus - Folia compatible scheduler
 
     private Vec3 knockback = Vec3.ZERO;
 
@@ -129,7 +129,9 @@ public class ServerBot extends ServerPlayer {
 
         playerConnection.send(this.getAddEntityPacket(entityTracker.serverEntity));
         if (login) {
-            Bukkit.getScheduler().runTaskLater(MinecraftInternalPlugin.INSTANCE, () -> playerConnection.send(new ClientboundRotateHeadPacket(this, (byte) ((getYRot() * 256f) / 360f))), 10);
+            // DeerFoliaPlus start - use entity scheduler for Folia compatibility
+            this.getBukkitEntity().getScheduler().runDelayed(MinecraftInternalPlugin.INSTANCE, (task) -> playerConnection.send(new ClientboundRotateHeadPacket(this, (byte) ((getYRot() * 256f) / 360f))), null, 10);
+            // DeerFoliaPlus end - use entity scheduler for Folia compatibility
         } else {
             playerConnection.send(new ClientboundRotateHeadPacket(this, (byte) ((getYRot() * 256f) / 360f)));
         }

@@ -29,6 +29,11 @@ public class DeerFoliaPlusConfiguration extends ConfigurationFile {
         MinecraftServer.getServer().server.getCommandMap().register("bot", "deerfoliaplus", new org.leavesmc.leaves.bot.BotCommand("bot"));
         MinecraftServer.getServer().server.syncCommands();
         Actions.registerAll();
+        // Register bot inventory GUI listener
+        org.bukkit.Bukkit.getPluginManager().registerEvents(
+                new org.leavesmc.leaves.bot.gui.BotInventoryListener(),
+                org.leavesmc.leaves.plugin.MinecraftInternalPlugin.INSTANCE
+        );
     }
 
     @Comments("Bedrock-style Stronghold Generation - Random unlimited distribution instead of 128 in rings")

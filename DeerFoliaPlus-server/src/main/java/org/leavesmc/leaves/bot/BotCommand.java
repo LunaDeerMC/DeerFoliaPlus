@@ -37,6 +37,7 @@ import java.util.function.Consumer;
 
 import static cn.lunadeer.mc.deerfoliaplus.bot.BotAssert.assertAmount;
 import static cn.lunadeer.mc.deerfoliaplus.bot.BotAssert.assertControl;
+import static cn.lunadeer.mc.deerfoliaplus.bot.BotAssert.assertOp;
 import static net.kyori.adventure.text.Component.text;
 
 public class BotCommand extends Command {
@@ -46,7 +47,7 @@ public class BotCommand extends Command {
     public BotCommand(String name) {
         super(name);
         this.description = "FakePlayer Command";
-        this.usageMessage = "/bot [create | remove | action | list | config]";
+        this.usageMessage = "/bot [create | remove | action | list | config | tp | tphere | inventory | equipment | backpack]";
         this.unknownMessage = text("Usage: " + usageMessage, NamedTextColor.RED);
         this.setPermission("bukkit.command.bot");
         final PluginManager pluginManager = Bukkit.getServer().getPluginManager();
@@ -68,12 +69,17 @@ public class BotCommand extends Command {
             list.add("save");
             list.add("load");
             list.add("list");
+            list.add("tp");
+            list.add("tphere");
+            list.add("inventory");
+            list.add("equipment");
+            list.add("backpack");
         }
 
         if (args.length == 2) {
             switch (args[0]) {
                 case "create" -> list.add("<BotName>");
-                case "remove", "action", "config", "save" ->
+                case "remove", "action", "config", "save", "tp", "tphere", "inventory", "equipment", "backpack" ->
                         list.addAll(botList.bots.stream().map(e -> e.getName().getString()).toList());
                 case "list" -> list.addAll(Bukkit.getWorlds().stream().map(WorldInfo::getName).toList());
                 case "load" -> list.addAll(botList.getSavedBotList().keySet());
@@ -90,7 +96,36 @@ public class BotCommand extends Command {
                 case "create" -> list.add("<BotSkinName>");
                 case "config" -> list.addAll(acceptConfig);
                 case "remove" -> list.addAll(List.of("cancel", "[hour]"));
+                case "tp" -> {
+                    // suggest online player names and coordinates
+                    list.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
+                    if (sender instanceof Player player) {
+                        list.add(String.valueOf(player.getLocation().getBlockX()));
+                    } else {
+                        list.add("<x>");
+                    }
+                }
             }
+        }
+
+        if (args.length == 4 && args[0].equals("tp")) {
+            if (sender instanceof Player player) {
+                list.add(String.valueOf(player.getLocation().getBlockY()));
+            } else {
+                list.add("<y>");
+            }
+        }
+
+        if (args.length == 5 && args[0].equals("tp")) {
+            if (sender instanceof Player player) {
+                list.add(String.valueOf(player.getLocation().getBlockZ()));
+            } else {
+                list.add("<z>");
+            }
+        }
+
+        if (args.length == 6 && args[0].equals("tp")) {
+            list.addAll(Bukkit.getWorlds().stream().map(WorldInfo::getName).toList());
         }
 
         if (args[0].equals("remove") && args.length >= 3) {
@@ -154,6 +189,11 @@ public class BotCommand extends Command {
             case "list" -> this.onList(sender, args);
             case "save" -> this.onSave(sender, args);
             case "load" -> this.onLoad(sender, args);
+            case "tp" -> this.onTp(sender, args);
+            case "tphere" -> this.onTpHere(sender, args);
+            case "inventory" -> this.onOpenInventory(sender, args, org.leavesmc.leaves.bot.gui.BotInventoryViewType.INVENTORY);
+            case "equipment" -> this.onOpenInventory(sender, args, org.leavesmc.leaves.bot.gui.BotInventoryViewType.EQUIPMENT);
+            case "backpack" -> this.onOpenInventory(sender, args, org.leavesmc.leaves.bot.gui.BotInventoryViewType.BACKPACK);
             default -> {
                 sender.sendMessage(unknownMessage);
                 return false;
@@ -243,12 +283,14 @@ public class BotCommand extends Command {
 
         if (args.length > 2) {
             if (args[2].equals("cancel")) {
-                if (bot.removeTaskId == -1) {
+                // DeerFoliaPlus start - use Folia compatible scheduler
+                if (bot.removeTask == null) {
                     sender.sendMessage(text("This fakeplayer is not scheduled to be removed", NamedTextColor.RED));
                     return;
                 }
-                Bukkit.getScheduler().cancelTask(bot.removeTaskId);
-                bot.removeTaskId = -1;
+                bot.removeTask.cancel();
+                bot.removeTask = null;
+                // DeerFoliaPlus end - use Folia compatible scheduler
                 sender.sendMessage(text("Remove cancel"));
                 return;
             }
@@ -283,15 +325,17 @@ public class BotCommand extends Command {
                 return;
             }
 
-            boolean isReschedule = bot.removeTaskId != -1;
+            // DeerFoliaPlus start - use Folia compatible entity scheduler
+            boolean isReschedule = bot.removeTask != null;
 
             if (isReschedule) {
-                Bukkit.getScheduler().cancelTask(bot.removeTaskId);
+                bot.removeTask.cancel();
             }
-            bot.removeTaskId = Bukkit.getScheduler().runTaskLater(MinecraftInternalPlugin.INSTANCE, () -> {
-                bot.removeTaskId = -1;
+            bot.removeTask = bot.getBukkitEntity().getScheduler().runDelayed(MinecraftInternalPlugin.INSTANCE, (task) -> {
+                bot.removeTask = null;
                 botList.removeBot(bot, BotRemoveEvent.RemoveReason.COMMAND, sender, false);
-            }, time).getTaskId();
+            }, null, time);
+            // DeerFoliaPlus end - use Folia compatible entity scheduler
 
             sender.sendMessage("This fakeplayer will be removed in " + h + "h " + m + "m " + s + "s" + (isReschedule ? " (rescheduled)" : ""));
 
@@ -533,6 +577,128 @@ public class BotCommand extends Command {
             }
 
             sender.sendMessage(world.getName() + "(" + botList.bots.size() + "): " + formatPlayerNameList(snowBotList));
+        }
+    }
+
+    private void onTp(CommandSender sender, String @NotNull [] args) {
+        if (!assertOp(sender)) return;
+
+        if (args.length < 3) {
+            sender.sendMessage(text("Use /bot tp <name> <x> <y> <z> [world] or /bot tp <name> <player> to teleport a fakeplayer", NamedTextColor.RED));
+            return;
+        }
+
+        BotList botList = BotList.INSTANCE;
+        ServerBot bot = botList.getBotByName(args[1]);
+        if (bot == null) {
+            sender.sendMessage(text("This fakeplayer is not in server", NamedTextColor.RED));
+            return;
+        }
+
+        if (args.length == 3) {
+            // /bot tp <name> <player>
+            Player target = Bukkit.getPlayerExact(args[2]);
+            if (target == null) {
+                sender.sendMessage(text("Player " + args[2] + " is not online", NamedTextColor.RED));
+                return;
+            }
+            Location targetLoc = target.getLocation();
+            bot.getBukkitEntity().teleportAsync(targetLoc).thenAccept(success -> {
+                if (success) {
+                    sender.sendMessage(text("Teleported " + bot.getName().getString() + " to " + target.getName(), NamedTextColor.GREEN));
+                } else {
+                    sender.sendMessage(text("Failed to teleport " + bot.getName().getString(), NamedTextColor.RED));
+                }
+            });
+            return;
+        }
+
+        if (args.length < 5) {
+            sender.sendMessage(text("Use /bot tp <name> <x> <y> <z> [world] to teleport a fakeplayer to coordinates", NamedTextColor.RED));
+            return;
+        }
+
+        // /bot tp <name> <x> <y> <z> [world]
+        try {
+            double x = Double.parseDouble(args[2]);
+            double y = Double.parseDouble(args[3]);
+            double z = Double.parseDouble(args[4]);
+
+            World world;
+            if (args.length >= 6) {
+                world = Bukkit.getWorld(args[5]);
+                if (world == null) {
+                    sender.sendMessage(text("Unknown world: " + args[5], NamedTextColor.RED));
+                    return;
+                }
+            } else {
+                world = bot.getBukkitEntity().getWorld();
+            }
+
+            Location targetLoc = new Location(world, x, y, z, bot.getBukkitEntity().getLocation().getYaw(), bot.getBukkitEntity().getLocation().getPitch());
+            bot.getBukkitEntity().teleportAsync(targetLoc).thenAccept(success -> {
+                if (success) {
+                    sender.sendMessage(text("Teleported " + bot.getName().getString() + " to " + x + ", " + y + ", " + z + " in " + world.getName(), NamedTextColor.GREEN));
+                } else {
+                    sender.sendMessage(text("Failed to teleport " + bot.getName().getString(), NamedTextColor.RED));
+                }
+            });
+        } catch (NumberFormatException e) {
+            sender.sendMessage(text("Invalid coordinates", NamedTextColor.RED));
+        }
+    }
+
+    private void onTpHere(CommandSender sender, String @NotNull [] args) {
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(text("This command can only be used by a player", NamedTextColor.RED));
+            return;
+        }
+
+        if (args.length < 2) {
+            sender.sendMessage(text("Use /bot tphere <name> to teleport a fakeplayer to you", NamedTextColor.RED));
+            return;
+        }
+
+        BotList botList = BotList.INSTANCE;
+        ServerBot bot = botList.getBotByName(args[1]);
+        if (bot == null) {
+            sender.sendMessage(text("This fakeplayer is not in server", NamedTextColor.RED));
+            return;
+        }
+        if (!assertControl(sender, args[1])) return;
+
+        Location targetLoc = player.getLocation();
+        bot.getBukkitEntity().teleportAsync(targetLoc).thenAccept(success -> {
+            if (success) {
+                sender.sendMessage(text("Teleported " + bot.getName().getString() + " to you", NamedTextColor.GREEN));
+            } else {
+                sender.sendMessage(text("Failed to teleport " + bot.getName().getString(), NamedTextColor.RED));
+            }
+        });
+    }
+
+    private void onOpenInventory(CommandSender sender, String @NotNull [] args, org.leavesmc.leaves.bot.gui.BotInventoryViewType viewType) {
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(text("This command can only be used by a player", NamedTextColor.RED));
+            return;
+        }
+
+        if (args.length < 2) {
+            sender.sendMessage(text("Use /bot " + viewType.name().toLowerCase() + " <name> to open fakeplayer's " + viewType.getDisplayName().toLowerCase(), NamedTextColor.RED));
+            return;
+        }
+
+        ServerBot bot = BotList.INSTANCE.getBotByName(args[1]);
+        if (bot == null) {
+            sender.sendMessage(text("This fakeplayer is not in server", NamedTextColor.RED));
+            return;
+        }
+        if (!assertControl(sender, args[1])) return;
+
+        switch (viewType) {
+            case INVENTORY -> org.leavesmc.leaves.bot.gui.BotInventoryGUI.openInventory(player, bot);
+            case EQUIPMENT -> org.leavesmc.leaves.bot.gui.BotInventoryGUI.openEquipment(player, bot);
+            case BACKPACK -> org.leavesmc.leaves.bot.gui.BotInventoryGUI.openBackpack(player, bot);
         }
     }
 

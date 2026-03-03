@@ -1,5 +1,6 @@
 package org.leavesmc.leaves.plugin;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -24,6 +25,7 @@ public class MinecraftInternalPlugin extends PluginBase {
     private boolean enabled = true;
 
     private final PluginDescriptionFile pdf;
+    private PluginLogger logger; // DeerFoliaPlus - lazy-init logger for Folia scheduler compatibility
 
     public MinecraftInternalPlugin() {
         String pluginName = "Minecraft";
@@ -79,20 +81,27 @@ public class MinecraftInternalPlugin extends PluginBase {
         throw new UnsupportedOperationException("Not supported.");
     }
 
+    // DeerFoliaPlus start - implement getLogger for Folia scheduler compatibility
     @Override
     public PluginLogger getLogger() {
-        throw new UnsupportedOperationException("Not supported.");
+        if (this.logger == null) {
+            this.logger = new PluginLogger(this);
+        }
+        return this.logger;
     }
+    // DeerFoliaPlus end - implement getLogger for Folia scheduler compatibility
 
     @Override
     public PluginLoader getPluginLoader() {
         throw new UnsupportedOperationException("Not supported.");
     }
 
+    // DeerFoliaPlus start - implement getServer for Folia scheduler compatibility
     @Override
     public Server getServer() {
-        throw new UnsupportedOperationException("Not supported.");
+        return Bukkit.getServer();
     }
+    // DeerFoliaPlus end - implement getServer for Folia scheduler compatibility
 
     @Override
     public boolean isEnabled() {

@@ -27,6 +27,13 @@ public class BotAssert {
         return true;
     }
 
+    public static boolean assertOp(CommandSender sender) {
+        if (!(sender instanceof Player player)) return true;
+        if (player.isOp()) return true;
+        sender.sendMessage("You do not have permission to use this command");
+        return false;
+    }
+
     public static boolean assertControl(CommandSender sender, String botName) {
         if (!(sender instanceof Player player)) return true;
         if (player.isOp()) return true;

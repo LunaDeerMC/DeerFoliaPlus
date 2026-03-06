@@ -58,7 +58,10 @@ public class FakePlayerConfiguration extends ConfigurationPart {
     public double regenAmount = 0.0;
 
     @Comments({
-            "The amount of fake players to spawn per real player.",
+            "The default amount of fake players each real player can spawn.",
+            "This can be overridden per-player via permission node: bot.amount.<number>",
+            "e.g. bot.amount.5 allows the player to have 5 bots regardless of this setting.",
+            "If multiple bot.amount.* permissions are present, the highest value is used.",
     })
     public int amountPerPlayer = 2;
 

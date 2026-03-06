@@ -10,9 +10,12 @@ import java.util.UUID;
 
 public class BotAssert {
 
+    private static final String AMOUNT_PERMISSION_PREFIX = "bot.amount.";
+
     public static boolean assertAmount(CommandSender sender) {
         if (!(sender instanceof Player player)) return true;
         if (player.isOp()) return true;
+        int limit = getAmountLimit(player);
         BotList botList = BotList.INSTANCE;
         int count = 0;
         for (var bot : botList.bots) {
@@ -20,11 +23,28 @@ public class BotAssert {
                 count++;
             }
         }
-        if (count >= DeerFoliaPlusConfiguration.fakePlayer.amountPerPlayer) {
-            sender.sendMessage("The amount of bots you spawned has reached the limit: " + DeerFoliaPlusConfiguration.fakePlayer.amountPerPlayer);
+        if (count >= limit) {
+            sender.sendMessage("The amount of bots you spawned has reached the limit: " + limit);
             return false;
         }
         return true;
+    }
+
+    private static int getAmountLimit(Player player) {
+        int limit = -1;
+        for (org.bukkit.permissions.PermissionAttachmentInfo info : player.getEffectivePermissions()) {
+            if (!info.getValue()) continue;
+            String perm = info.getPermission();
+            if (!perm.startsWith(AMOUNT_PERMISSION_PREFIX)) continue;
+            try {
+                int value = Integer.parseInt(perm.substring(AMOUNT_PERMISSION_PREFIX.length()));
+                if (value > limit) {
+                    limit = value;
+                }
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        return limit >= 0 ? limit : DeerFoliaPlusConfiguration.fakePlayer.amountPerPlayer;
     }
 
     public static boolean assertOp(CommandSender sender) {

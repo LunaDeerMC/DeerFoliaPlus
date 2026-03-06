@@ -15,7 +15,7 @@ import java.util.List;
 public class SimulationDistanceConfig extends BotConfig<Integer> {
 
     public SimulationDistanceConfig() {
-        super("simulation_distance", CommandArgument.of(CommandArgumentType.INTEGER).setTabComplete(0, List.of("2", "10", "<INT 2 - 32>")), SimulationDistanceConfig::new);
+        super("simulation_distance", CommandArgument.of(CommandArgumentType.INTEGER).setTabComplete(0, List.of("2", "10", "<INT 2 - 16>")), SimulationDistanceConfig::new);
     }
 
     @Override
@@ -26,8 +26,8 @@ public class SimulationDistanceConfig extends BotConfig<Integer> {
     @Override
     public void setValue(@NotNull CommandArgumentResult result) throws IllegalArgumentException {
         int realValue = result.readInt(this.bot.getBukkitEntity().getSimulationDistance());
-        if (realValue < 2 || realValue > 32) {
-            throw new IllegalArgumentException("simulation_distance must be a number between 2 and 32, got: " + result);
+        if (realValue < 2 || realValue > 16) {
+            throw new IllegalArgumentException("simulation_distance must be a number between 2 and 16, got: " + result);
         }
         this.bot.getBukkitEntity().setSimulationDistance(realValue);
     }

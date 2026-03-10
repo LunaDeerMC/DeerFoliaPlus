@@ -3,7 +3,6 @@ package cn.lunadeer.mc.deerfoliaplus.configurations;
 import cn.lunadeer.mc.deerfolia.utils.configuration.*;
 import com.mojang.logging.LogUtils;
 import io.papermc.paper.configuration.PaperConfigurations;
-import net.minecraft.server.MinecraftServer;
 import org.leavesmc.leaves.bot.agent.Actions;
 import org.slf4j.Logger;
 
@@ -25,9 +24,7 @@ public class DeerFoliaPlusConfiguration extends ConfigurationFile {
     public static FakePlayerConfiguration fakePlayer = new FakePlayerConfiguration();
 
     @PostProcess
-    public void registerFakePlayerCommand() {
-        MinecraftServer.getServer().server.getCommandMap().register("bot", "deerfoliaplus", new org.leavesmc.leaves.bot.BotCommand("bot"));
-        MinecraftServer.getServer().server.syncCommands();
+    public void registerFakePlayer() {
         Actions.registerAll();
         // Register bot inventory GUI listener
         org.bukkit.Bukkit.getPluginManager().registerEvents(

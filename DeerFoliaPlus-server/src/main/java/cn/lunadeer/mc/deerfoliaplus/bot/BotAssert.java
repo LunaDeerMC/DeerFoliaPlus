@@ -59,13 +59,22 @@ public class BotAssert {
         if (player.isOp()) return true;
         ServerBot bot = BotList.INSTANCE.getBotByName(botName);
         if (bot == null) {
-            UUID creator = UUID.fromString(BotList.INSTANCE.getSavedBotList().getCompound(botName).get().getStringOr("creator", ""));
+            // Bot is not loaded, check saved bot data for creator
+            var savedCompound = BotList.INSTANCE.getSavedBotList().getCompound(botName);
+            if (savedCompound.isEmpty()) {
+                sender.sendMessage("Bot not found: " + botName);
+                return false;
+            }
+            String creatorStr = savedCompound.get().getStringOr("creator", "");
+            if (creatorStr.isEmpty()) {
+                return true; // No creator info, allow access
+            }
+            UUID creator = UUID.fromString(creatorStr);
             if (!creator.equals(player.getUniqueId())) {
                 sender.sendMessage("You do not have permission to control this bot: " + botName);
                 return false;
             }
-            sender.sendMessage("Bot not found: " + botName);
-            return false;
+            return true; // Player is the creator of this saved bot
         }
         if (bot.createPlayer != null && !bot.createPlayer.equals(player.getUniqueId())) {
             sender.sendMessage("You do not have permission to control this bot: " + botName);

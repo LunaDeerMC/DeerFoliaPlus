@@ -607,36 +607,89 @@ public class BotCommand {
         CommandSourceStack source = ctx.getSource();
         BotList botList = BotList.INSTANCE;
 
-        if (filterWorld == null) {
-            Map<org.bukkit.World, List<String>> botMap = new LinkedHashMap<>();
-            for (org.bukkit.World world : Bukkit.getWorlds()) {
-                botMap.put(world, new ArrayList<>());
-            }
-            for (ServerBot bot : botList.bots) {
-                Bot bukkitBot = bot.getBukkitEntity();
-                List<String> list = botMap.get(bukkitBot.getWorld());
-                if (list != null) {
-                    list.add(bukkitBot.getName());
-                }
-            }
-
-            source.sendSuccess(() -> Component.literal("Total number: (" + botList.bots.size() + ")"), false);
-            for (var entry : botMap.entrySet()) {
-                org.bukkit.World w = entry.getKey();
-                List<String> names = entry.getValue();
-                source.sendSuccess(() -> Component.literal(w.getName() + "(" + names.size() + "): " + formatNameList(names)), false);
-            }
-        } else {
+        if (filterWorld != null) {
+            // Filtered by specific world — show bots in that world grouped by creator
             org.bukkit.World bukkitWorld = filterWorld.getWorld();
-            List<String> names = new ArrayList<>();
+            Map<String, List<String>> creatorMap = new LinkedHashMap<>();
+            int count = 0;
             for (ServerBot bot : botList.bots) {
                 if (bot.getBukkitEntity().getWorld() == bukkitWorld) {
-                    names.add(bot.getBukkitEntity().getName());
+                    String creatorName = getCreatorName(bot);
+                    creatorMap.computeIfAbsent(creatorName, k -> new ArrayList<>()).add(bot.getBukkitEntity().getName());
+                    count++;
                 }
             }
-            source.sendSuccess(() -> Component.literal(bukkitWorld.getName() + "(" + names.size() + "): " + formatNameList(names)), false);
+            int totalInWorld = count;
+
+            source.sendSuccess(() -> Component.literal("========= " + bukkitWorld.getName() + " (" + totalInWorld + ") =========")
+                    .withStyle(net.minecraft.ChatFormatting.GOLD), false);
+            sendCreatorGroup(source, creatorMap);
+            return totalInWorld;
         }
+
+        // Full list — group by world, then group by creator
+        Map<org.bukkit.World, List<String>> worldMap = new LinkedHashMap<>();
+        for (org.bukkit.World world : Bukkit.getWorlds()) {
+            worldMap.put(world, new ArrayList<>());
+        }
+        Map<String, List<String>> creatorMap = new LinkedHashMap<>();
+
+        for (ServerBot bot : botList.bots) {
+            Bot bukkitBot = bot.getBukkitEntity();
+            String botName = bukkitBot.getName();
+
+            List<String> worldList = worldMap.get(bukkitBot.getWorld());
+            if (worldList != null) {
+                worldList.add(botName);
+            }
+
+            String creatorName = getCreatorName(bot);
+            creatorMap.computeIfAbsent(creatorName, k -> new ArrayList<>()).add(botName);
+        }
+
+        // Header
+        source.sendSuccess(() -> Component.literal("========= Bot List (" + botList.bots.size() + ") =========")
+                .withStyle(net.minecraft.ChatFormatting.GOLD), false);
+
+        // By World
+        source.sendSuccess(() -> Component.literal("[By World]").withStyle(net.minecraft.ChatFormatting.YELLOW), false);
+        for (var entry : worldMap.entrySet()) {
+            org.bukkit.World w = entry.getKey();
+            List<String> names = entry.getValue();
+            if (names.isEmpty()) continue;
+            net.minecraft.network.chat.MutableComponent line = Component.empty()
+                    .append(Component.literal("  " + w.getName()).withStyle(net.minecraft.ChatFormatting.GREEN))
+                    .append(Component.literal(" (" + names.size() + "): ").withStyle(net.minecraft.ChatFormatting.GRAY))
+                    .append(Component.literal(formatNameList(names)).withStyle(net.minecraft.ChatFormatting.WHITE));
+            source.sendSuccess(() -> line, false);
+        }
+
+        // By Creator
+        sendCreatorGroup(source, creatorMap);
+
         return botList.bots.size();
+    }
+
+    private static void sendCreatorGroup(CommandSourceStack source, Map<String, List<String>> creatorMap) {
+        source.sendSuccess(() -> Component.literal("[By Creator]").withStyle(net.minecraft.ChatFormatting.YELLOW), false);
+        for (var entry : creatorMap.entrySet()) {
+            String creator = entry.getKey();
+            List<String> names = entry.getValue();
+            net.minecraft.network.chat.MutableComponent line = Component.empty()
+                    .append(Component.literal("  " + creator).withStyle(net.minecraft.ChatFormatting.AQUA))
+                    .append(Component.literal(" (" + names.size() + "): ").withStyle(net.minecraft.ChatFormatting.GRAY))
+                    .append(Component.literal(formatNameList(names)).withStyle(net.minecraft.ChatFormatting.WHITE));
+            source.sendSuccess(() -> line, false);
+        }
+    }
+
+    private static String getCreatorName(ServerBot bot) {
+        if (bot.createPlayer != null) {
+            org.bukkit.OfflinePlayer player = Bukkit.getOfflinePlayer(bot.createPlayer);
+            String name = player.getName();
+            if (name != null) return name;
+        }
+        return "Console";
     }
 
     // ---- /bot tp ----

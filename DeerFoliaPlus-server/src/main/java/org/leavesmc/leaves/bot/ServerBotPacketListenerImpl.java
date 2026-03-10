@@ -1,5 +1,6 @@
 package org.leavesmc.leaves.bot;
 
+import io.netty.channel.ChannelFutureListener;
 import net.kyori.adventure.text.Component;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
@@ -9,6 +10,7 @@ import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ServerBotPacketListenerImpl extends ServerGamePacketListenerImpl {
 
@@ -18,6 +20,10 @@ public class ServerBotPacketListenerImpl extends ServerGamePacketListenerImpl {
 
     @Override
     public void send(@NotNull Packet<?> packet) {
+    }
+
+    @Override
+    public void send(@NotNull Packet<?> packet, @Nullable ChannelFutureListener sendListener) {
     }
 
     @Override
@@ -62,6 +68,10 @@ public class ServerBotPacketListenerImpl extends ServerGamePacketListenerImpl {
 
         @Override
         public void send(@NotNull Packet<?> packet) {
+        }
+
+        @Override
+        public void send(@NotNull Packet<?> packet, @Nullable ChannelFutureListener sendListener, boolean flush) {
         }
     }
 }

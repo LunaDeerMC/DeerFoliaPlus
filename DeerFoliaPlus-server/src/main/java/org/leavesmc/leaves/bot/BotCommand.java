@@ -44,20 +44,27 @@ public class BotCommand extends Command {
     private static final Logger LOGGER = LogUtils.getClassLogger();
     private final Component unknownMessage;
 
+    private static final String BOT_PERMISSION = "bukkit.command.bot";
+
     public BotCommand(String name) {
         super(name);
         this.description = "FakePlayer Command";
         this.usageMessage = "/bot [create | remove | action | list | config | tp | tphere | inventory | equipment | backpack]";
         this.unknownMessage = text("Usage: " + usageMessage, NamedTextColor.RED);
-        this.setPermission("bukkit.command.bot");
+        // Don't use setPermission here - it controls Brigadier tree visibility
+        // which causes tab completion to not work for non-OP players even if they
+        // have the permission granted. Instead, check permissions in execute/tabComplete.
         final PluginManager pluginManager = Bukkit.getServer().getPluginManager();
-        if (pluginManager.getPermission("bukkit.command.bot") == null) {
-            pluginManager.addPermission(new Permission("bukkit.command.bot", PermissionDefault.OP));
+        if (pluginManager.getPermission(BOT_PERMISSION) == null) {
+            pluginManager.addPermission(new Permission(BOT_PERMISSION, PermissionDefault.OP));
         }
     }
 
     @Override
     public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, String @NotNull [] args, Location location) throws IllegalArgumentException {
+        if (!sender.hasPermission(BOT_PERMISSION) || !DeerFoliaPlusConfiguration.fakePlayer.enable) {
+            return Collections.emptyList();
+        }
         List<String> list = new ArrayList<>();
         BotList botList = BotList.INSTANCE;
 
@@ -169,14 +176,14 @@ public class BotCommand extends Command {
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, String[] args) {
-        if (!testPermission(sender) || !DeerFoliaPlusConfiguration.fakePlayer.enable) return true;
+        if (!sender.hasPermission(BOT_PERMISSION) || !DeerFoliaPlusConfiguration.fakePlayer.enable) return true;
 
         if (args.length == 0) {
             sender.sendMessage(unknownMessage);
             return false;
         }
 
-        if (List.of("action", "config", "save", "load").contains(args[0]) && !sender.hasPermission("bukkit.command.bot." + args[0])) {
+        if (List.of("action", "config", "save", "load").contains(args[0]) && !sender.hasPermission(BOT_PERMISSION + "." + args[0])) {
             sender.sendMessage(unknownMessage);
             return false;
         }

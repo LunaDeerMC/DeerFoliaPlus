@@ -51,9 +51,7 @@ public class BotCommand extends Command {
         this.description = "FakePlayer Command";
         this.usageMessage = "/bot [create | remove | action | list | config | tp | tphere | inventory | equipment | backpack]";
         this.unknownMessage = text("Usage: " + usageMessage, NamedTextColor.RED);
-        // Don't use setPermission here - it controls Brigadier tree visibility
-        // which causes tab completion to not work for non-OP players even if they
-        // have the permission granted. Instead, check permissions in execute/tabComplete.
+        this.setPermission(BOT_PERMISSION);
         final PluginManager pluginManager = Bukkit.getServer().getPluginManager();
         if (pluginManager.getPermission(BOT_PERMISSION) == null) {
             pluginManager.addPermission(new Permission(BOT_PERMISSION, PermissionDefault.OP));

@@ -104,6 +104,20 @@ public class BotList {
             return;
         }
 
+        // DeerFoliaPlus start - restore creator UUID from saved bot list
+        Optional<CompoundTag> savedNbt = this.getSavedBotList().getCompound(realName);
+        if (savedNbt.isPresent()) {
+            String creatorStr = savedNbt.get().getStringOr("creator", "");
+            if (!creatorStr.isEmpty()) {
+                try {
+                    bot.createPlayer = java.util.UUID.fromString(creatorStr);
+                } catch (IllegalArgumentException e) {
+                    BotList.LOGGER.warn("Invalid creator UUID for bot {}: {}", realName, creatorStr);
+                }
+            }
+        }
+        // DeerFoliaPlus end - restore creator UUID from saved bot list
+
         ResourceKey<Level> resourcekey = null;
         if (optional.get().getLong("WorldUUIDMost").isPresent() && optional.get().getLong("WorldUUIDLeast").isPresent()) {
             org.bukkit.World bWorld = Bukkit.getServer().getWorld(

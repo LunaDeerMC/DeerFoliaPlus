@@ -97,14 +97,9 @@ public class BotList {
 
         ServerBot bot = new ServerBot(this.server, this.server.getLevel(Level.OVERWORLD), new GameProfile(uuid, realName));
         bot.connection = new ServerBotPacketListenerImpl(this.server, bot);
-        Optional<ValueInput> optional = playerIO.load(bot, ProblemReporter.DISCARDING);
-
-        if (optional.isEmpty()) {
-            consumer.accept(null);
-            return;
-        }
 
         // DeerFoliaPlus start - restore creator UUID from saved bot list
+        // Must read before playerIO.load() because load() removes the entry from savedBotList
         Optional<CompoundTag> savedNbt = this.getSavedBotList().getCompound(realName);
         if (savedNbt.isPresent()) {
             String creatorStr = savedNbt.get().getStringOr("creator", "");
@@ -117,6 +112,13 @@ public class BotList {
             }
         }
         // DeerFoliaPlus end - restore creator UUID from saved bot list
+
+        Optional<ValueInput> optional = playerIO.load(bot, ProblemReporter.DISCARDING);
+
+        if (optional.isEmpty()) {
+            consumer.accept(null);
+            return;
+        }
 
         ResourceKey<Level> resourcekey = null;
         if (optional.get().getLong("WorldUUIDMost").isPresent() && optional.get().getLong("WorldUUIDLeast").isPresent()) {

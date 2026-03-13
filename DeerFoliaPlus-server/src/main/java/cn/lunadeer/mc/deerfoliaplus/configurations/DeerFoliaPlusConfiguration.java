@@ -45,4 +45,9 @@ public class DeerFoliaPlusConfiguration extends ConfigurationFile {
         public int separation = 12;
     }
 
+    @PostProcess
+    public void initProtocols() {
+        org.leavesmc.leaves.protocol.core.LeavesProtocolManager.init();
+    }
+
 }

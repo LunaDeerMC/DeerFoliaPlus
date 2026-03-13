@@ -1,0 +1,70 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: zhangyuheng <zhangyuheng@lunadeer.cn>
+Date: Fri, 13 Mar 2026 10:50:21 +0800
+Subject: [PATCH] Leaves protocol core
+
+
+diff --git a/io/papermc/paper/threadedregions/RegionizedServer.java b/io/papermc/paper/threadedregions/RegionizedServer.java
+index 9c6aae7c27342e6d23613d58d12008b4a55c46e9..9f64dc8b0334bcea34eb8a970a1c9222b1655574 100644
+--- a/io/papermc/paper/threadedregions/RegionizedServer.java
++++ b/io/papermc/paper/threadedregions/RegionizedServer.java
+@@ -363,6 +363,10 @@ public final class RegionizedServer {
+ 
+         // Leaves FakePlayer
+         MinecraftServer.getServer().botList.networkTick();
++
++        // DeerFoliaPlus start - Leaves protocol tick
++        org.leavesmc.leaves.protocol.core.LeavesProtocolManager.handleTick((int) tickCount);
++        // DeerFoliaPlus end - Leaves protocol tick
+     }
+ 
+     private void tickPlayerSample() {
+diff --git a/net/minecraft/server/network/ServerCommonPacketListenerImpl.java b/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
+index 0bf2173c5445de021090c2d0264afc440b005bdc..a69af45da036f9365fac2386fd7471fc64966aae 100644
+--- a/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
++++ b/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
+@@ -194,6 +194,15 @@ public abstract class ServerCommonPacketListenerImpl implements ServerCommonPack
+                 this.playerBrand = new net.minecraft.network.FriendlyByteBuf(io.netty.buffer.Unpooled.wrappedBuffer(data)).readUtf(256);
+             }
+ 
++            // DeerFoliaPlus start - Leaves protocol support
++            if (this instanceof ServerGamePacketListenerImpl gamePacketListener) {
++                net.minecraft.resources.Identifier resId = net.minecraft.resources.Identifier.tryParse(identifier.toString());
++                if (resId != null && org.leavesmc.leaves.protocol.core.LeavesProtocolManager.handleRawPayload(gamePacketListener.player, resId, data)) {
++                    return;
++                }
++            }
++            // DeerFoliaPlus end - Leaves protocol support
++
+             this.cserver.getMessenger().dispatchIncomingMessage(paperConnection(), identifier.toString(), data);
+         } catch (final Exception e) {
+             ServerGamePacketListenerImpl.LOGGER.error("Couldn't handle custom payload on channel {}", identifier, e);
+diff --git a/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index bdd3062d0e2cca647c749259c8d497d05f7fed86..37752eeaa9e0c3355ca49181e7c742248d706853 100644
+--- a/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -2294,6 +2294,9 @@ public class ServerGamePacketListenerImpl
+ 
+     private void removePlayerFromWorld(net.kyori.adventure.text.@Nullable Component quitMessage) {
+         // Paper end - Fix kick event leave message not being sent
++        // DeerFoliaPlus start - Leaves protocol player leave
++        org.leavesmc.leaves.protocol.core.LeavesProtocolManager.handlePlayerLeave(this.player);
++        // DeerFoliaPlus end - Leaves protocol player leave
+         this.chatMessageChain.close();
+         // CraftBukkit start - Replace vanilla quit message handling with our own.
+         /*
+diff --git a/net/minecraft/server/players/PlayerList.java b/net/minecraft/server/players/PlayerList.java
+index f123f4702bb9fee24cdd32fa72da50e55dd618f5..b596c2d3bbdaf942212bbcaaa002af70f74292b4 100644
+--- a/net/minecraft/server/players/PlayerList.java
++++ b/net/minecraft/server/players/PlayerList.java
+@@ -327,6 +327,10 @@ public abstract class PlayerList {
+         }
+         // Leaves end - bot support
+ 
++        // DeerFoliaPlus start - Leaves protocol player join
++        org.leavesmc.leaves.protocol.core.LeavesProtocolManager.handlePlayerJoin(player);
++        // DeerFoliaPlus end - Leaves protocol player join
++
+         final net.kyori.adventure.text.Component jm = playerJoinEvent.joinMessage();
+ 
+         if (jm != null && !jm.equals(net.kyori.adventure.text.Component.empty())) { // Paper - Adventure

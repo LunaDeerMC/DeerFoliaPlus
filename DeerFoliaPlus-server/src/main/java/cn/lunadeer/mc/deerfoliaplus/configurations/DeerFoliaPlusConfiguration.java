@@ -45,6 +45,9 @@ public class DeerFoliaPlusConfiguration extends ConfigurationFile {
         public int separation = 12;
     }
 
+    @Comments("Syncmatica Protocol - Litematica schematic sharing between server and clients")
+    public static SyncmaticaConfiguration syncmatica = new SyncmaticaConfiguration();
+
     @PostProcess
     public void initProtocols() {
         org.leavesmc.leaves.protocol.core.LeavesProtocolManager.init();

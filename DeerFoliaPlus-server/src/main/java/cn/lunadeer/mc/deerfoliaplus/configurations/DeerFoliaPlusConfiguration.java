@@ -48,6 +48,9 @@ public class DeerFoliaPlusConfiguration extends ConfigurationFile {
     @Comments("Syncmatica Protocol - Litematica schematic sharing between server and clients")
     public static SyncmaticaConfiguration syncmatica = new SyncmaticaConfiguration();
 
+    @Comments("Servux Protocol - Structure bounding box overlay and entity data for MiniHUD/Litematica")
+    public static ServuxConfiguration servux = new ServuxConfiguration();
+
     @PostProcess
     public void initProtocols() {
         org.leavesmc.leaves.protocol.core.LeavesProtocolManager.init();

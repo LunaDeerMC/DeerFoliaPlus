@@ -21,11 +21,13 @@ import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.leavesmc.leaves.protocol.core.LeavesCustomPayload;
 import org.leavesmc.leaves.protocol.core.LeavesProtocol;
 import org.leavesmc.leaves.protocol.core.ProtocolHandler;
 import org.leavesmc.leaves.protocol.core.ProtocolUtils;
+import org.leavesmc.leaves.plugin.MinecraftInternalPlugin;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,10 +46,12 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
     public static final int PROTOCOL_VERSION = 2;
     private static final int updateInterval = 40;
     private static final int timeout = 30 * 20;
+    private static final int clientRefreshHysteresisChunks = 8;
     private static final Map<Integer, ServerPlayer> players = new ConcurrentHashMap<>();
     private static final Map<UUID, net.minecraft.resources.ResourceKey<Level>> playerDimensions = new ConcurrentHashMap<>();
-    private static final Map<UUID, Map<ChunkPos, Timeout>> timeouts = new HashMap<>();
-    private static int retainDistance;
+    private static final Map<UUID, Map<ChunkPos, Timeout>> timeouts = new ConcurrentHashMap<>();
+    private static final Set<UUID> pendingFullResync = ConcurrentHashMap.newKeySet();
+    private static final Map<UUID, Integer> lastFullSyncTicks = new ConcurrentHashMap<>();
 
     @ProtocolHandler.PlayerJoin
     public static void onPlayerJoin(ServerPlayer player) {
@@ -57,7 +61,7 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
     @ProtocolHandler.PayloadReceiver(payload = StructuresPayload.class)
     public static void onPacketReceive(ServerPlayer player, StructuresPayload payload) {
         switch (payload.packetType()) {
-            case PACKET_C2S_STRUCTURES_REGISTER -> onPlayerSubscribed(player);
+            case PACKET_C2S_STRUCTURES_REGISTER -> resubscribePlayer(player);
             case PACKET_C2S_REQUEST_SPAWN_METADATA -> {
                 // HUD data protocol not implemented, send empty spawn metadata
                 CompoundTag spawnTag = new CompoundTag();
@@ -72,11 +76,17 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
         players.remove(player.getId());
         playerDimensions.remove(player.getUUID());
         timeouts.remove(player.getUUID());
+        pendingFullResync.remove(player.getUUID());
+        lastFullSyncTicks.remove(player.getUUID());
+    }
+
+    private static void resubscribePlayer(@NotNull ServerPlayer player) {
+        onPlayerLoggedOut(player);
+        onPlayerSubscribed(player);
     }
 
     @ProtocolHandler.Ticker
     public static void tick() {
-        retainDistance = getServer().getPlayerList().getViewDistance() + 2;
         for (ServerPlayer player : players.values()) {
             checkForDimensionChange(player);
             refreshTrackedChunks(player, (int) player.level().getGameTime());
@@ -85,7 +95,11 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
 
     public static void onStartedWatchingChunk(ServerPlayer player, LevelChunk chunk) {
         if (players.containsKey(player.getId())) {
-            addChunkTimeoutIfHasReferences(player.getUUID(), chunk, (int) player.level().getGameTime());
+            boolean hasReferences = chunkHasStructureReferences(chunk.getPos().x, chunk.getPos().z, chunk.getLevel());
+            scheduleMovementFullResync(player);
+            if (hasReferences) {
+                addChunkTimeoutIfHasReferences(player.getUUID(), chunk, (int) chunk.getLevel().getGameTime());
+            }
         }
     }
 
@@ -93,9 +107,41 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
         final ChunkPos pos = chunk.getPos();
 
         if (chunkHasStructureReferences(pos.x, pos.z, chunk.getLevel())) {
-            final Map<ChunkPos, Timeout> map = timeouts.computeIfAbsent(uuid, (u) -> new HashMap<>());
-            map.computeIfAbsent(pos, (p) -> new Timeout(tickCounter - timeout));
+            final Map<ChunkPos, Timeout> map = timeouts.computeIfAbsent(uuid, (u) -> new ConcurrentHashMap<>());
+            map.compute(pos, (p, existing) -> {
+                if (existing == null) {
+                    return new Timeout(tickCounter - timeout);
+                }
+
+                existing.markForImmediateSync(tickCounter, timeout);
+                return existing;
+            });
         }
+    }
+
+    private static void scheduleMovementFullResync(@NotNull ServerPlayer player) {
+        UUID uuid = player.getUUID();
+
+        if (!pendingFullResync.add(uuid)) {
+            return;
+        }
+
+        org.bukkit.Location playerLocation = new org.bukkit.Location(player.level().getWorld(), player.getX(), player.getY(), player.getZ());
+        Bukkit.getRegionScheduler().run(MinecraftInternalPlugin.INSTANCE, playerLocation, (task) -> {
+            ServerPlayer currentPlayer = players.get(player.getId());
+            if (currentPlayer == null || !currentPlayer.isAlive()) {
+                pendingFullResync.remove(uuid);
+                return;
+            }
+
+            if (!pendingFullResync.remove(uuid)) {
+                return;
+            }
+
+            int tickCounter = (int) currentPlayer.level().getGameTime();
+            initialSyncStructures(currentPlayer, getTrackingChunkRadius(currentPlayer), tickCounter, "movement_full_resync");
+            lastFullSyncTicks.put(uuid, tickCounter);
+        });
     }
 
     private static boolean chunkHasStructureReferences(int chunkX, int chunkZ, @NotNull Level world) {
@@ -103,7 +149,7 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
             return false;
         }
 
-        ChunkAccess chunk = world.getChunk(chunkX, chunkZ, ChunkStatus.STRUCTURE_STARTS, false);
+        ChunkAccess chunk = world.getChunk(chunkX, chunkZ, ChunkStatus.STRUCTURE_REFERENCES, false);
 
         if (chunk != null) {
             for (Map.Entry<Structure, LongSet> entry : chunk.getAllReferences().entrySet()) {
@@ -117,17 +163,14 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
     }
 
     public static void onPlayerSubscribed(@NotNull ServerPlayer player) {
-        if (!players.containsKey(player.getId())) {
-            players.put(player.getId(), player);
-        } else {
-            ServuxProtocol.LOGGER.warn("{} re-register servux:structures", player.getScoreboardName());
-        }
+        players.put(player.getId(), player);
 
         sendMetaData(player);
         playerDimensions.put(player.getUUID(), player.level().dimension());
-        initialSyncStructures(player,
-            player.moonrise$getViewDistanceHolder().getViewDistances().sendViewDistance() + 2,
-            (int) player.level().getGameTime());
+        int tickCounter = (int) player.level().getGameTime();
+        initialSyncStructures(player, getTrackingChunkRadius(player), tickCounter, "register");
+        lastFullSyncTicks.put(player.getUUID(), tickCounter);
+        pendingFullResync.remove(player.getUUID());
     }
 
     private static void checkForDimensionChange(ServerPlayer player) {
@@ -137,7 +180,15 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
 
         if (previous != null && previous != dimension) {
             timeouts.remove(uuid);
+            int tickCounter = (int) player.level().getGameTime();
+            initialSyncStructures(player, getTrackingChunkRadius(player), tickCounter, "dimension_change");
+            lastFullSyncTicks.put(uuid, tickCounter);
+            pendingFullResync.remove(uuid);
         }
+    }
+
+    private static int getTrackingChunkRadius(@NotNull ServerPlayer player) {
+        return player.moonrise$getViewDistanceHolder().getViewDistances().sendViewDistance() + 2 + clientRefreshHysteresisChunks;
     }
 
     private static void sendMetaData(ServerPlayer player) {
@@ -151,14 +202,14 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
         sendPacket(player, new StructuresPayload(StructuresPayloadType.PACKET_S2C_METADATA, tag));
     }
 
-    public static void initialSyncStructures(ServerPlayer player, int chunkRadius, int tickCounter) {
+    public static void initialSyncStructures(ServerPlayer player, int chunkRadius, int tickCounter, String reason) {
         UUID uuid = player.getUUID();
         ChunkPos center = player.getLastSectionPos().chunk();
         Map<Structure, LongSet> references = getStructureReferences(player.level(), center, chunkRadius);
 
         timeouts.remove(uuid);
 
-        sendStructures(player, references, tickCounter);
+        sendStructures(player, references, tickCounter, reason, center, chunkRadius);
     }
 
     public static Map<Structure, LongSet> getStructureReferences(ServerLevel world, ChunkPos center, int chunkRadius) {
@@ -178,7 +229,7 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
             return;
         }
 
-        ChunkAccess chunk = world.getChunk(chunkX, chunkZ, ChunkStatus.STRUCTURE_STARTS, false);
+        ChunkAccess chunk = world.getChunk(chunkX, chunkZ, ChunkStatus.STRUCTURE_REFERENCES, false);
 
         if (chunk != null) {
             for (Map.Entry<Structure, LongSet> entry : chunk.getAllReferences().entrySet()) {
@@ -196,21 +247,34 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
         }
     }
 
-    public static void sendStructures(ServerPlayer player, Map<Structure, LongSet> references, int tickCounter) {
+    public static void sendStructures(ServerPlayer player, Map<Structure, LongSet> references, int tickCounter, String reason, ChunkPos center, int chunkRadius) {
         ServerLevel world = player.level();
         Map<ChunkPos, StructureStart> starts = getStructureStarts(world, references);
+        int referencedChunkCount = countReferencedChunks(references);
 
         if (!starts.isEmpty()) {
             addOrRefreshTimeouts(player.getUUID(), references, tickCounter);
 
             ListTag structureList = getStructureList(starts, world);
+            boolean packetSent = false;
 
             if (players.containsKey(player.getId())) {
                 CompoundTag test = new CompoundTag();
                 test.put("Structures", structureList.copy());
                 sendPacket(player, new StructuresPayload(StructuresPayloadType.PACKET_S2C_STRUCTURE_DATA_START, test));
+                packetSent = true;
             }
         }
+    }
+
+    private static int countReferencedChunks(Map<Structure, LongSet> references) {
+        int count = 0;
+
+        for (LongSet chunks : references.values()) {
+            count += chunks.size();
+        }
+
+        return count;
     }
 
     public static ListTag getStructureList(Map<ChunkPos, StructureStart> structures, ServerLevel world) {
@@ -257,14 +321,21 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
 
     public static void refreshTrackedChunks(ServerPlayer player, int tickCounter) {
         UUID uuid = player.getUUID();
-        Map<ChunkPos, Timeout> map = timeouts.get(uuid);
+        Integer lastSyncTick = lastFullSyncTicks.get(uuid);
+        boolean timedResync = lastSyncTick == null || tickCounter - lastSyncTick >= timeout;
 
-        if (map != null) {
-            sendAndRefreshExpiredStructures(player, map, tickCounter);
+        if (timedResync) {
+            initialSyncStructures(
+                player,
+                getTrackingChunkRadius(player),
+                tickCounter,
+                "timeout_full_resync"
+            );
+            lastFullSyncTicks.put(uuid, tickCounter);
         }
     }
 
-    public static void sendAndRefreshExpiredStructures(ServerPlayer player, Map<ChunkPos, Timeout> map, int tickCounter) {
+    public static void sendAndRefreshExpiredStructures(ServerPlayer player, Map<ChunkPos, Timeout> map, int tickCounter, int chunkRadius) {
         Set<ChunkPos> positionsToUpdate = new HashSet<>();
 
         for (Map.Entry<ChunkPos, Timeout> entry : map.entrySet()) {
@@ -276,16 +347,12 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
         }
 
         if (!positionsToUpdate.isEmpty()) {
-            ServerLevel world = player.level();
             ChunkPos center = player.getLastSectionPos().chunk();
-            Map<Structure, LongSet> references = new HashMap<>();
 
             for (ChunkPos pos : positionsToUpdate) {
-                if (isOutOfRange(pos, center)) {
+                if (isOutOfRange(pos, center, chunkRadius)) {
                     map.remove(pos);
                 } else {
-                    getReferencesFromChunk(pos.x, pos.z, world, references);
-
                     Timeout t = map.get(pos);
 
                     if (t != null) {
@@ -294,18 +361,19 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
                 }
             }
 
+            Map<Structure, LongSet> references = getStructureReferences(player.level(), center, chunkRadius);
             if (!references.isEmpty()) {
-                sendStructures(player, references, tickCounter);
+                sendStructures(player, references, tickCounter, "legacy_expired_refresh", center, chunkRadius);
             }
         }
     }
 
-    protected static boolean isOutOfRange(ChunkPos pos, ChunkPos center) {
-        return Math.abs(pos.x - center.x) > retainDistance || Math.abs(pos.z - center.z) > retainDistance;
+    protected static boolean isOutOfRange(ChunkPos pos, ChunkPos center, int chunkRadius) {
+        return Math.abs(pos.x - center.x) > chunkRadius || Math.abs(pos.z - center.z) > chunkRadius;
     }
 
     public static void addOrRefreshTimeouts(final UUID uuid, final Map<Structure, LongSet> references, final int tickCounter) {
-        Map<ChunkPos, Timeout> map = timeouts.computeIfAbsent(uuid, (u) -> new HashMap<>());
+        Map<ChunkPos, Timeout> map = timeouts.computeIfAbsent(uuid, (u) -> new ConcurrentHashMap<>());
 
         for (LongSet chunks : references.values()) {
             for (Long chunkPosLong : chunks) {
@@ -403,7 +471,7 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
     }
 
     public static class Timeout {
-        private int lastSync;
+        private volatile int lastSync;
 
         public Timeout(int currentTick) {
             this.lastSync = currentTick;
@@ -415,6 +483,10 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
 
         public void setLastSync(int tickCounter) {
             this.lastSync = tickCounter;
+        }
+
+        public void markForImmediateSync(int tickCounter, int timeout) {
+            this.lastSync = tickCounter - timeout;
         }
     }
 }

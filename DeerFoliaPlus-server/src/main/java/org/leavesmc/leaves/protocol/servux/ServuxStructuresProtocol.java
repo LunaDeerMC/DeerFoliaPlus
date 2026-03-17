@@ -45,6 +45,7 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
     private static final int updateInterval = 40;
     private static final int timeout = 30 * 20;
     private static final Map<Integer, ServerPlayer> players = new ConcurrentHashMap<>();
+    private static final Map<UUID, net.minecraft.resources.ResourceKey<Level>> playerDimensions = new ConcurrentHashMap<>();
     private static final Map<UUID, Map<ChunkPos, Timeout>> timeouts = new HashMap<>();
     private static int retainDistance;
 
@@ -69,23 +70,22 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
     @ProtocolHandler.PlayerLeave
     public static void onPlayerLoggedOut(@NotNull ServerPlayer player) {
         players.remove(player.getId());
+        playerDimensions.remove(player.getUUID());
         timeouts.remove(player.getUUID());
     }
 
     @ProtocolHandler.Ticker
     public static void tick() {
-        MinecraftServer server = getServer();
-        int tickCounter = server.getTickCount();
-        retainDistance = server.getPlayerList().getViewDistance() + 2;
+        retainDistance = getServer().getPlayerList().getViewDistance() + 2;
         for (ServerPlayer player : players.values()) {
-            refreshTrackedChunks(player, tickCounter);
+            checkForDimensionChange(player);
+            refreshTrackedChunks(player, (int) player.level().getGameTime());
         }
     }
 
     public static void onStartedWatchingChunk(ServerPlayer player, LevelChunk chunk) {
-        MinecraftServer server = getServer();
         if (players.containsKey(player.getId())) {
-            addChunkTimeoutIfHasReferences(player.getUUID(), chunk, server.getTickCount());
+            addChunkTimeoutIfHasReferences(player.getUUID(), chunk, (int) player.level().getGameTime());
         }
     }
 
@@ -123,11 +123,21 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
             ServuxProtocol.LOGGER.warn("{} re-register servux:structures", player.getScoreboardName());
         }
 
-        MinecraftServer server = getServer();
         sendMetaData(player);
+        playerDimensions.put(player.getUUID(), player.level().dimension());
         initialSyncStructures(player,
             player.moonrise$getViewDistanceHolder().getViewDistances().sendViewDistance() + 2,
-            server.getTickCount());
+            (int) player.level().getGameTime());
+    }
+
+    private static void checkForDimensionChange(ServerPlayer player) {
+        UUID uuid = player.getUUID();
+        net.minecraft.resources.ResourceKey<Level> dimension = player.level().dimension();
+        net.minecraft.resources.ResourceKey<Level> previous = playerDimensions.put(uuid, dimension);
+
+        if (previous != null && previous != dimension) {
+            timeouts.remove(uuid);
+        }
     }
 
     private static void sendMetaData(ServerPlayer player) {

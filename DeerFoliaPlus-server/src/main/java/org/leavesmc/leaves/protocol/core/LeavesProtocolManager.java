@@ -237,6 +237,24 @@ public class LeavesProtocolManager {
         }
     }
 
+    public static net.minecraft.network.protocol.common.custom.DiscardedPayload toDiscardedPayload(LeavesCustomPayload payload) {
+        var location = IDS.get(payload.getClass());
+        var codec = CODECS.get(payload.getClass());
+        if (location == null || codec == null) {
+            throw new IllegalArgumentException("Payload " + payload.getClass() + " is not configured correctly " + location + " " + codec);
+        }
+        io.netty.buffer.ByteBuf buf = io.netty.buffer.Unpooled.buffer();
+        try {
+            codec.encode(ProtocolUtils.decorate(buf), payload);
+            return new net.minecraft.network.protocol.common.custom.DiscardedPayload(location, io.netty.buffer.ByteBufUtil.getBytes(buf));
+        } catch (Exception e) {
+            LOGGER.error("Failed to encode payload " + location, e);
+            throw e;
+        } finally {
+            buf.release();
+        }
+    }
+
     public static void handlePayload(IdentifierSelector selector, LeavesCustomPayload payload) {
         PayloadReceiverInvokerHolder holder;
         if ((holder = PAYLOAD_RECEIVERS.get(payload.getClass())) != null) {
@@ -356,7 +374,10 @@ public class LeavesProtocolManager {
         Set<String> set = new HashSet<>();
         PAYLOAD_RECEIVERS.forEach((clazz, holder) -> {
             if (holder.owner().isActive()) {
-                set.add(IDS.get(clazz).toString());
+                Identifier id = IDS.get(clazz);
+                if (id != null) {
+                    set.add(id.toString());
+                }
             }
         });
         STRICT_BYTEBUF_RECEIVERS.forEach((key, holder) -> {

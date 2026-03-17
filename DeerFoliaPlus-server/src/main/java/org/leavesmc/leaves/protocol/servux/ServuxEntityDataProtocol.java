@@ -82,9 +82,10 @@ public class ServuxEntityDataProtocol implements LeavesProtocol {
     }
 
     public static void onBlockEntityRequest(ServerPlayer player, BlockPos pos) {
-        Bukkit.getGlobalRegionScheduler().run(MinecraftInternalPlugin.INSTANCE, (task) -> {
-            BlockEntity be = player.level().getBlockEntity(pos);
-            CompoundTag nbt = be != null ? be.saveWithFullMetadata(player.registryAccess()) : new CompoundTag();
+        net.minecraft.server.level.ServerLevel level = player.level();
+        Bukkit.getRegionScheduler().run(MinecraftInternalPlugin.INSTANCE, new org.bukkit.Location(level.getWorld(), pos.getX(), pos.getY(), pos.getZ()), (task) -> {
+            BlockEntity be = level.getBlockEntity(pos);
+            CompoundTag nbt = be != null ? be.saveWithFullMetadata(level.registryAccess()) : new CompoundTag();
 
             EntityDataPayload payload = new EntityDataPayload(EntityDataPayloadType.PACKET_S2C_BLOCK_NBT_RESPONSE_SIMPLE);
             payload.pos = pos.immutable();
@@ -94,8 +95,10 @@ public class ServuxEntityDataProtocol implements LeavesProtocol {
     }
 
     public static void onEntityRequest(ServerPlayer player, int entityId) {
-        Bukkit.getGlobalRegionScheduler().run(MinecraftInternalPlugin.INSTANCE, (task) -> {
-            Entity entity = player.level().getEntity(entityId);
+        net.minecraft.server.level.ServerLevel level = player.level();
+        Bukkit.getRegionScheduler().run(MinecraftInternalPlugin.INSTANCE, new org.bukkit.Location(level.getWorld(), player.getX(), player.getY(), player.getZ()), (task) -> {
+            Entity entity = level.getEntity(entityId);
+            if (entity == null) return;
             CompoundTag nbt = TagUtil.saveEntityWithoutId(entity);
 
             EntityDataPayload payload = new EntityDataPayload(EntityDataPayloadType.PACKET_S2C_ENTITY_NBT_RESPONSE_SIMPLE);

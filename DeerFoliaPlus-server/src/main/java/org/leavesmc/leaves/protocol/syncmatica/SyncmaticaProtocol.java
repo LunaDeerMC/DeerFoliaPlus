@@ -64,6 +64,8 @@ public class SyncmaticaProtocol implements LeavesProtocol {
             final FriendlyByteBuf buf = payload.toFriendlyByteBuf();
             try {
                 communicationManager.onPacket(player, payload.id(), buf);
+            } catch (final Exception e) {
+                LOGGER.warn("Failed to handle syncmatica packet {} from {}: {}", payload.id(), player.getGameProfile().name(), e.getMessage());
             } finally {
                 buf.release();
             }

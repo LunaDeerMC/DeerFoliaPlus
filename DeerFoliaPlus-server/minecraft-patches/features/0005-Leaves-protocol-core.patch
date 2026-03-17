@@ -19,6 +19,20 @@ index 9c6aae7c27342e6d23613d58d12008b4a55c46e9..9f64dc8b0334bcea34eb8a970a1c9222
      }
  
      private void tickPlayerSample() {
+diff --git a/net/minecraft/server/network/PlayerChunkSender.java b/net/minecraft/server/network/PlayerChunkSender.java
+index 644948d64791d0ffa4166375d0f4419f1ffa214a..f7aa6fe18c7421d06cac748e8ea3560c49fe0372 100644
+--- a/net/minecraft/server/network/PlayerChunkSender.java
++++ b/net/minecraft/server/network/PlayerChunkSender.java
+@@ -83,6 +83,9 @@ public class PlayerChunkSender {
+         final boolean shouldModify = level.chunkPacketBlockController.shouldModify(packetListener.player, chunk);
+         packetListener.send(new ClientboundLevelChunkWithLightPacket(chunk, level.getLightEngine(), null, null, shouldModify));
+         // Paper end - Anti-Xray
++        // DeerFoliaPlus start - Servux structure tracking
++        org.leavesmc.leaves.protocol.servux.ServuxStructuresProtocol.onStartedWatchingChunk(packetListener.player, chunk);
++        // DeerFoliaPlus end - Servux structure tracking
+         // Paper start - PlayerChunkLoadEvent
+         if (io.papermc.paper.event.packet.PlayerChunkLoadEvent.getHandlerList().getRegisteredListeners().length > 0) {
+             new io.papermc.paper.event.packet.PlayerChunkLoadEvent(new org.bukkit.craftbukkit.CraftChunk(chunk), packetListener.getPlayer().getBukkitEntity()).callEvent();
 diff --git a/net/minecraft/server/network/ServerCommonPacketListenerImpl.java b/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
 index 0bf2173c5445de021090c2d0264afc440b005bdc..a69af45da036f9365fac2386fd7471fc64966aae 100644
 --- a/net/minecraft/server/network/ServerCommonPacketListenerImpl.java

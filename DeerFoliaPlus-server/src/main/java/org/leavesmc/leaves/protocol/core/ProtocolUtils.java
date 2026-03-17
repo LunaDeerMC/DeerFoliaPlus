@@ -48,6 +48,9 @@ public class ProtocolUtils {
     }
 
     public static void sendPayloadPacket(ServerPlayer player, CustomPacketPayload payload) {
+        if (payload instanceof LeavesCustomPayload leavesPayload) {
+            payload = LeavesProtocolManager.toDiscardedPayload(leavesPayload);
+        }
         player.connection.send(new ClientboundCustomPayloadPacket(payload));
     }
 
@@ -63,6 +66,9 @@ public class ProtocolUtils {
     }
 
     public static void sendPayloadPacket(Context context, CustomPacketPayload payload) {
+        if (payload instanceof LeavesCustomPayload leavesPayload) {
+            payload = LeavesProtocolManager.toDiscardedPayload(leavesPayload);
+        }
         context.connection().send(new ClientboundCustomPayloadPacket(payload));
     }
 

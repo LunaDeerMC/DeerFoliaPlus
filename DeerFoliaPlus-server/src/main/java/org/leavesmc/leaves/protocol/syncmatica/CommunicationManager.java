@@ -185,6 +185,10 @@ public class CommunicationManager {
     }
 
     private void handleFeatureRequest(final ExchangeTarget target, final FriendlyByteBuf packetBuf) {
+        if (!packetBuf.isReadable()) {
+            LOGGER.debug("Received empty feature request from {}", target.getPlayer().getGameProfile().name());
+            return;
+        }
         final String featureString = packetBuf.readUtf(32767);
         final FeatureSet clientFeatures = FeatureSet.fromString(featureString);
         final FeatureSet agreedFeatures = serverFeatures.intersect(clientFeatures);

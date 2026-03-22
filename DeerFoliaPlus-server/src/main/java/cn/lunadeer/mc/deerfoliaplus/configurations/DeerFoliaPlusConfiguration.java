@@ -33,6 +33,16 @@ public class DeerFoliaPlusConfiguration extends ConfigurationFile {
         );
     }
 
+    @PostProcess
+    public void registerInspectInventoryListener() {
+        // Register inspect inventory GUI listener
+        org.bukkit.Bukkit.getPluginManager().registerEvents(
+                new cn.lunadeer.mc.deerfoliaplus.commands.InspectInventoryListener(),
+                org.leavesmc.leaves.plugin.MinecraftInternalPlugin.INSTANCE
+        );
+    }
+
+
     @Comments("Bedrock-style Stronghold Generation - Random unlimited distribution instead of 128 in rings")
     public static BedrockStrongholdGeneration bedrockStrongholdGeneration = new BedrockStrongholdGeneration();
 

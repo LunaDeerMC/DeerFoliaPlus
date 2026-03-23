@@ -42,6 +42,11 @@ public class DeerFoliaPlusConfiguration extends ConfigurationFile {
         );
     }
 
+    @PostProcess
+    public void registerUtilityCommandPermissions() {
+        cn.lunadeer.mc.deerfoliaplus.commands.MenuCommandPermissions.register();
+    }
+
 
     @Comments("Bedrock-style Stronghold Generation - Random unlimited distribution instead of 128 in rings")
     public static BedrockStrongholdGeneration bedrockStrongholdGeneration = new BedrockStrongholdGeneration();
@@ -61,9 +66,27 @@ public class DeerFoliaPlusConfiguration extends ConfigurationFile {
     @Comments("Servux Protocol - Structure bounding box overlay and entity data for MiniHUD/Litematica")
     public static ServuxConfiguration servux = new ServuxConfiguration();
 
+    @Comments("Custom Recipe System - Define custom crafting, smelting, stonecutting recipes via config file")
+    public static CustomRecipeConfiguration customRecipe = new CustomRecipeConfiguration();
+
     @PostProcess
     public void initProtocols() {
         org.leavesmc.leaves.protocol.core.LeavesProtocolManager.init();
+    }
+
+    @PostProcess
+    public void registerCustomRecipes() {
+        if (customRecipe.enabled) {
+            org.bukkit.Bukkit.getPluginManager().registerEvents(
+                    new org.bukkit.event.Listener() {
+                        @org.bukkit.event.EventHandler
+                        public void onServerLoad(org.bukkit.event.server.ServerLoadEvent event) {
+                            cn.lunadeer.mc.deerfoliaplus.recipe.CustomRecipeManager.registerAllRecipes();
+                        }
+                    },
+                    org.leavesmc.leaves.plugin.MinecraftInternalPlugin.INSTANCE
+            );
+        }
     }
 
 }

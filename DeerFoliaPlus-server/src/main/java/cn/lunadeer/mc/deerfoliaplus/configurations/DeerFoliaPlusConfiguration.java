@@ -66,6 +66,9 @@ public class DeerFoliaPlusConfiguration extends ConfigurationFile {
     @Comments("Servux Protocol - Structure bounding box overlay and entity data for MiniHUD/Litematica")
     public static ServuxConfiguration servux = new ServuxConfiguration();
 
+    @Comments("Recipe Sync - Send recipe data to modded JEI clients via NeoForge/Fabric protocols")
+    public static RecipeSyncConfiguration recipeSync = new RecipeSyncConfiguration();
+
     @Comments("Custom Recipe System - Define custom crafting, smelting, stonecutting recipes via config file")
     public static CustomRecipeConfiguration customRecipe = new CustomRecipeConfiguration();
 

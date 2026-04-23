@@ -76,7 +76,7 @@ This regenerates all `.patch` files from the current module git history, incorpo
 ### Step 6: Verify build
 
 ```bash
-./gradlew createMojmapPaperclipJar
+./gradlew createPaperclipJar
 ```
 
 If the build fails, fix compilation errors in the module directories, amend the relevant commits, and rebuild patches again.

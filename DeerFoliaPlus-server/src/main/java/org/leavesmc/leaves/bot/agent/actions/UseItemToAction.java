@@ -2,6 +2,7 @@ package org.leavesmc.leaves.bot.agent.actions;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.leavesmc.leaves.bot.ServerBot;
 
@@ -17,7 +18,7 @@ public class UseItemToAction extends AbstractTimerAction<UseItemToAction> {
         if (entity != null) {
             bot.swing(InteractionHand.MAIN_HAND);
             bot.updateItemInHand(InteractionHand.MAIN_HAND);
-            return bot.interactOn(entity, InteractionHand.MAIN_HAND).consumesAction();
+            return bot.interactOn(entity, InteractionHand.MAIN_HAND, Vec3.atCenterOf(entity.blockPosition())).consumesAction();
         }
         return false;
     }

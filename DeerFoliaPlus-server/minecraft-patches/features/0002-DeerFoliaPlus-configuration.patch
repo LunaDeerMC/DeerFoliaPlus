@@ -5,10 +5,10 @@ Subject: [PATCH] DeerFoliaPlus configuration
 
 
 diff --git a/net/minecraft/server/dedicated/DedicatedServer.java b/net/minecraft/server/dedicated/DedicatedServer.java
-index d550b2d58de031eb470a9452af7e0f37caf739b4..741e4ee63020665f07017d21111095e53325ead7 100644
+index 7b4153041411dbb46f69e82667262644bf5e4a20..b379b4b089a73c74e963799caac80d2c060ab23e 100644
 --- a/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -264,6 +264,9 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+@@ -285,6 +285,9 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
          // DeerFolia start - initialize config
          cn.lunadeer.mc.deerfolia.DeerFoliaConfiguration.load();
          // DeerFolia end - initialize config

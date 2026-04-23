@@ -54,10 +54,7 @@ public class CustomRecipeManager {
 
         // Remove previously registered DFP recipes to support reload
         for (ResourceKey<Recipe<?>> key : registeredRecipeKeys) {
-            @SuppressWarnings("unchecked")
-            ResourceKey<Recipe<net.minecraft.world.item.crafting.RecipeInput>> typedKey =
-                    (ResourceKey<Recipe<net.minecraft.world.item.crafting.RecipeInput>>) (ResourceKey<?>) key;
-            recipeManager.recipes.removeRecipe(typedKey);
+            recipeManager.removeRecipe(key);
         }
         registeredRecipeKeys.clear();
 

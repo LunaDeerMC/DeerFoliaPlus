@@ -3,7 +3,6 @@ package cn.lunadeer.mc.deerfoliaplus.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 
 public class SunCommand {
@@ -17,11 +16,13 @@ public class SunCommand {
     }
 
     private static int setSun(CommandSourceStack source) {
-        io.papermc.paper.threadedregions.RegionizedServer.getInstance().addTask(() -> {
-            int duration = ServerLevel.RAIN_DELAY.sample(source.getLevel().getRandom());
-            source.getLevel().setWeatherParameters(duration, 0, false, false);
-            source.sendSuccess(() -> Component.translatable("commands.weather.set.clear"), true);
-        });
-        return 1;
+        return WorldStateCommandHelper.setWeather(
+                source,
+                ServerLevel.RAIN_DELAY.sample(source.getLevel().getRandom()),
+                0,
+                false,
+                false,
+                "commands.weather.set.clear"
+        );
     }
 }

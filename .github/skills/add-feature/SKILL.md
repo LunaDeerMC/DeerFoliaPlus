@@ -146,7 +146,7 @@ If the API needs to be accessible via `Bukkit.getXxx()` or `Server.getXxx()`, th
 
 ```bash
 # Full build
-./gradlew createMojmapPaperclipJar
+./gradlew createPaperclipJar
 
 # Quick test server
 ./gradlew runServer

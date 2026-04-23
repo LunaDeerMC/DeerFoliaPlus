@@ -3,7 +3,6 @@ package cn.lunadeer.mc.deerfoliaplus.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 
 public class StormCommand {
@@ -17,11 +16,13 @@ public class StormCommand {
     }
 
     private static int setStorm(CommandSourceStack source) {
-        io.papermc.paper.threadedregions.RegionizedServer.getInstance().addTask(() -> {
-            int duration = ServerLevel.THUNDER_DURATION.sample(source.getLevel().getRandom());
-            source.getLevel().setWeatherParameters(0, duration, true, true);
-            source.sendSuccess(() -> Component.translatable("commands.weather.set.thunder"), true);
-        });
-        return 1;
+        return WorldStateCommandHelper.setWeather(
+                source,
+                0,
+                ServerLevel.THUNDER_DURATION.sample(source.getLevel().getRandom()),
+                true,
+                true,
+                "commands.weather.set.thunder"
+        );
     }
 }

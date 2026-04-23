@@ -224,8 +224,8 @@ public class ServerBot extends ServerPlayer {
     }
 
     @Override
-    public @NotNull InteractionResult interact(@NotNull Player player, @NotNull InteractionHand hand) {
-        return super.interact(player, hand);
+    public @NotNull InteractionResult interact(@NotNull Player player, @NotNull InteractionHand hand, @NotNull Vec3 location) {
+        return super.interact(player, hand, location);
     }
 
     @Override

@@ -22,7 +22,7 @@ New standalone files go under `DeerFoliaPlus-server/src/main/java/` or `DeerFoli
 
 ## Code Style
 
-- **Java 21** — toolchain and language level
+- **Java 25** — toolchain and language level
 - Package: `cn.lunadeer.mc.deerfoliaplus.*` for DeerFoliaPlus code; `org.leavesmc.leaves.*` for code ported from Leaves
 - In patches, mark all modifications with comment markers:
   ```java
@@ -42,7 +42,7 @@ New standalone files go under `DeerFoliaPlus-server/src/main/java/` or `DeerFoli
 ./gradlew applyAllPatches
 
 # Build production server jar → DeerFoliaPlus-server/build/libs/
-./gradlew createMojmapPaperclipJar
+./gradlew createPaperclipJar
 
 # Regenerate patch files after committing changes in DeerFoliaPlus-server or DeerFoliaPlus-api
 ./gradlew rebuildAllServerPatches

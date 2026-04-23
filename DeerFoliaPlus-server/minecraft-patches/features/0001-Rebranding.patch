@@ -5,7 +5,7 @@ Subject: [PATCH] Rebranding
 
 
 diff --git a/net/minecraft/CrashReport.java b/net/minecraft/CrashReport.java
-index 5b7ef319c3eda1aa2562e06ae75f95e49cda5f70..853791b39f089bf0b986a0ca0ef258fd3c7f7051 100644
+index d0d5d08dbc09c436f2ac6eccc331465238946d67..a40efd06c0c1a4fd9d157fcd90280356d00b985e 100644
 --- a/net/minecraft/CrashReport.java
 +++ b/net/minecraft/CrashReport.java
 @@ -30,7 +30,7 @@ public class CrashReport {
@@ -15,10 +15,10 @@ index 5b7ef319c3eda1aa2562e06ae75f95e49cda5f70..853791b39f089bf0b986a0ca0ef258fd
 -    private final List<String> extraInfo = List.of("", "DO NOT REPORT THIS TO PAPER/FOLIA! REPORT TO DEERFOLIA INSTEAD!", ""); // DeerFolia - Rebrand
 +    private final List<String> extraInfo = List.of("", "DO NOT REPORT THIS TO PAPER/FOLIA! REPORT TO DEERFOLIAPLUS INSTEAD!", ""); // DeerFoliaPlus - Rebrand
  
-     public CrashReport(String title, Throwable exception) {
+     public CrashReport(final String title, final Throwable t) {
          this.title = title;
 diff --git a/net/minecraft/world/level/chunk/storage/RegionFileStorage.java b/net/minecraft/world/level/chunk/storage/RegionFileStorage.java
-index 9171fedb498d468ce8136239d63eed569850e44a..12de965a1d415d15e63686ff6070432ef997abc5 100644
+index 3e220a5d13ac0740ceabd7af13a64b825787861e..5ddad04b35f1e280850743e676894cc4fa8d168d 100644
 --- a/net/minecraft/world/level/chunk/storage/RegionFileStorage.java
 +++ b/net/minecraft/world/level/chunk/storage/RegionFileStorage.java
 @@ -309,7 +309,7 @@ public class RegionFileStorage implements AutoCloseable, ca.spottedleaf.moonrise

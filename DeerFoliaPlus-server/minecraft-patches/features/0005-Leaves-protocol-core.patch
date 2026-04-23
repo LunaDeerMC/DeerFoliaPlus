@@ -5,10 +5,10 @@ Subject: [PATCH] Leaves protocol core
 
 
 diff --git a/io/papermc/paper/threadedregions/RegionizedServer.java b/io/papermc/paper/threadedregions/RegionizedServer.java
-index 9c6aae7c27342e6d23613d58d12008b4a55c46e9..9f64dc8b0334bcea34eb8a970a1c9222b1655574 100644
+index e2c4ca98b6d9b425a4369030979337998430d768..b19344fd0aa1bbe04dfa12d62a8731eeae0634e3 100644
 --- a/io/papermc/paper/threadedregions/RegionizedServer.java
 +++ b/io/papermc/paper/threadedregions/RegionizedServer.java
-@@ -363,6 +363,10 @@ public final class RegionizedServer {
+@@ -366,6 +366,10 @@ public final class RegionizedServer {
  
          // Leaves FakePlayer
          MinecraftServer.getServer().botList.networkTick();
@@ -20,21 +20,21 @@ index 9c6aae7c27342e6d23613d58d12008b4a55c46e9..9f64dc8b0334bcea34eb8a970a1c9222
  
      private void tickPlayerSample() {
 diff --git a/net/minecraft/server/network/PlayerChunkSender.java b/net/minecraft/server/network/PlayerChunkSender.java
-index 644948d64791d0ffa4166375d0f4419f1ffa214a..f7aa6fe18c7421d06cac748e8ea3560c49fe0372 100644
+index 373da9d604cfb1614a0618d856aefd2be3c7682b..9cfaebe0e3b4368b2baab81ffa1afc30fe19e1f8 100644
 --- a/net/minecraft/server/network/PlayerChunkSender.java
 +++ b/net/minecraft/server/network/PlayerChunkSender.java
 @@ -83,6 +83,9 @@ public class PlayerChunkSender {
-         final boolean shouldModify = level.chunkPacketBlockController.shouldModify(packetListener.player, chunk);
-         packetListener.send(new ClientboundLevelChunkWithLightPacket(chunk, level.getLightEngine(), null, null, shouldModify));
+         final boolean shouldModify = level.chunkPacketBlockController.shouldModify(connection.player, chunk);
+         connection.send(new ClientboundLevelChunkWithLightPacket(chunk, level.getLightEngine(), null, null, shouldModify));
          // Paper end - Anti-Xray
 +        // DeerFoliaPlus start - Servux structure tracking
 +        org.leavesmc.leaves.protocol.servux.ServuxStructuresProtocol.onStartedWatchingChunk(packetListener.player, chunk);
 +        // DeerFoliaPlus end - Servux structure tracking
          // Paper start - PlayerChunkLoadEvent
          if (io.papermc.paper.event.packet.PlayerChunkLoadEvent.getHandlerList().getRegisteredListeners().length > 0) {
-             new io.papermc.paper.event.packet.PlayerChunkLoadEvent(new org.bukkit.craftbukkit.CraftChunk(chunk), packetListener.getPlayer().getBukkitEntity()).callEvent();
+             new io.papermc.paper.event.packet.PlayerChunkLoadEvent(new org.bukkit.craftbukkit.CraftChunk(chunk), connection.getPlayer().getBukkitEntity()).callEvent();
 diff --git a/net/minecraft/server/network/ServerCommonPacketListenerImpl.java b/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
-index 0bf2173c5445de021090c2d0264afc440b005bdc..a69af45da036f9365fac2386fd7471fc64966aae 100644
+index 963afbe66765096213b4b7cdd664f8dba2021afa..485445918b67ef6e5acdfdb2c7c4c8d9500ccaf7 100644
 --- a/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
 +++ b/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
 @@ -194,6 +194,15 @@ public abstract class ServerCommonPacketListenerImpl implements ServerCommonPack
@@ -52,12 +52,12 @@ index 0bf2173c5445de021090c2d0264afc440b005bdc..a69af45da036f9365fac2386fd7471fc
 +
              this.cserver.getMessenger().dispatchIncomingMessage(paperConnection(), identifier.toString(), data);
          } catch (final Exception e) {
-             ServerGamePacketListenerImpl.LOGGER.error("Couldn't handle custom payload on channel {}", identifier, e);
+             LOGGER.error("Couldn't handle custom payload on channel {}", identifier, e);
 diff --git a/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index bdd3062d0e2cca647c749259c8d497d05f7fed86..37752eeaa9e0c3355ca49181e7c742248d706853 100644
+index a67a9ac716c1517640275dcb1ccd19084a7740f5..766f7ba8da2f19495eb2da1fc1ad9153197b2d7b 100644
 --- a/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -2294,6 +2294,9 @@ public class ServerGamePacketListenerImpl
+@@ -2353,6 +2353,9 @@ public class ServerGamePacketListenerImpl
  
      private void removePlayerFromWorld(net.kyori.adventure.text.@Nullable Component quitMessage) {
          // Paper end - Fix kick event leave message not being sent
@@ -68,10 +68,10 @@ index bdd3062d0e2cca647c749259c8d497d05f7fed86..37752eeaa9e0c3355ca49181e7c74224
          // CraftBukkit start - Replace vanilla quit message handling with our own.
          /*
 diff --git a/net/minecraft/server/players/PlayerList.java b/net/minecraft/server/players/PlayerList.java
-index f123f4702bb9fee24cdd32fa72da50e55dd618f5..b596c2d3bbdaf942212bbcaaa002af70f74292b4 100644
+index 1841e0b8edce2ef5b3d00d5105c2b94fe28dfacb..2ccd3b11b40a6e17f97b4314ac4ab6648e260cad 100644
 --- a/net/minecraft/server/players/PlayerList.java
 +++ b/net/minecraft/server/players/PlayerList.java
-@@ -327,6 +327,10 @@ public abstract class PlayerList {
+@@ -329,6 +329,10 @@ public abstract class PlayerList {
          }
          // Leaves end - bot support
  

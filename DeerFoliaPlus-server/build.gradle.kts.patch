@@ -1,6 +1,6 @@
 --- a/DeerFolia-server/build.gradle.kts
 +++ b/DeerFolia-server/build.gradle.kts
-@@ -52,7 +_,21 @@
+@@ -53,7 +53,21 @@
              outputDir = rootDirectory.dir("folia-server")
          }
      }
@@ -22,8 +22,8 @@
 +    activeFork = deerFoliaPlus
  
  
-     spigot {
-@@ -141,10 +_,14 @@
+     updatingMinecraft {
+@@ -124,10 +138,14 @@
      main {
          java { srcDir("../paper-server/src/main/java"); srcDir("../paper-server/src/generated/java") }
          resources { srcDir("../paper-server/src/main/resources") }
@@ -38,16 +38,16 @@
      }
  }
  val log4jPlugins = sourceSets.create("log4jPlugins") {
-@@ -172,7 +_,7 @@
+@@ -155,7 +173,7 @@
  }
  
  dependencies {
 -    implementation(project(":DeerFolia-api"))
 +    implementation(project(":DeerFoliaPlus-api"))
-     implementation("ca.spottedleaf:concurrentutil:0.0.8")
+     implementation("ca.spottedleaf:concurrentutil:0.0.10")
      implementation("org.jline:jline-terminal-ffm:3.27.1") // use ffm on java 22+
      implementation("org.jline:jline-terminal-jni:3.27.1") // fall back to jni on java 21
-@@ -246,14 +_,14 @@
+@@ -220,14 +238,14 @@
          val gitBranch = git.exec(providers, "rev-parse", "--abbrev-ref", "HEAD").get().trim()
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",

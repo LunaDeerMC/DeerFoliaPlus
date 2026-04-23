@@ -1,9 +1,12 @@
 package cn.lunadeer.mc.deerfoliaplus.recipe;
 
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.Level;
@@ -23,7 +26,12 @@ public class DFPShapedRecipe extends ShapedRecipe {
     public DFPShapedRecipe(String group, CraftingBookCategory category,
                            ShapedRecipePattern pattern, ItemStack result,
                            Map<Integer, String> ingredientCustomIds) {
-        super(group, category, pattern, result, true);
+        super(
+                new Recipe.CommonInfo(true),
+                new CraftingRecipe.CraftingBookInfo(category, group),
+                pattern,
+                ItemStackTemplate.fromNonEmptyStack(result)
+        );
         this.ingredientCustomIds = ingredientCustomIds;
         this.cachedIngredientCount = (int) getIngredients().stream().filter(Optional::isPresent).count();
     }

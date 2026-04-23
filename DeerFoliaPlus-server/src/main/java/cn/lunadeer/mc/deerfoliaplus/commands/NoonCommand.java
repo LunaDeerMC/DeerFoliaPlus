@@ -3,7 +3,6 @@ package cn.lunadeer.mc.deerfoliaplus.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.server.commands.TimeCommand;
 
 public class NoonCommand {
 
@@ -11,7 +10,7 @@ public class NoonCommand {
         dispatcher.register(
                 Commands.literal("noon")
                         .requires(source -> source.getBukkitSender().hasPermission("deerfoliaplus.command.noon"))
-                        .executes(ctx -> TimeCommand.setTime(ctx.getSource(), 6000))
+                        .executes(ctx -> WorldStateCommandHelper.setTime(ctx.getSource(), 6000))
         );
     }
 }

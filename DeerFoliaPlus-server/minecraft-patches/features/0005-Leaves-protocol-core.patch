@@ -28,7 +28,7 @@ index 373da9d604cfb1614a0618d856aefd2be3c7682b..9cfaebe0e3b4368b2baab81ffa1afc30
          connection.send(new ClientboundLevelChunkWithLightPacket(chunk, level.getLightEngine(), null, null, shouldModify));
          // Paper end - Anti-Xray
 +        // DeerFoliaPlus start - Servux structure tracking
-+        org.leavesmc.leaves.protocol.servux.ServuxStructuresProtocol.onStartedWatchingChunk(packetListener.player, chunk);
++        org.leavesmc.leaves.protocol.servux.ServuxStructuresProtocol.onStartedWatchingChunk(connection.player, chunk);
 +        // DeerFoliaPlus end - Servux structure tracking
          // Paper start - PlayerChunkLoadEvent
          if (io.papermc.paper.event.packet.PlayerChunkLoadEvent.getHandlerList().getRegisteredListeners().length > 0) {

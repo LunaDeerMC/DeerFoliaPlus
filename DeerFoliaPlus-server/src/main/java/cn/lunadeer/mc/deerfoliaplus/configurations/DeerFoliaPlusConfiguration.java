@@ -47,9 +47,21 @@ public class DeerFoliaPlusConfiguration extends ConfigurationFile {
         cn.lunadeer.mc.deerfoliaplus.commands.MenuCommandPermissions.register();
     }
 
+    @PostProcess
+    public void registerPostureSupport() {
+        cn.lunadeer.mc.deerfoliaplus.commands.PostureCommandPermissions.register();
+        org.bukkit.Bukkit.getPluginManager().registerEvents(
+                new cn.lunadeer.mc.deerfoliaplus.posture.PostureListener(),
+                org.leavesmc.leaves.plugin.MinecraftInternalPlugin.INSTANCE
+        );
+    }
+
 
     @Comments("Bedrock-style Stronghold Generation - Random unlimited distribution instead of 128 in rings")
     public static BedrockStrongholdGeneration bedrockStrongholdGeneration = new BedrockStrongholdGeneration();
+
+    @Comments("Posture System - Sit on chairs, lie down, crawl, and stand back up")
+    public static PostureConfiguration posture = new PostureConfiguration();
 
     public static class BedrockStrongholdGeneration extends ConfigurationPart {
         @Comments("Enable Bedrock-style random stronghold distribution (default: false)")

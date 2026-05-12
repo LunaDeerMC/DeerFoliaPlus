@@ -10,6 +10,7 @@ DeerFoliaPlus 相比于 DeerFolia 引入了更多额外功能，这些功能并�
 - Servux Protocol — 为 MiniHUD/Litematica 提供结构边界框叠加层和实体 NBT 数据查看
 - Recipe Sync Protocol — 向 NeoForge/Fabric 客户端同步完整配方数据，支持 JEI 等模组显示服务器配方
 - Custom Recipe System — 通过配置文件定义自定义合成、烧炼、营火烹饪、高炉、切石机等配方
+- Posture System — 支持原地坐下、躺下、趴下，以及将楼梯/台阶识别为可坐下的椅子
 - 实用快捷命令 — 快速设置时间/天气、飞行、无敌、帽子、复制物品、自杀、查看玩家背包，以及快速打开末影箱和各类工作台
 
 ## 额外配置
@@ -70,6 +71,32 @@ DeerFoliaPlus 相比于 DeerFolia 引入了更多额外功能，这些功能并�
 | `custom-recipe.enabled` | `false` | 是否启用自定义配方系统，启用后会从配置文件加载自定义配方 |
 
 自定义配方内容定义在 `config/custom-recipes.yml` 中，可用于添加自定义合成、烧炼、高炉、营火烹饪、切石机等配方。
+
+### Posture System
+
+| 配置项 | 默认值 | 说明 |
+|---|---|---|
+| `posture.enabled` | `false` | 是否启用姿态系统；关闭时姿态命令与椅子交互均不可用 |
+| `posture.chair-interaction` | `true` | 是否允许玩家空手右键楼梯或台阶坐下 |
+| `posture.require-side-signs` | `false` | 是否要求一整排椅子的两端各有一个普通告示牌或墙上告示牌 |
+| `posture.max-chair-chain-length` | `8` | 连续楼梯/台阶可被识别为同一排椅子的最大数量，超过则不视为椅子 |
+
+使用说明：
+
+- 启用后，玩家可以空手右键下半砖或底部楼梯坐下；连续的楼梯或台阶会按同一排椅子识别，每个方块对应一个座位。
+- 楼梯会按朝向修正坐姿位置；台阶会自动按连续长度更长的方向识别座位朝向。
+- `posture.require-side-signs` 开启后，只有当整排椅子的首尾两端都有告示牌时，才允许右键坐下。
+- `/sit` 和 `/lay` 会锁定玩家位置，期间不能移动；`/crawl` 会让玩家保持爬行姿态，但仍可正常移动。
+- 玩家可使用 `/get-up` 主动起身；处于坐下或躺下状态时，也可以通过潜行或跳跃快速起身。
+
+以下姿态命令默认对所有玩家开放：
+
+| 命令 | 权限节点 | 说明 |
+|---|---|---|
+| `/sit` | `deerfoliaplus.command.sit` | 原地坐下；启用椅子交互后也可通过空手右键楼梯或台阶坐下 |
+| `/lay` | `deerfoliaplus.command.lay` | 原地躺下，并锁定在当前位置 |
+| `/crawl` | `deerfoliaplus.command.crawl` | 进入爬行状态，同时保留移动能力 |
+| `/get-up` | `deerfoliaplus.command.get-up` | 从坐下、躺下或爬行状态恢复站立 |
 
 ### 实用快捷命令
 

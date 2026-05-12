@@ -5,10 +5,10 @@ Subject: [PATCH] Posture system
 
 
 diff --git a/net/minecraft/commands/Commands.java b/net/minecraft/commands/Commands.java
-index 0000000000000000000000000000000000000000..0000000000000000000000000000000000000000 100644
+index 00e598931364f019b4de9412ae304a6fd3d5771d..5a53b95c3b3b5683f744c9bbefc9f570fb927e4b 100644
 --- a/net/minecraft/commands/Commands.java
 +++ b/net/minecraft/commands/Commands.java
-@@ -280,6 +280,7 @@
+@@ -280,6 +280,7 @@ public class Commands {
          cn.lunadeer.mc.deerfoliaplus.commands.SuicideCommand.register(this.dispatcher);
          cn.lunadeer.mc.deerfoliaplus.commands.InspectCommand.register(this.dispatcher);
          cn.lunadeer.mc.deerfoliaplus.commands.MenuShortcutCommand.register(this.dispatcher);
@@ -17,10 +17,10 @@ index 0000000000000000000000000000000000000000..00000000000000000000000000000000
          if (JvmProfiler.INSTANCE.isAvailable()) {
              JfrCommand.register(this.dispatcher);
 diff --git a/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 0000000000000000000000000000000000000000..0000000000000000000000000000000000000000 100644
+index 0941c901752d3e4adf24eaabf31382c488a0446a..f7708d89db10a8dd75025f08ac6dbc08ca3cc0b0 100644
 --- a/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -538,7 +538,16 @@
+@@ -537,7 +537,16 @@ public class ServerGamePacketListenerImpl
              }
          }
          // Paper end - PlayerToggleSneakEvent
@@ -38,7 +38,7 @@ index 0000000000000000000000000000000000000000..00000000000000000000000000000000
          if (this.hasClientLoaded()) {
              this.player.resetLastActionTime();
              // this.player.setShiftKeyDown(packet.input().shift()); // Paper - move up and only set if event is not cancelled.
-@@ -1534,6 +1543,20 @@
+@@ -1533,6 +1542,20 @@ public class ServerGamePacketListenerImpl
                          double targetX = clampHorizontal(packet.getX(this.player.getX()));
                          double targetY = clampVertical(packet.getY(this.player.getY()));
                          double targetZ = clampHorizontal(packet.getZ(this.player.getZ()));
@@ -60,10 +60,10 @@ index 0000000000000000000000000000000000000000..00000000000000000000000000000000
                              this.player.absSnapTo(this.player.getX(), this.player.getY(), this.player.getZ(), targetYRot, targetXRot);
                              this.player.level().getChunkSource().move(this.player);
 diff --git a/net/minecraft/world/entity/player/Player.java b/net/minecraft/world/entity/player/Player.java
-index 0000000000000000000000000000000000000000..0000000000000000000000000000000000000000 100644
+index 2a70e3ab48eb2a88a90f4af60f27dff78a53c653..88f31350a7c8545e05daccf12f6be7363c547cac 100644
 --- a/net/minecraft/world/entity/player/Player.java
 +++ b/net/minecraft/world/entity/player/Player.java
-@@ -363,6 +363,18 @@
+@@ -363,6 +363,18 @@ public abstract class Player extends Avatar implements ContainerUser {
      }
  
      protected void updatePlayerPose() {
@@ -82,7 +82,7 @@ index 0000000000000000000000000000000000000000..00000000000000000000000000000000
          if (this.canPlayerFitWithinBlocksAndEntitiesWhen(Pose.SWIMMING)) {
              Pose desiredPose = this.getDesiredPose();
              Pose actualPose;
-@@ -1501,6 +1513,14 @@
+@@ -1501,6 +1513,14 @@ public abstract class Player extends Avatar implements ContainerUser {
  
      @Override
      public void travel(final Vec3 input) {

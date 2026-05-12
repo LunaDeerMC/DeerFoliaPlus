@@ -3,6 +3,7 @@ build/
 
 /DeerFoliaPlus-server/build.gradle.kts
 /DeerFoliaPlus-server/src/minecraft
+/DeerFoliaPlus-server/paper-patches/files
 /DeerFoliaPlus-api/build.gradle.kts
 /DeerFolia-server
 /DeerFolia-api

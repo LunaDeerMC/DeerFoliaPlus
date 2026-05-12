@@ -66,7 +66,7 @@ index 7b46c2fd77d1c268997952922b7cd2fea8faf969..a2b4edf7a2eca815c90e4f0fa65c75ae
      public boolean isPaused() {
          return this.console.isTickPaused();
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 6e783cfc62b3c73c6fe98d9623c907d8de17cea7..d56bd42f73b9834ed444176680ad2e0081c420ef 100644
+index eb8a5f76004c3131f229c5f27c752b4d759d6a47..c0dd4c8481ec3a4d2ddaeacc6bdec6b903ed3cac 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 @@ -248,7 +248,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
@@ -78,7 +78,7 @@ index 6e783cfc62b3c73c6fe98d9623c907d8de17cea7..d56bd42f73b9834ed444176680ad2e00
      }
  
      @Override
-@@ -1115,9 +1115,9 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+@@ -1119,9 +1119,9 @@ public class CraftWorld extends CraftRegionAccessor implements World {
  
      @Override
      public List<Player> getPlayers() {
@@ -90,7 +90,7 @@ index 6e783cfc62b3c73c6fe98d9623c907d8de17cea7..d56bd42f73b9834ed444176680ad2e00
              HumanEntity bukkitEntity = human.getBukkitEntity();
  
              if ((bukkitEntity != null) && (bukkitEntity instanceof Player)) {
-@@ -1616,7 +1616,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+@@ -1620,7 +1620,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
      public void playSound(final net.kyori.adventure.sound.Sound sound) {
          org.spigotmc.AsyncCatcher.catchOp("play sound"); // Paper
          final long seed = sound.seed().orElseGet(this.world.getRandom()::nextLong);
@@ -99,7 +99,7 @@ index 6e783cfc62b3c73c6fe98d9623c907d8de17cea7..d56bd42f73b9834ed444176680ad2e00
              player.connection.send(io.papermc.paper.adventure.PaperAdventure.asSoundPacket(sound, player.getX(), player.getY(), player.getZ(), seed, null));
          }
      }
-@@ -1644,7 +1644,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+@@ -1648,7 +1648,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
          org.spigotmc.AsyncCatcher.catchOp("play sound"); // Paper
          final long seed = sound.seed().orElseGet(this.getHandle().getRandom()::nextLong);
          if (emitter == net.kyori.adventure.sound.Sound.Emitter.self()) {
@@ -108,7 +108,7 @@ index 6e783cfc62b3c73c6fe98d9623c907d8de17cea7..d56bd42f73b9834ed444176680ad2e00
                  player.connection.send(io.papermc.paper.adventure.PaperAdventure.asSoundPacket(sound, player, seed, null));
              }
          } else if (emitter instanceof CraftEntity craftEntity) {
-@@ -1767,7 +1767,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+@@ -1771,7 +1771,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
              Preconditions.checkArgument(particle.getDataType().isInstance(data), "data (%s) should be %s", data.getClass(), particle.getDataType());
          }
          this.getHandle().sendParticlesSource(

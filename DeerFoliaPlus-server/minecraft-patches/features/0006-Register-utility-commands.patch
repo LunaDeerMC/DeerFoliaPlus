@@ -5,10 +5,10 @@ Subject: [PATCH] Register utility commands
 
 
 diff --git a/net/minecraft/commands/Commands.java b/net/minecraft/commands/Commands.java
-index 35fc48c1cbdb3a9169efb9c9b2847a4ccfce96e7..9bc60ace699334c5b61dfd1cd6e83784cea84638 100644
+index 4b23909d63c8700fefdf359c8bf17fb0fd230321..00e598931364f019b4de9412ae304a6fd3d5771d 100644
 --- a/net/minecraft/commands/Commands.java
 +++ b/net/minecraft/commands/Commands.java
-@@ -265,6 +265,21 @@ public class Commands {
+@@ -266,6 +266,21 @@ public class Commands {
          WeatherCommand.register(this.dispatcher);
          WorldBorderCommand.register(this.dispatcher);
          cn.lunadeer.mc.deerfoliaplus.commands.BotCommand.register(this.dispatcher); // DeerFoliaPlus - fake player command

@@ -5,7 +5,7 @@ Subject: [PATCH] Leaves protocol core
 
 
 diff --git a/io/papermc/paper/threadedregions/RegionizedServer.java b/io/papermc/paper/threadedregions/RegionizedServer.java
-index e2c4ca98b6d9b425a4369030979337998430d768..b19344fd0aa1bbe04dfa12d62a8731eeae0634e3 100644
+index fe7cab888696986457314b221c95ea61ebb6c3e9..08a04f0e15ab4f1c49a76f47ad35a6608ead8845 100644
 --- a/io/papermc/paper/threadedregions/RegionizedServer.java
 +++ b/io/papermc/paper/threadedregions/RegionizedServer.java
 @@ -366,6 +366,10 @@ public final class RegionizedServer {
@@ -20,7 +20,7 @@ index e2c4ca98b6d9b425a4369030979337998430d768..b19344fd0aa1bbe04dfa12d62a8731ee
  
      private void tickPlayerSample() {
 diff --git a/net/minecraft/server/network/PlayerChunkSender.java b/net/minecraft/server/network/PlayerChunkSender.java
-index 373da9d604cfb1614a0618d856aefd2be3c7682b..9cfaebe0e3b4368b2baab81ffa1afc30fe19e1f8 100644
+index 373da9d604cfb1614a0618d856aefd2be3c7682b..6b398a37d25ce906be71313ffa520fbffad94634 100644
 --- a/net/minecraft/server/network/PlayerChunkSender.java
 +++ b/net/minecraft/server/network/PlayerChunkSender.java
 @@ -83,6 +83,9 @@ public class PlayerChunkSender {
@@ -34,10 +34,10 @@ index 373da9d604cfb1614a0618d856aefd2be3c7682b..9cfaebe0e3b4368b2baab81ffa1afc30
          if (io.papermc.paper.event.packet.PlayerChunkLoadEvent.getHandlerList().getRegisteredListeners().length > 0) {
              new io.papermc.paper.event.packet.PlayerChunkLoadEvent(new org.bukkit.craftbukkit.CraftChunk(chunk), connection.getPlayer().getBukkitEntity()).callEvent();
 diff --git a/net/minecraft/server/network/ServerCommonPacketListenerImpl.java b/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
-index 963afbe66765096213b4b7cdd664f8dba2021afa..485445918b67ef6e5acdfdb2c7c4c8d9500ccaf7 100644
+index cf4b5e436b8d81657d1deaa5b06645016d9dc3cc..3d72ce1b8c11d6e8fffcf6fed55e881d348fcc9a 100644
 --- a/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
 +++ b/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
-@@ -194,6 +194,15 @@ public abstract class ServerCommonPacketListenerImpl implements ServerCommonPack
+@@ -176,6 +176,15 @@ public abstract class ServerCommonPacketListenerImpl implements ServerCommonPack
                  this.playerBrand = new net.minecraft.network.FriendlyByteBuf(io.netty.buffer.Unpooled.wrappedBuffer(data)).readUtf(256);
              }
  
@@ -54,10 +54,10 @@ index 963afbe66765096213b4b7cdd664f8dba2021afa..485445918b67ef6e5acdfdb2c7c4c8d9
          } catch (final Exception e) {
              LOGGER.error("Couldn't handle custom payload on channel {}", identifier, e);
 diff --git a/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index a67a9ac716c1517640275dcb1ccd19084a7740f5..766f7ba8da2f19495eb2da1fc1ad9153197b2d7b 100644
+index 1dee97257d0a64d0ef0f465a5be7b53380dfef87..0941c901752d3e4adf24eaabf31382c488a0446a 100644
 --- a/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -2353,6 +2353,9 @@ public class ServerGamePacketListenerImpl
+@@ -2364,6 +2364,9 @@ public class ServerGamePacketListenerImpl
  
      private void removePlayerFromWorld(net.kyori.adventure.text.@Nullable Component quitMessage) {
          // Paper end - Fix kick event leave message not being sent
@@ -68,7 +68,7 @@ index a67a9ac716c1517640275dcb1ccd19084a7740f5..766f7ba8da2f19495eb2da1fc1ad9153
          // CraftBukkit start - Replace vanilla quit message handling with our own.
          /*
 diff --git a/net/minecraft/server/players/PlayerList.java b/net/minecraft/server/players/PlayerList.java
-index 1841e0b8edce2ef5b3d00d5105c2b94fe28dfacb..2ccd3b11b40a6e17f97b4314ac4ab6648e260cad 100644
+index d19c80600c9001a394db2607c980a5258f615ab3..b3b81c9ea69e890fd7706e041b405c1aedaebd82 100644
 --- a/net/minecraft/server/players/PlayerList.java
 +++ b/net/minecraft/server/players/PlayerList.java
 @@ -329,6 +329,10 @@ public abstract class PlayerList {

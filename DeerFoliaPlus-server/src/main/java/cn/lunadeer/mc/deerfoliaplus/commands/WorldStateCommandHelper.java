@@ -1,14 +1,11 @@
 package cn.lunadeer.mc.deerfoliaplus.commands;
 
-import io.papermc.paper.configuration.GlobalConfiguration;
 import io.papermc.paper.threadedregions.RegionizedServer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.clock.WorldClock;
 import org.bukkit.event.world.TimeSkipEvent;
 
-import java.util.List;
 import java.util.Optional;
 
 final class WorldStateCommandHelper {
@@ -25,14 +22,10 @@ final class WorldStateCommandHelper {
 
         net.minecraft.core.Holder<WorldClock> clock = defaultClock.get();
         RegionizedServer.getInstance().addTask(() -> {
-            for (ServerLevel level : GlobalConfiguration.get().commands.timeCommandAffectsAllWorlds
-                    ? source.getServer().getAllLevels()
-                    : List.of(source.getLevel())) {
-                long currentTime = level.clockManager().getTotalTicks(clock);
-                TimeSkipEvent event = new TimeSkipEvent(level.getWorld(), TimeSkipEvent.SkipReason.COMMAND, totalTicks - currentTime);
-                if (event.callEvent()) {
-                    level.clockManager().setTotalTicks(clock, currentTime + event.getSkipAmount());
-                }
+            long currentTime = source.getLevel().clockManager().getTotalTicks(clock);
+            TimeSkipEvent event = new TimeSkipEvent(source.getLevel().getWorld(), TimeSkipEvent.SkipReason.COMMAND, totalTicks - currentTime);
+            if (event.callEvent()) {
+                source.getLevel().clockManager().setTotalTicks(clock, currentTime + event.getSkipAmount());
             }
 
             source.sendSuccess(() -> Component.translatable("commands.time.set.absolute", clock.getRegisteredName(), totalTicks), true);

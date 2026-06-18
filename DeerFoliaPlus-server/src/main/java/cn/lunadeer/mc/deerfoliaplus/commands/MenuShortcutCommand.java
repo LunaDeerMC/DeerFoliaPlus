@@ -136,7 +136,11 @@ public final class MenuShortcutCommand {
         ContainerLevelAccess access = ContainerLevelAccess.create(player.level(), blockPos);
 
         if (player.openMenu(new SimpleMenuProvider(
-                (containerId, inventory, menuPlayer) -> factory.create(containerId, inventory, access),
+                (containerId, inventory, menuPlayer) -> {
+                    net.minecraft.world.inventory.AbstractContainerMenu menu = factory.create(containerId, inventory, access);
+                    menu.checkReachable = false; // DeerFoliaPlus - allow opening without a nearby block
+                    return menu;
+                },
                 title
         )).isPresent()) {
             player.awardStat(stat);

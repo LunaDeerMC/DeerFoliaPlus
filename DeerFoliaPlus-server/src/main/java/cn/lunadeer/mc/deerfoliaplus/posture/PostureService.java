@@ -12,7 +12,7 @@ import org.bukkit.util.Vector;
 public final class PostureService {
 
     private static final String ANCHOR_TAG = "deerfoliaplus_posture_anchor";
-    private static final double SIT_ANCHOR_Y_OFFSET = -1.15D;
+    private static final double SIT_ANCHOR_Y_OFFSET = -0.65D;
     private static final PostureService INSTANCE = new PostureService();
 
     private final PostureManager postureManager = PostureManager.getInstance();

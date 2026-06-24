@@ -9,4 +9,7 @@ public class RecipeSyncConfiguration extends ConfigurationPart {
 
     @Comments("Fabric Recipe Sync - Send recipe data to Fabric JEI clients via fabric:recipe_sync protocol")
     public boolean fabric = true;
+
+    @Comments("Skip Fabric Recipe Sync for players connecting via ViaVersion/ViaBackwards with non-native protocol versions")
+    public boolean skipFabricOnViaNonNative = true;
 }

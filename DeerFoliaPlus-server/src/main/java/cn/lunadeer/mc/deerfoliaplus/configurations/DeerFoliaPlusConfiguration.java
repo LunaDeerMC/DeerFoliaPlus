@@ -17,7 +17,7 @@ public class DeerFoliaPlusConfiguration extends ConfigurationFile {
         try {
             ConfigurationManager.load(DeerFoliaPlusConfiguration.class, new File(PaperConfigurations.CONFIG_DIR, "deer-folia-plus.yml"));
         } catch (Exception e) {
-            LOGGER.error("Failed to load DeerFolia configuration: {}", e.getMessage());
+            LOGGER.error("Failed to load DeerFolia configuration", e);
         }
     }
 

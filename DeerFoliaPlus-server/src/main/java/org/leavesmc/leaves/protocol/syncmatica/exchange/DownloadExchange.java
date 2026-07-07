@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -134,6 +135,12 @@ public class DownloadExchange extends AbstractExchange {
 
         final String calculatedHash = getHashFromDigest(md5);
         if (calculatedHash.equals(placement.getHash())) {
+            if (!hasGzipMagicBytes(downloadFile)) {
+                LOGGER.error("Downloaded file for {} is not a valid gzip/litematic file", placement.getId());
+                downloadFile.delete();
+                close(false);
+                return;
+            }
             if (fileStorage.finalizeFile(placement, downloadFile)) {
                 placement.setLocalState(LocalLitematicState.LOCAL_LITEMATIC_PRESENT);
                 manager.onDownloadComplete(placement, partner);
@@ -189,5 +196,17 @@ public class DownloadExchange extends AbstractExchange {
             sb.append(String.format("%02x", b));
         }
         return sb.toString();
+    }
+
+    private static boolean hasGzipMagicBytes(final File file) {
+        try (final FileInputStream fis = new FileInputStream(file)) {
+            final byte[] header = new byte[2];
+            if (fis.read(header) < 2) {
+                return false;
+            }
+            return header[0] == (byte) 0x1F && header[1] == (byte) 0x8B;
+        } catch (final IOException e) {
+            return false;
+        }
     }
 }

@@ -127,6 +127,12 @@ public class CommunicationManager {
             return;
         }
 
+        if (!FileStorage.isValidHash(hash)) {
+            sendMessage(target, MessageType.ERROR, "Invalid hash format.");
+            LOGGER.warn("Rejected placement {} from {} with invalid hash format", syncmaticaId, target.getPlayer().getGameProfile().name());
+            return;
+        }
+
         if (fileStorage.hasFile(placement)) {
             placement.setLocalState(LocalLitematicState.LOCAL_LITEMATIC_PRESENT);
             syncmaticManager.addPlacement(placement);

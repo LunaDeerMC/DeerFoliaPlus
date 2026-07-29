@@ -23,7 +23,7 @@ index 96637abe31b6801fbf4233af6cddbc5822bfd53d..8f81df4ee98ec2e7488fafc34516ab7f
                  metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
                      String minecraftVersion = Bukkit.getVersion();
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index b75cd97c70cbeb90a82d5a2b9099eaa30791d984..6634c384855718031b34cd813fbf18af0f3807b6 100644
+index 72ef863c9fd43021fbbf23bcaeace92a7ec05bb5..72be77cd08cbd8905e1332d004ff55e5b88a51d9 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 @@ -40,8 +40,8 @@ public class PaperVersionFetcher implements VersionFetcher {
@@ -80,7 +80,7 @@ index d2d1e28ea6759579a1415da6a4596a408a42553c..d839340d76974a445cf707842158493e
                  // (async tasks must live with race-conditions if they attempt to cancel between these few lines of code)
              }
 diff --git a/src/main/java/org/spigotmc/WatchdogThread.java b/src/main/java/org/spigotmc/WatchdogThread.java
-index 54542848e559f44cbed696ba9cb489137379b62f..4e5076be5021c647ee7c9df86f541d8e2278c3f3 100644
+index 711fb44975029623233729a13fb8f10cc1b1afec..fcaa92d05b9b8a65834b6a471cf6bfa0ab5b26c4 100644
 --- a/src/main/java/org/spigotmc/WatchdogThread.java
 +++ b/src/main/java/org/spigotmc/WatchdogThread.java
 @@ -25,7 +25,7 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
@@ -123,7 +123,7 @@ index 54542848e559f44cbed696ba9cb489137379b62f..4e5076be5021c647ee7c9df86f541d8e
 -                logger.log(Level.SEVERE, "Server thread dump (Look for plugins here before reporting to DeerFolia!):"); // DeerFolia
 +                logger.log(Level.SEVERE, "Server thread dump (Look for plugins here before reporting to DeerFoliaPlus!):"); // DeerFoliaPlus
                  FeatureHooks.dumpAllChunkLoadInfo(MinecraftServer.getServer(), isLongTimeout); // Paper - log detailed tick information
-                 WatchdogThread.dumpThread(ManagementFactory.getThreadMXBean().getThreadInfo(MinecraftServer.getServer().serverThread.threadId(), Integer.MAX_VALUE), logger);
+                 WatchdogThread.dumpThread(ManagementFactory.getThreadMXBean().getThreadInfo(MinecraftServer.getServer().getRunningThread().threadId(), Integer.MAX_VALUE), logger);
                  logger.log(Level.SEVERE, "------------------------------");
 @@ -120,7 +120,7 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
                          WatchdogThread.dumpThread(thread, logger);

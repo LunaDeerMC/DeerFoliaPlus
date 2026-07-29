@@ -5,7 +5,7 @@ Subject: [PATCH] Register utility commands
 
 
 diff --git a/net/minecraft/commands/Commands.java b/net/minecraft/commands/Commands.java
-index 4b23909d63c8700fefdf359c8bf17fb0fd230321..00e598931364f019b4de9412ae304a6fd3d5771d 100644
+index 4c2be09de83d59131bf348abe45679791c85f9c5..03ed64aa9c78d43618c6d87c8327d0cb2ff45ba2 100644
 --- a/net/minecraft/commands/Commands.java
 +++ b/net/minecraft/commands/Commands.java
 @@ -266,6 +266,21 @@ public class Commands {

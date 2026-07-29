@@ -156,7 +156,6 @@ public class BotList {
         this.server.server.getPluginManager().callEvent(event);
         location = event.getSpawnLocation();
 
-        bot.spawnIn(world);
         bot.gameMode.setLevel((ServerLevel) bot.level());
 
         bot.setPosRaw(location.getX(), location.getY(), location.getZ());
@@ -184,7 +183,7 @@ public class BotList {
 
         bot.renderAll();
         bot.suppressTrackerForLogin = false;
-        bot.level().getChunkSource().chunkMap.addEntity(bot);
+        bot.level().getChunkSource().addEntity(bot);
         BotList.LOGGER.info("{}[{}] logged in with entity id {} at ([{}]{}, {}, {})", bot.getName().getString(), "Local", bot.getId(), bot.level().serverLevelData.getLevelName(), bot.getX(), bot.getY(), bot.getZ());
         return bot;
     }

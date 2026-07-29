@@ -5,7 +5,7 @@ Subject: [PATCH] Bedrock-style stronghold generation
 
 
 diff --git a/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java b/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java
-index d43105cf0c29cb86a5e3c7c59dc5e02d2ab8e53f..8cc89b120dc6c0fc55946f069a5e620f0484c1e8 100644
+index 8b4ea2b16da45bcefe743990866e43c94e121825..d39e3814f7c03d3c1e13b984c9a8f5005668fbdd 100644
 --- a/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java
 +++ b/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java
 @@ -73,6 +73,21 @@ public class ChunkGeneratorStructureState {

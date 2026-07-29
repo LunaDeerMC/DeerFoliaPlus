@@ -5,10 +5,10 @@ Subject: [PATCH] Leaves protocol core
 
 
 diff --git a/io/papermc/paper/threadedregions/RegionizedServer.java b/io/papermc/paper/threadedregions/RegionizedServer.java
-index fe7cab888696986457314b221c95ea61ebb6c3e9..08a04f0e15ab4f1c49a76f47ad35a6608ead8845 100644
+index aa3f0670e804554d23d850f39cf216ee2f00d016..67317525bc5318d5a2e594b8a21aba89ff6e20cf 100644
 --- a/io/papermc/paper/threadedregions/RegionizedServer.java
 +++ b/io/papermc/paper/threadedregions/RegionizedServer.java
-@@ -366,6 +366,10 @@ public final class RegionizedServer {
+@@ -267,6 +267,10 @@ public final class RegionizedServer {
  
          // Leaves FakePlayer
          MinecraftServer.getServer().botList.networkTick();
@@ -20,7 +20,7 @@ index fe7cab888696986457314b221c95ea61ebb6c3e9..08a04f0e15ab4f1c49a76f47ad35a660
  
      private void tickPlayerSample() {
 diff --git a/net/minecraft/server/network/PlayerChunkSender.java b/net/minecraft/server/network/PlayerChunkSender.java
-index 373da9d604cfb1614a0618d856aefd2be3c7682b..6b398a37d25ce906be71313ffa520fbffad94634 100644
+index 196c01fe5f200ed57e6f23e0939cac616305571a..40962f02c7d15cef9a1b5cac0705c20db1f7d19d 100644
 --- a/net/minecraft/server/network/PlayerChunkSender.java
 +++ b/net/minecraft/server/network/PlayerChunkSender.java
 @@ -83,6 +83,9 @@ public class PlayerChunkSender {
@@ -34,11 +34,11 @@ index 373da9d604cfb1614a0618d856aefd2be3c7682b..6b398a37d25ce906be71313ffa520fbf
          if (io.papermc.paper.event.packet.PlayerChunkLoadEvent.getHandlerList().getRegisteredListeners().length > 0) {
              new io.papermc.paper.event.packet.PlayerChunkLoadEvent(new org.bukkit.craftbukkit.CraftChunk(chunk), connection.getPlayer().getBukkitEntity()).callEvent();
 diff --git a/net/minecraft/server/network/ServerCommonPacketListenerImpl.java b/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
-index cf4b5e436b8d81657d1deaa5b06645016d9dc3cc..3d72ce1b8c11d6e8fffcf6fed55e881d348fcc9a 100644
+index 010180899d69d0457dcc9feee4f1c062c5354995..0eaafdc22077eb43bff91c46a0557a288d40f017 100644
 --- a/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
 +++ b/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
 @@ -176,6 +176,15 @@ public abstract class ServerCommonPacketListenerImpl implements ServerCommonPack
-                 this.playerBrand = new net.minecraft.network.FriendlyByteBuf(io.netty.buffer.Unpooled.wrappedBuffer(data)).readUtf(256);
+                 this.clientBrand = new net.minecraft.network.FriendlyByteBuf(io.netty.buffer.Unpooled.wrappedBuffer(data)).readUtf(256);
              }
  
 +            // DeerFoliaPlus start - Leaves protocol support
@@ -54,10 +54,10 @@ index cf4b5e436b8d81657d1deaa5b06645016d9dc3cc..3d72ce1b8c11d6e8fffcf6fed55e881d
          } catch (final Exception e) {
              LOGGER.error("Couldn't handle custom payload on channel {}", identifier, e);
 diff --git a/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 1dee97257d0a64d0ef0f465a5be7b53380dfef87..0941c901752d3e4adf24eaabf31382c488a0446a 100644
+index 90f78bcb8658c13dcdb70915317020cea5477547..404186dfa4f0c0c2caec9ee9faef89b28a8e3668 100644
 --- a/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -2364,6 +2364,9 @@ public class ServerGamePacketListenerImpl
+@@ -2356,6 +2356,9 @@ public class ServerGamePacketListenerImpl
  
      private void removePlayerFromWorld(net.kyori.adventure.text.@Nullable Component quitMessage) {
          // Paper end - Fix kick event leave message not being sent
@@ -68,10 +68,10 @@ index 1dee97257d0a64d0ef0f465a5be7b53380dfef87..0941c901752d3e4adf24eaabf31382c4
          // CraftBukkit start - Replace vanilla quit message handling with our own.
          /*
 diff --git a/net/minecraft/server/players/PlayerList.java b/net/minecraft/server/players/PlayerList.java
-index d19c80600c9001a394db2607c980a5258f615ab3..b3b81c9ea69e890fd7706e041b405c1aedaebd82 100644
+index 97166917734c498f71ff674b03904d015191c926..0fadd0cc753ac784b2e4cfb0ace6ac5104d78c97 100644
 --- a/net/minecraft/server/players/PlayerList.java
 +++ b/net/minecraft/server/players/PlayerList.java
-@@ -329,6 +329,10 @@ public abstract class PlayerList {
+@@ -330,6 +330,10 @@ public abstract class PlayerList {
          }
          // Leaves end - bot support
  

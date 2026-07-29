@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: zhangyuheng <zhangyuheng@lunadeer.cn>
+Date: Wed, 29 Jul 2026 12:37:36 +0800
+Subject: [PATCH] Update fake player internals for 26.2
+
+
+diff --git a/net/minecraft/server/level/ServerPlayer.java b/net/minecraft/server/level/ServerPlayer.java
+index 5fdfbd5ef0bd89fecc09b3b3b2c5ff7f6861d457..f84b20d55e3c6dcb9de58d7419b2748456a56301 100644
+--- a/net/minecraft/server/level/ServerPlayer.java
++++ b/net/minecraft/server/level/ServerPlayer.java
+@@ -66,6 +66,7 @@ import net.minecraft.network.protocol.game.ClientboundHurtAnimationPacket;
+ import net.minecraft.network.protocol.game.ClientboundMerchantOffersPacket;
+ import net.minecraft.network.protocol.game.ClientboundMountScreenOpenPacket;
+ import net.minecraft.network.protocol.game.ClientboundOpenBookPacket;
++import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
+ import net.minecraft.network.protocol.game.ClientboundOpenSignEditorPacket;
+ import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
+ import net.minecraft.network.protocol.game.ClientboundPlayerCombatEndPacket;
+diff --git a/net/minecraft/world/entity/player/Player.java b/net/minecraft/world/entity/player/Player.java
+index 0605ed161dbffd69861e3dbdccff8d7266e3ee9c..127dc16556d95222eb0356a38b62bad8fab4479b 100644
+--- a/net/minecraft/world/entity/player/Player.java
++++ b/net/minecraft/world/entity/player/Player.java
+@@ -156,7 +156,7 @@ public abstract class Player extends Avatar implements ContainerUser {
+     protected FoodData foodData = new FoodData();
+     protected int jumpTriggerTime;
+     public int takeXpDelay;
+-    private int sleepCounter = 0;
++    protected int sleepCounter = 0; // DeerFoliaPlus - fake players use the vanilla sleep tick flow
+     protected boolean wasUnderwater;
+     private final Abilities abilities = new Abilities();
+     public int experienceLevel = 0;

@@ -327,7 +327,7 @@ public class ServerBot extends ServerPlayer {
     }
 
     @Override
-    public void knockback(double strength, double x, double z, @Nullable Entity attacker, @NotNull EntityKnockbackEvent.Cause cause) {
+    public void knockback(double strength, double x, double z, DamageSource source, float damage, boolean comesFromEffect, @Nullable Entity attacker, @NotNull EntityKnockbackEvent.Cause cause) {
         strength *= 1.0D - this.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE);
         if (strength > 0.0D) {
             Vec3 vec3d = this.getDeltaMovement();

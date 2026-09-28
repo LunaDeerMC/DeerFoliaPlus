@@ -33,6 +33,21 @@ paperweight {
             patchesDir = file("DeerFoliaPlus-api/folia-patches")
             outputDir = file("folia-api")
         }
+        patchRepo("foliaCheckstyle") {
+            upstreamPath = "folia-checkstyle"
+            patchesDir = file("DeerFoliaPlus-checkstyle/folia-patches")
+            outputDir = file("folia-checkstyle")
+        }
+        patchRepo("paperCheckstyle") {
+            upstreamPath = "paper-checkstyle"
+            patchesDir = file("DeerFoliaPlus-checkstyle/paper-patches")
+            outputDir = file("paper-checkstyle")
+        }
+        patchRepo("paperCheckstyleConfig") {
+            upstreamPath = ".checkstyle"
+            patchesDir = file("DeerFoliaPlus-checkstyle/config-patches")
+            outputDir = file(".checkstyle")
+        }
     }
 
 }

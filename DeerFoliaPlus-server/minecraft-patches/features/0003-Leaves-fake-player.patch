@@ -43,7 +43,7 @@ index 7328f6879e92cdeaa03562c34139c580f38fa2ee..4c2be09de83d59131bf348abe4567979
              JfrCommand.register(this.dispatcher);
          }
 diff --git a/net/minecraft/server/MinecraftServer.java b/net/minecraft/server/MinecraftServer.java
-index 6f13870a1b463049dd37cf1c65d0bdecfc35b5c4..4df49d03deb82266533ace432236f906dc2603b1 100644
+index be15a671e0b39b455cd5983f4b90f8f3022a2ebc..01becd972457d274e6c7a727025932b2e73fada3 100644
 --- a/net/minecraft/server/MinecraftServer.java
 +++ b/net/minecraft/server/MinecraftServer.java
 @@ -538,6 +538,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -72,7 +72,7 @@ index 6f13870a1b463049dd37cf1c65d0bdecfc35b5c4..4df49d03deb82266533ace432236f906
          // CraftBukkit start
          if (this.server != null) {
              this.server.spark.disable(); // Paper - spark
-@@ -3209,6 +3214,16 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -3222,6 +3227,16 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
          }
      }
  
@@ -114,10 +114,10 @@ index 3da8e9f9b0cc5c8e677322d12d1371689640f413..f4f81a86f6983768051a4f7f2a7f1bac
          org.spigotmc.SpigotConfig.init((java.io.File) this.options.valueOf("spigot-settings"));
          org.spigotmc.SpigotConfig.registerCommands();
 diff --git a/net/minecraft/server/level/ChunkMap.java b/net/minecraft/server/level/ChunkMap.java
-index 163999d50213e0167eb09f0eae883388849f28fa..ec4e1c462430541a4cf4a90782451064500d3d96 100644
+index e9307ef10502856378d7831fb7800dd77230130c..4d37e0a4ea9a52540b9f051126d2da81c36cef3f 100644
 --- a/net/minecraft/server/level/ChunkMap.java
 +++ b/net/minecraft/server/level/ChunkMap.java
-@@ -1389,6 +1389,13 @@ public class ChunkMap extends SimpleRegionStorage implements ChunkHolder.PlayerP
+@@ -1413,6 +1413,13 @@ public class ChunkMap extends SimpleRegionStorage implements ChunkHolder.PlayerP
                      }
                  } else {
                      this.removePlayer(player);
@@ -132,7 +132,7 @@ index 163999d50213e0167eb09f0eae883388849f28fa..ec4e1c462430541a4cf4a90782451064
              }
          }
 diff --git a/net/minecraft/server/level/ServerLevel.java b/net/minecraft/server/level/ServerLevel.java
-index 986a811a86e831ed1d9e22b3efc37483acba2945..249e3a97ff59f6b321d4dd5f42528b1c2ac8c46f 100644
+index f7d0c3ca0052536847bdda97205d4e4cc2c6efbf..76b801d6b982d55f605aa2aa9aa0f0d7ec5497b1 100644
 --- a/net/minecraft/server/level/ServerLevel.java
 +++ b/net/minecraft/server/level/ServerLevel.java
 @@ -221,6 +221,7 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
@@ -143,7 +143,7 @@ index 986a811a86e831ed1d9e22b3efc37483acba2945..249e3a97ff59f6b321d4dd5f42528b1c
  
      // CraftBukkit start
      private final ResourceKey<LevelStem> typeKey;
-@@ -2545,6 +2546,12 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
+@@ -2556,6 +2557,12 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
          return this.players;
      }
  
@@ -156,7 +156,7 @@ index 986a811a86e831ed1d9e22b3efc37483acba2945..249e3a97ff59f6b321d4dd5f42528b1c
      @Override
      public void updatePOIOnBlockStateChange(final BlockPos pos, final BlockState oldState, final BlockState newState) {
          Optional<Holder<PoiType>> oldType = PoiTypes.forState(oldState);
-@@ -3018,6 +3025,11 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
+@@ -3029,6 +3036,11 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
              // ServerLevel.this.getChunkSource().addEntity(entity); // Paper - ignore and warn about illegal addEntity calls instead of crashing server; moved down below valid=true
              if (entity instanceof ServerPlayer player) {
                  ServerLevel.this.players.add(player);
@@ -168,7 +168,7 @@ index 986a811a86e831ed1d9e22b3efc37483acba2945..249e3a97ff59f6b321d4dd5f42528b1c
                  if (player.isReceivingWaypoints()) {
                      ServerLevel.this.getWaypointManager().addPlayer(player);
                  }
-@@ -3099,6 +3111,11 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
+@@ -3110,6 +3122,11 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
              ServerLevel.this.getChunkSource().removeEntity(entity);
              if (entity instanceof ServerPlayer player) {
                  ServerLevel.this.players.remove(player);
@@ -181,7 +181,7 @@ index 986a811a86e831ed1d9e22b3efc37483acba2945..249e3a97ff59f6b321d4dd5f42528b1c
                  ServerLevel.this.updateSleepingPlayerList();
              }
 diff --git a/net/minecraft/server/level/ServerPlayer.java b/net/minecraft/server/level/ServerPlayer.java
-index bde2c738181eea110ca693080f38f896d87cea55..5fdfbd5ef0bd89fecc09b3b3b2c5ff7f6861d457 100644
+index 0e7375f7126318a25dd199919688e4fb0ab89d96..879378f1beeb4016a090269f848cc00fce501381 100644
 --- a/net/minecraft/server/level/ServerPlayer.java
 +++ b/net/minecraft/server/level/ServerPlayer.java
 @@ -66,7 +66,6 @@ import net.minecraft.network.protocol.game.ClientboundHurtAnimationPacket;
@@ -238,7 +238,7 @@ index bde2c738181eea110ca693080f38f896d87cea55..5fdfbd5ef0bd89fecc09b3b3b2c5ff7f
          // CraftBukkit start
          org.bukkit.event.player.PlayerChangedWorldEvent changeEvent = new org.bukkit.event.player.PlayerChangedWorldEvent(this.getBukkitEntity(), oldLevel.getWorld());
 diff --git a/net/minecraft/server/players/PlayerList.java b/net/minecraft/server/players/PlayerList.java
-index d5a30d38709c9f55fef6032dcf0121d281e64eaf..97166917734c498f71ff674b03904d015191c926 100644
+index 35ab16c2a8f03ea02e5bdb6c4b259d6149212746..2adbb0fd2af361a6eabc34a928f5a4e5d90e2500 100644
 --- a/net/minecraft/server/players/PlayerList.java
 +++ b/net/minecraft/server/players/PlayerList.java
 @@ -1,7 +1,6 @@
@@ -342,10 +342,10 @@ index d5a30d38709c9f55fef6032dcf0121d281e64eaf..97166917734c498f71ff674b03904d01
  
      public @Nullable ServerPlayer getPlayer(final String playerName) {
 diff --git a/net/minecraft/world/entity/Entity.java b/net/minecraft/world/entity/Entity.java
-index 7e931ecba9b5435fd618eb9f4fcf1d2d9ff4f7c0..72d76424ea2808987608f8c28ff885833dd9a182 100644
+index b222a25a91eaaba40ac462ce73311bcae6ad91d7..dd4dc51a02451fc50b019a2647345fa3d32181c1 100644
 --- a/net/minecraft/world/entity/Entity.java
 +++ b/net/minecraft/world/entity/Entity.java
-@@ -1634,7 +1634,7 @@ public abstract class Entity
+@@ -1649,7 +1649,7 @@ public abstract class Entity
          return colliders.isEmpty() ? maxDistance : -Shapes.collide(Direction.Axis.Y, aabb, colliders, -maxDistance);
      }
  
@@ -355,7 +355,7 @@ index 7e931ecba9b5435fd618eb9f4fcf1d2d9ff4f7c0..72d76424ea2808987608f8c28ff88583
          final boolean xZero = movement.x == 0.0;
          final boolean yZero = movement.y == 0.0;
 diff --git a/net/minecraft/world/entity/player/Player.java b/net/minecraft/world/entity/player/Player.java
-index 2eb5fc819e2e17c69de87f8aa1a99e02bc5a62d5..2d234a7063381b36ffbc0c4e6e339d2c3f3ae76c 100644
+index 5ffcf20d06f8a0cc0394347d8ef4cfa1e89ebab2..e65fa32a7a7bc2b16fcd7eda0c006043fbd0433e 100644
 --- a/net/minecraft/world/entity/player/Player.java
 +++ b/net/minecraft/world/entity/player/Player.java
 @@ -167,7 +167,7 @@ public abstract class Player extends Avatar implements ContainerUser {

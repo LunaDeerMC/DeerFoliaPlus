@@ -17,7 +17,7 @@ index 03ed64aa9c78d43618c6d87c8327d0cb2ff45ba2..6ddefbfb54d1678d71da57e47b2337f7
          if (JvmProfiler.INSTANCE.isAvailable()) {
              JfrCommand.register(this.dispatcher);
 diff --git a/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 404186dfa4f0c0c2caec9ee9faef89b28a8e3668..88f2f289f3a4a07c62f22b9eab3212078706d4d0 100644
+index 209323db54734ad293761a37eed503d03b7e6f87..2ebf1f536a9be0e12df62a0dc0447f1bac54f140 100644
 --- a/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 @@ -540,7 +540,16 @@ public class ServerGamePacketListenerImpl
@@ -38,7 +38,7 @@ index 404186dfa4f0c0c2caec9ee9faef89b28a8e3668..88f2f289f3a4a07c62f22b9eab321207
          if (this.hasClientLoaded()) {
              this.player.resetLastActionTime();
              // this.player.setShiftKeyDown(packet.input().shift()); // Paper - move up and only set if event is not cancelled.
-@@ -1552,6 +1561,20 @@ public class ServerGamePacketListenerImpl
+@@ -1553,6 +1562,20 @@ public class ServerGamePacketListenerImpl
                          double targetX = clampHorizontal(packet.getX(this.player.getX()));
                          double targetY = clampVertical(packet.getY(this.player.getY()));
                          double targetZ = clampHorizontal(packet.getZ(this.player.getZ()));
@@ -60,13 +60,13 @@ index 404186dfa4f0c0c2caec9ee9faef89b28a8e3668..88f2f289f3a4a07c62f22b9eab321207
                              this.player.absSnapTo(this.player.getX(), this.player.getY(), this.player.getZ(), targetYRot, targetXRot);
                              this.player.level().getChunkSource().move(this.player);
 diff --git a/net/minecraft/world/entity/player/Player.java b/net/minecraft/world/entity/player/Player.java
-index 2d234a7063381b36ffbc0c4e6e339d2c3f3ae76c..0605ed161dbffd69861e3dbdccff8d7266e3ee9c 100644
+index e65fa32a7a7bc2b16fcd7eda0c006043fbd0433e..277cc55f66efbdf0618c8acba88900fb1d41171e 100644
 --- a/net/minecraft/world/entity/player/Player.java
 +++ b/net/minecraft/world/entity/player/Player.java
 @@ -367,6 +367,18 @@ public abstract class Player extends Avatar implements ContainerUser {
      }
  
-     protected void updatePlayerPose() {
+     public void updatePlayerPose() {
 +        // DeerFoliaPlus start - forced crawl and lay poses
 +        if (this.getBukkitEntity() instanceof org.bukkit.entity.Player bukkitPlayer) {
 +            if (cn.lunadeer.mc.deerfoliaplus.posture.PostureService.getInstance().isCrawling(bukkitPlayer)) {

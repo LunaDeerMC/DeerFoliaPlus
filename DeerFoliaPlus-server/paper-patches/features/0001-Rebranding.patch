@@ -38,16 +38,16 @@ index 72ef863c9fd43021fbbf23bcaeace92a7ec05bb5..72be77cd08cbd8905e1332d004ff55e5
      private static final String USER_AGENT = BUILD_INFO.brandName() + "/" + BUILD_INFO.asString(VERSION_SIMPLE) + " (https://mc.lunadeer.cn/)";
      private static final Gson GSON = new Gson();
 diff --git a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java b/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
-index 8fd162b6441ca1a6ee779d898ee854dc5b1343c5..cd522106e68c4614f1cf4b8e42eefa699c2156eb 100644
+index 5da7db5bd4e387a899c542750516203f023412fb..9a0d623ac00efd1f37f48581fab0bbf1a73aabdf 100644
 --- a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
 +++ b/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
-@@ -20,7 +20,7 @@ public final class PaperConsole extends SimpleTerminalConsole {
+@@ -21,7 +21,7 @@ public final class PaperConsole extends SimpleTerminalConsole {
      @Override
      protected LineReader buildReader(LineReaderBuilder builder) {
          builder
 -                .appName("DeerFolia") // DeerFolia
 +                .appName("DeerFoliaPlus") // DeerFoliaPlus
-                 .variable(LineReader.HISTORY_FILE, java.nio.file.Paths.get(".console_history"))
+                 .variable(LineReader.HISTORY_FILE, PaperCacheDir.moveFromServerRootAndGet(".console_history", "console_history"))
                  .completer(new ConsoleCommandCompleter(this.server))
                  .option(LineReader.Option.COMPLETE_IN_WORD, true);
 diff --git a/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java b/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java

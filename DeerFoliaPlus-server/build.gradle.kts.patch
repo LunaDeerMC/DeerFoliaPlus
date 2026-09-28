@@ -25,7 +25,7 @@
      updatingMinecraft {
 @@ -124,10 +138,14 @@
      main {
-         java { srcDir("../paper-server/src/main/java"); srcDir("../paper-server/src/generated/java") }
+         java { srcDir("../paper-server/src/main/java") }
          resources { srcDir("../paper-server/src/main/resources") }
 +        java { srcDir("../DeerFolia-server/src/main/java") }
 +        resources { srcDir("../DeerFolia-server/src/main/resources") }
@@ -44,7 +44,7 @@
  dependencies {
 -    implementation(project(":DeerFolia-api"))
 +    implementation(project(":DeerFoliaPlus-api"))
-     implementation("ca.spottedleaf:leafpile:1.0.0")
+     implementation("ca.spottedleaf:leafpile:1.2.0")
      implementation("org.jline:jline-terminal-ffm:3.27.1") // use ffm on java 22+
      implementation("org.jline:jline-terminal-jni:3.27.1") // fall back to jni on java 21
 @@ -220,14 +238,14 @@

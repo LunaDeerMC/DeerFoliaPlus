@@ -11,7 +11,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import org.leavesmc.leaves.protocol.core.IdentifierSelector;
 import org.leavesmc.leaves.protocol.core.LeavesProtocol;
 import org.leavesmc.leaves.protocol.core.ProtocolHandler;
 import org.leavesmc.leaves.protocol.core.ProtocolUtils;
@@ -66,9 +65,8 @@ public class FabricRecipeSyncProtocol implements LeavesProtocol {
     }
 
     @ProtocolHandler.BytebufReceiver(key = "fabric:recipe_sync/supported_serializers")
-    public static void onSupportedSerializers(IdentifierSelector selector, FriendlyByteBuf buf) {
-        ServerPlayer player = selector.player();
-        if (player == null || !DeerFoliaPlusConfiguration.recipeSync.fabric) return;
+    public static void onSupportedSerializers(ServerPlayer player, FriendlyByteBuf buf) {
+        if (!DeerFoliaPlusConfiguration.recipeSync.fabric) return;
 
         try {
             int count = buf.readVarInt();

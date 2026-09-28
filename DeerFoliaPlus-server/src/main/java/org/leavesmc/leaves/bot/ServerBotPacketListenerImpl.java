@@ -73,5 +73,9 @@ public class ServerBotPacketListenerImpl extends ServerGamePacketListenerImpl {
         @Override
         public void send(@NotNull Packet<?> packet, @Nullable ChannelFutureListener sendListener, boolean flush) {
         }
+
+        @Override
+        public void flushChannel() {
+        }
     }
 }

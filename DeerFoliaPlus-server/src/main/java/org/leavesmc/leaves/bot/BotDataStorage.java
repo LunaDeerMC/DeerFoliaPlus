@@ -23,6 +23,7 @@ public class BotDataStorage implements IPlayerDataStorage {
     private final File botDir;
     private final File botListFile;
 
+    private final Object savedBotListLock = new Object();
     private CompoundTag savedBotList;
 
     public BotDataStorage(LevelStorageSource.@NotNull LevelStorageAccess session) {
@@ -42,36 +43,57 @@ public class BotDataStorage implements IPlayerDataStorage {
 
     @Override
     public void save(Player player) {
-        boolean flag = true;
+        this.createSnapshot(player).ifPresent(this::save);
+    }
+
+    @Override
+    public Optional<SaveSnapshot> createSnapshot(Player player) {
         try (ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(player.problemPath(), LOGGER)) {
             TagValueOutput tagValueOutput = TagValueOutput.createWithContext(scopedCollector, player.registryAccess());
-
             player.saveWithoutId(tagValueOutput);
-            CompoundTag nbt = tagValueOutput.buildResult();
-            File file = new File(this.botDir, player.getStringUUID() + ".dat");
 
-            if (file.exists() && file.isFile()) {
-                if (!file.delete()) {
-                    throw new IOException("Failed to delete file: " + file);
+            String listKey = player.getScoreboardName();
+            CompoundTag listEntry = null;
+            if (player instanceof ServerBot bot) {
+                listKey = bot.createState.realName();
+                listEntry = new CompoundTag();
+                listEntry.putString("name", bot.createState.name());
+                listEntry.putString("uuid", bot.getUUID().toString());
+                listEntry.putBoolean("resume", bot.resume);
+                if (bot.createPlayer != null) {
+                    listEntry.putString("creator", bot.createPlayer.toString());
                 }
+            }
+
+            return Optional.of(new SaveSnapshot(listKey, player.getStringUUID(), tagValueOutput.buildResult(), listEntry));
+        } catch (Exception exception) {
+            BotDataStorage.LOGGER.warn("Failed to create fakeplayer save snapshot for {}", player.getScoreboardName(), exception);
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public void save(SaveSnapshot snapshot) {
+        boolean saved = true;
+        File file = new File(this.botDir, snapshot.uuid() + ".dat");
+        try {
+            if (file.exists() && file.isFile() && !file.delete()) {
+                throw new IOException("Failed to delete file: " + file);
             }
             if (!file.createNewFile()) {
                 throw new IOException("Failed to create nbt file: " + file);
             }
-            NbtIo.writeCompressed(nbt, file.toPath());
+            NbtIo.writeCompressed(snapshot.playerData(), file.toPath());
         } catch (Exception exception) {
-            BotDataStorage.LOGGER.warn("Failed to save fakeplayer data for {}", player.getScoreboardName(), exception);
-            flag = false;
+            BotDataStorage.LOGGER.warn("Failed to save fakeplayer data for {}", snapshot.listKey(), exception);
+            saved = false;
         }
 
-        if (flag && player instanceof ServerBot bot) {
-            CompoundTag nbt = new CompoundTag();
-            nbt.putString("name", bot.createState.name());
-            nbt.putString("uuid", bot.getUUID().toString());
-            nbt.putBoolean("resume", bot.resume);
-            if (bot.createPlayer != null) nbt.putString("creator", bot.createPlayer.toString());
-            this.savedBotList.put(bot.createState.realName(), nbt);
-            this.saveBotList();
+        if (saved && snapshot.listEntry() != null) {
+            synchronized (this.savedBotListLock) {
+                this.savedBotList.put(snapshot.listKey(), snapshot.listEntry());
+                this.saveBotListLocked();
+            }
         }
     }
 
@@ -93,8 +115,10 @@ public class BotDataStorage implements IPlayerDataStorage {
                 if (!file.delete()) {
                     throw new IOException("Failed to delete fakeplayer data");
                 }
-                this.savedBotList.remove(name);
-                this.saveBotList();
+                synchronized (this.savedBotListLock) {
+                    this.savedBotList.remove(name);
+                    this.saveBotListLocked();
+                }
                 return optional;
             } catch (Exception exception) {
                 BotDataStorage.LOGGER.warn("Failed to load fakeplayer data for {}", name);
@@ -104,7 +128,7 @@ public class BotDataStorage implements IPlayerDataStorage {
         return Optional.empty();
     }
 
-    private void saveBotList() {
+    private void saveBotListLocked() {
         try {
             if (this.botListFile.exists() && this.botListFile.isFile()) {
                 if (!this.botListFile.delete()) {
@@ -121,6 +145,8 @@ public class BotDataStorage implements IPlayerDataStorage {
     }
 
     public CompoundTag getSavedBotList() {
-        return savedBotList;
+        synchronized (this.savedBotListLock) {
+            return this.savedBotList.copy();
+        }
     }
 }

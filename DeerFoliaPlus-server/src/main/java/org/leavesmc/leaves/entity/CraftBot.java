@@ -37,7 +37,12 @@ public class CraftBot extends CraftPlayer implements Bot {
 
     @Override
     public void addAction(@NotNull LeavesBotAction action) {
-        this.getHandle().addBotAction(CraftBotAction.asInternalCopy(action), null);
+        BotAction<?> internalAction = CraftBotAction.asInternalCopy(action);
+        this.getHandle().getBukkitEntity().taskScheduler.schedule(
+                (entity) -> this.getHandle().addBotAction(internalAction, null),
+                null,
+                1L
+        );
     }
 
     @Override
@@ -52,14 +57,20 @@ public class CraftBot extends CraftPlayer implements Bot {
 
     @Override
     public void stopAction(int index) {
-        this.getHandle().getBotActions().get(index).stop(this.getHandle(), BotActionStopEvent.Reason.PLUGIN);
+        this.getHandle().getBukkitEntity().taskScheduler.schedule((entity) -> {
+            if (index >= 0 && index < this.getHandle().getBotActions().size()) {
+                this.getHandle().getBotActions().get(index).stop(this.getHandle(), BotActionStopEvent.Reason.PLUGIN);
+            }
+        }, null, 1L);
     }
 
     @Override
     public void stopAllActions() {
-        for (BotAction<?> action : this.getHandle().getBotActions()) {
-            action.stop(this.getHandle(), BotActionStopEvent.Reason.PLUGIN);
-        }
+        this.getHandle().getBukkitEntity().taskScheduler.schedule((entity) -> {
+            for (BotAction<?> action : this.getHandle().getBotActions()) {
+                action.stop(this.getHandle(), BotActionStopEvent.Reason.PLUGIN);
+            }
+        }, null, 1L);
     }
 
     @Override

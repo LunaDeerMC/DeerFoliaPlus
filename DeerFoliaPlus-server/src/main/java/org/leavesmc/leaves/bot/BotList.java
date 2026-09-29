@@ -214,7 +214,13 @@ public class BotList {
 
             if (event.shouldSave()) {
                 BotList.LOGGER.info("Saving fake player: {}[{}]", bot.getName().getString(), bot.getUUID());
-                Bukkit.getAsyncScheduler().runNow(MinecraftInternalPlugin.INSTANCE, (t) -> playerIO.save(bot));
+                Optional<IPlayerDataStorage.SaveSnapshot> snapshot = playerIO.createSnapshot(bot);
+                if (snapshot.isPresent()) {
+                    IPlayerDataStorage.SaveSnapshot saveSnapshot = snapshot.get();
+                    Bukkit.getAsyncScheduler().runNow(MinecraftInternalPlugin.INSTANCE, (t) -> playerIO.save(saveSnapshot));
+                } else {
+                    playerIO.save(bot);
+                }
             } else {
                 BotList.LOGGER.info("Removing fake player: {}[{}]", bot.getName().getString(), bot.getUUID());
                 bot.dropAll();
@@ -268,8 +274,9 @@ public class BotList {
     }
 
     /**
-     * This is synchronous, so it should be called in the main thread.
-     * Only called on server closed.
+     * Called during server shutdown after the region scheduler has been halted.
+     * Snapshot creation and disk I/O are synchronous here so shutdown cannot exit
+     * before resident bot data reaches disk.
      */
     public void saveAll() {
         BotList.LOGGER.info("Saving all fake players...");
@@ -282,9 +289,11 @@ public class BotList {
 
     public void loadResume() {
         if (DeerFoliaPlusConfiguration.fakePlayer.enable && DeerFoliaPlusConfiguration.fakePlayer.residentBot) {
-            for (String realName : this.getSavedBotList().keySet()) {
-                if (this.getSavedBotList().getCompound(realName).isEmpty()) continue;
-                CompoundTag nbt = this.getSavedBotList().getCompound(realName).get();
+            CompoundTag savedBotList = this.getSavedBotList();
+            for (String realName : savedBotList.keySet()) {
+                Optional<CompoundTag> savedBot = savedBotList.getCompound(realName);
+                if (savedBot.isEmpty()) continue;
+                CompoundTag nbt = savedBot.get();
                 if (nbt.getBooleanOr("resume", false)) {
                     this.loadNewBot(serverBot -> {
                     }, realName);

@@ -192,7 +192,7 @@ public class ServerBot extends ServerPlayer {
         if (DeerFoliaPlusConfiguration.fakePlayer.regenAmount > 0.0 && this.botTickCount % 20 == 0) {
             float health = getHealth();
             float maxHealth = getMaxHealth();
-            float regenAmount = (float) (DeerFoliaPlusConfiguration.fakePlayer.regenAmount * 20);
+            float regenAmount = (float) DeerFoliaPlusConfiguration.fakePlayer.regenAmount;
             float amount;
 
             if (health < maxHealth - regenAmount) {
@@ -301,8 +301,7 @@ public class ServerBot extends ServerPlayer {
         this.addDeltaMovement(knockback);
         this.knockback = Vec3.ZERO;
 
-        this.getBukkitEntity().taskScheduler.schedule((entity) -> this.runAction(), (entity) -> {
-        }, 1L);
+        this.runAction();
 
         this.livingEntityTick();
 
@@ -393,8 +392,9 @@ public class ServerBot extends ServerPlayer {
         if (createNbt.list("skin", Codec.STRING).isPresent()) {
             ValueInput.TypedInputList<String> createSkin = createNbt.list("skin", Codec.STRING).get();
             skin = new String[Math.toIntExact(createSkin.stream().count())];
-            for (int i = 0; i < skin.length; i++) {
-                skin[i] = createSkin.iterator().next();
+            Iterator<String> iterator = createSkin.iterator();
+            for (int i = 0; i < skin.length && iterator.hasNext(); i++) {
+                skin[i] = iterator.next();
             }
         }
         createBuilder.skinName(createNbt.getStringOr("skinName", "Steve")).skin(skin);
@@ -406,8 +406,9 @@ public class ServerBot extends ServerPlayer {
         // actions
         if (nbt.childrenList("actions").isPresent()) {
             ValueInput.ValueInputList actionNbt = nbt.childrenList("actions").get();
-            for (int i = 0; i < actionNbt.stream().count(); i++) {
-                ValueInput actionTag = actionNbt.iterator().next();
+            Iterator<ValueInput> iterator = actionNbt.iterator();
+            while (iterator.hasNext()) {
+                ValueInput actionTag = iterator.next();
                 BotAction<?> action = Actions.getForName(actionTag.getStringOr("actionName", ""));
                 if (action != null) {
                     BotAction<?> newAction = action.create();
@@ -420,8 +421,9 @@ public class ServerBot extends ServerPlayer {
         // configs
         if (nbt.childrenList("configs").isPresent()) {
             ValueInput.ValueInputList configNbt = nbt.childrenList("configs").get();
-            for (int i = 0; i < configNbt.stream().count(); i++) {
-                ValueInput configTag = configNbt.iterator().next();
+            Iterator<ValueInput> iterator = configNbt.iterator();
+            while (iterator.hasNext()) {
+                ValueInput configTag = iterator.next();
                 Configs<?> configKey = Configs.getConfig(configTag.getStringOr("configName", ""));
                 if (configKey != null) {
                     this.configs.get(configKey).load(configTag);

@@ -417,13 +417,15 @@ public class BotCommand {
         ServerBot bot = requireBot(botName);
         requireControl(source, botName);
 
-        source.sendSuccess(() -> Component.literal(bot.getScoreboardName() + "'s action list:"), false);
-        List<BotAction<?>> actions = bot.getBotActions();
-        for (int i = 0; i < actions.size(); i++) {
-            int idx = i;
-            source.sendSuccess(() -> Component.literal(idx + " " + actions.get(idx).getName()), false);
-        }
-        return actions.size();
+        bot.getBukkitEntity().taskScheduler.schedule((entity) -> {
+            source.sendSuccess(() -> Component.literal(bot.getScoreboardName() + "'s action list:"), false);
+            List<BotAction<?>> actions = bot.getBotActions();
+            for (int i = 0; i < actions.size(); i++) {
+                int idx = i;
+                source.sendSuccess(() -> Component.literal(idx + " " + actions.get(idx).getName()), false);
+            }
+        }, null, 1L);
+        return 1;
     }
 
     private static int executeActionStopAll(CommandContext<CommandSourceStack> ctx, String botName) throws CommandSyntaxException {
@@ -432,20 +434,22 @@ public class BotCommand {
         requireControl(source, botName);
 
         CommandSender sender = source.getBukkitSender();
-        Set<BotAction<?>> forRemoval = new HashSet<>();
-        for (int i = 0; i < bot.getBotActions().size(); i++) {
-            BotAction<?> action = bot.getBotActions().get(i);
-            BotActionStopEvent event = new BotActionStopEvent(
-                    bot.getBukkitEntity(), action.getName(), action.getUUID(), BotActionStopEvent.Reason.COMMAND, sender
-            );
-            event.callEvent();
-            if (!event.isCancelled()) {
-                forRemoval.add(action);
+        bot.getBukkitEntity().taskScheduler.schedule((entity) -> {
+            Set<BotAction<?>> forRemoval = new HashSet<>();
+            for (int i = 0; i < bot.getBotActions().size(); i++) {
+                BotAction<?> action = bot.getBotActions().get(i);
+                BotActionStopEvent event = new BotActionStopEvent(
+                        bot.getBukkitEntity(), action.getName(), action.getUUID(), BotActionStopEvent.Reason.COMMAND, sender
+                );
+                event.callEvent();
+                if (!event.isCancelled()) {
+                    forRemoval.add(action);
+                }
             }
-        }
-        bot.getBotActions().removeAll(forRemoval);
-        source.sendSuccess(() -> Component.literal(bot.getScoreboardName() + "'s action list cleared."), false);
-        return forRemoval.size();
+            bot.getBotActions().removeAll(forRemoval);
+            source.sendSuccess(() -> Component.literal(bot.getScoreboardName() + "'s action list cleared."), false);
+        }, null, 1L);
+        return 1;
     }
 
     private static int executeActionStop(CommandContext<CommandSourceStack> ctx, String botName, int index) throws CommandSyntaxException {
@@ -453,19 +457,22 @@ public class BotCommand {
         ServerBot bot = requireBot(botName);
         requireControl(source, botName);
 
-        if (index < 0 || index >= bot.getBotActions().size()) {
-            throw ERROR_INVALID_INDEX.create();
-        }
+        bot.getBukkitEntity().taskScheduler.schedule((entity) -> {
+            if (index < 0 || index >= bot.getBotActions().size()) {
+                source.sendFailure(Component.literal("Invalid index"));
+                return;
+            }
 
-        BotAction<?> action = bot.getBotActions().get(index);
-        BotActionStopEvent event = new BotActionStopEvent(
-                bot.getBukkitEntity(), action.getName(), action.getUUID(), BotActionStopEvent.Reason.COMMAND, source.getBukkitSender()
-        );
-        event.callEvent();
-        if (!event.isCancelled()) {
-            bot.getBotActions().remove(index);
-            source.sendSuccess(() -> Component.literal(bot.getScoreboardName() + "'s " + action.getName() + " stopped."), false);
-        }
+            BotAction<?> action = bot.getBotActions().get(index);
+            BotActionStopEvent event = new BotActionStopEvent(
+                    bot.getBukkitEntity(), action.getName(), action.getUUID(), BotActionStopEvent.Reason.COMMAND, source.getBukkitSender()
+            );
+            event.callEvent();
+            if (!event.isCancelled()) {
+                bot.getBotActions().remove(index);
+                source.sendSuccess(() -> Component.literal(bot.getScoreboardName() + "'s " + action.getName() + " stopped."), false);
+            }
+        }, null, 1L);
         return 1;
     }
 
@@ -505,9 +512,11 @@ public class BotCommand {
             return 0;
         }
 
-        if (bot.addBotAction(newAction, source.getBukkitSender())) {
-            source.sendSuccess(() -> Component.literal("Action " + actionName + " has been issued to " + bot.getName().getString()), false);
-        }
+        bot.getBukkitEntity().taskScheduler.schedule((entity) -> {
+            if (bot.addBotAction(newAction, source.getBukkitSender())) {
+                source.sendSuccess(() -> Component.literal("Action " + actionName + " has been issued to " + bot.getName().getString()), false);
+            }
+        }, null, 1L);
         return 1;
     }
 
@@ -523,8 +532,10 @@ public class BotCommand {
             throw ERROR_INVALID_CONFIG.create();
         }
 
-        BotConfig<?> config = bot.getConfig(configKey);
-        config.getMessage().forEach(msg -> source.sendSuccess(() -> Component.literal(msg), false));
+        bot.getBukkitEntity().taskScheduler.schedule((entity) -> {
+            BotConfig<?> config = bot.getConfig(configKey);
+            config.getMessage().forEach(msg -> source.sendSuccess(() -> Component.literal(msg), false));
+        }, null, 1L);
         return 1;
     }
 
@@ -539,23 +550,24 @@ public class BotCommand {
             throw ERROR_INVALID_CONFIG.create();
         }
 
-        BotConfig<?> config = bot.getConfig(configKey);
         CommandSender sender = source.getBukkitSender();
 
-        BotConfigModifyEvent event = new BotConfigModifyEvent(bot.getBukkitEntity(), config.getName(), args, sender);
-        Bukkit.getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
-            return 0;
-        }
+        bot.getBukkitEntity().taskScheduler.schedule((entity) -> {
+            BotConfig<?> config = bot.getConfig(configKey);
+            BotConfigModifyEvent event = new BotConfigModifyEvent(bot.getBukkitEntity(), config.getName(), args, sender);
+            Bukkit.getPluginManager().callEvent(event);
+            if (event.isCancelled()) {
+                return;
+            }
 
-        org.leavesmc.leaves.command.CommandArgumentResult result = config.getArgument().parse(0, args);
-        try {
-            config.setValue(result);
-            config.getChangeMessage().forEach(msg -> source.sendSuccess(() -> Component.literal(msg), false));
-        } catch (IllegalArgumentException e) {
-            source.sendFailure(Component.literal(e.getMessage()));
-            return 0;
-        }
+            try {
+                org.leavesmc.leaves.command.CommandArgumentResult result = config.getArgument().parse(0, args);
+                config.setValue(result);
+                config.getChangeMessage().forEach(msg -> source.sendSuccess(() -> Component.literal(msg), false));
+            } catch (IllegalArgumentException e) {
+                source.sendFailure(Component.literal(e.getMessage()));
+            }
+        }, null, 1L);
         return 1;
     }
 

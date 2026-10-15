@@ -15,13 +15,14 @@ The TCP client and official-service relay are adapted from DeerFolia's `tools/li
 Coverage:
 
 - Paperclip startup, DeerFoliaPlus branding, Minecraft version, generated/loaded Plus and inherited Lithium configuration.
-- Actual TCP login and native command packets for fly/god/more/hat, four inventory menus, three posture modes and get-up, time and weather. God mode is toggled both ways while temporary invulnerability is active. Lying position locks are tested through actual movement packets and a displaced 26.3 teleport acknowledgement; look-only packets, jump/shift exit, and normal movement recovery are checked separately.
+- Actual TCP login and native command packets for fly/god/more/hat, four inventory menus, time and weather. God mode is toggled both ways while temporary invulnerability is active. Normal movement, look-only packets, and a position-bearing 26.3 teleport acknowledgement are checked without posture locks.
+- Removed posture commands, permissions, classes, listeners, and configuration field must be absent at runtime. The full run deliberately starts with a legacy `posture.enabled: true` section; a separate clean default-config startup verifies the generated YAML has no posture field.
 - Fake-player create and sneak action; all eight attack/break/use action variants verify real watcher swing packets against distinct hand, attack/interact animation components and durations; knockback marks velocity synchronization. Explicit save/load, creator UUID and inventory persistence, resident save on shutdown and restoration after restart, remove.
 - Seven custom recipe types registered; shaped and all five single-input matches/outputs, plus custom-ID chain acceptance/rejection checked against the live NMS recipe manager. All seven RecipeHolder and per-serializer stream codecs are encoded/decoded with the live registry access.
 - NeoForge recipe payload, Fabric supported-serializer request and response, Syncmatica version/feature handshake, Servux metadata request/response over the real TCP connection. Recipe payloads must include the custom recipe ID.
 - Inherited Lithium lazy collector, crafter sleep/API wake/countdown/resleep, safe asynchronous path creation, owner-region completion and actual navigation movement.
 
-World/entity assertions run on the owning Folia region. The external plugin logs explicit `PLUS_PASS`/`PLUS_FAIL` markers. Nonzero server exit and error/exception log entries fail the run; `summary.json` includes both startup and restart results, artifact SHA-256, assertions, packet and custom-channel counts.
+World/entity assertions run on the owning Folia region. The external plugin logs explicit `PLUS_PASS`/`PLUS_FAIL` markers. Nonzero server exit and error/exception log entries fail the run; `summary.json` includes the legacy-config startup, restart, and clean default-config startup results, artifact SHA-256, assertions, packet and custom-channel counts.
 
 These checks exercise server protocol handling and payload codecs. They do not establish compatibility with every third-party 26.3 client mod, full schematic transfer workflows, or whole-server performance. No performance benchmark is run.
 

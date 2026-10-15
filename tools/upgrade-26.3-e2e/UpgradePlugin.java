@@ -4,7 +4,6 @@ import cn.lunadeer.mc.deerfolia.DeerFoliaConfiguration;
 import cn.lunadeer.mc.deerfolia.async.path.AsyncPath;
 import cn.lunadeer.mc.deerfolia.async.path.AsyncPathProcessor;
 import cn.lunadeer.mc.deerfoliaplus.configurations.DeerFoliaPlusConfiguration;
-import cn.lunadeer.mc.deerfoliaplus.posture.PostureManager;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -37,8 +36,11 @@ public final class UpgradePlugin extends JavaPlugin implements CommandExecutor {
         guarded(() -> {
             check(Bukkit.getName().equals("DeerFoliaPlus"),"branding");
             check(Bukkit.getMinecraftVersion().equals("26.3"),"minecraft-26.3");
-            check(DeerFoliaPlusConfiguration.fakePlayer.enable && DeerFoliaPlusConfiguration.fakePlayer.residentBot,"fakeplayer-config");
-            check(DeerFoliaPlusConfiguration.posture.enabled && DeerFoliaPlusConfiguration.customRecipe.enabled,"plus-enabled-config");
+            if(!Boolean.getBoolean("plus.e2e.defaults")) {
+                check(DeerFoliaPlusConfiguration.fakePlayer.enable && DeerFoliaPlusConfiguration.fakePlayer.residentBot,"fakeplayer-config");
+                check(DeerFoliaPlusConfiguration.customRecipe.enabled,"custom-recipe-config");
+            }
+            removedPosture();
             check(DeerFoliaConfiguration.lithiumOptimize.enabled && DeerFoliaConfiguration.lithiumOptimize.blockEntitySleeping,"inherited-lithium-config");
             pass("plugin-enabled");
         });
@@ -83,9 +85,10 @@ public final class UpgradePlugin extends JavaPlugin implements CommandExecutor {
                 }
                 case "hat" -> check(player.getInventory().getHelmet()!=null && player.getInventory().getHelmet().getType()==Material.DIAMOND,"hat-command");
                 case "menu" -> {check(player.getOpenInventory().getType().name().equals(args[2]),"menu-"+args[2]);player.closeInventory();}
-                case "posture" -> {
-                    var session=PostureManager.getInstance().getSession(player);
-                    check(args[2].equals("NONE")?session==null:session!=null&&session.type().name().equals(args[2]),"posture-"+args[2]);
+                case "removed-posture" -> removedPosture();
+                case "teleport" -> {
+                    var nms=((org.bukkit.craftbukkit.entity.CraftPlayer)player).getHandle();
+                    nms.connection.internalTeleport(Double.parseDouble(args[2]),Double.parseDouble(args[3]),Double.parseDouble(args[4]),33,12);
                 }
                 case "position" -> {
                     var at=player.getLocation();
@@ -112,6 +115,24 @@ public final class UpgradePlugin extends JavaPlugin implements CommandExecutor {
             if(!args[0].equals("setup"))pass("complete-"+String.join("-",args));
         });
         return true;
+    }
+    private void removedPosture() {
+        var root=MinecraftServer.getServer().getCommands().getDispatcher().getRoot();
+        for(String name:List.of("sit","lay","crawl","get-up")) {
+            check(root.getChild(name)==null && root.getChild("minecraft:"+name)==null,"removed-command-native-"+name);
+            check(Bukkit.getServer().getCommandMap().getCommand(name)==null && Bukkit.getServer().getCommandMap().getCommand("minecraft:"+name)==null,"removed-command-bukkit-"+name);
+            check(Bukkit.getPluginManager().getPermission("deerfoliaplus.command."+name)==null,"removed-permission-"+name);
+        }
+        check(Bukkit.getPluginManager().getPermission("deerfoliaplus.command.posture")==null,"removed-permission-posture-root");
+        for(var handlers:org.bukkit.event.HandlerList.getHandlerLists())for(var listener:handlers.getRegisteredListeners()) {
+            check(!listener.getListener().getClass().getName().startsWith("cn.lunadeer.mc.deerfoliaplus.posture."),"no-posture-listener-"+listener.getListener().getClass().getSimpleName());
+        }
+        for(String name:List.of("commands.PostureCommand","commands.PostureCommandPermissions","commands.PostureCommandPermissions$PermissionNode","configurations.PostureConfiguration","posture.ChairDetector","posture.PostureListener","posture.PostureManager","posture.PostureService","posture.PostureSession","posture.PostureType")) {
+            boolean absent=false;
+            try {Class.forName("cn.lunadeer.mc.deerfoliaplus."+name,false,DeerFoliaPlusConfiguration.class.getClassLoader());}catch(ClassNotFoundException expected) {absent=true;}
+            check(absent,"removed-class-"+name);
+        }
+        check(java.util.Arrays.stream(DeerFoliaPlusConfiguration.class.getDeclaredFields()).noneMatch(f -> f.getName().equals("posture")),"removed-config-field");
     }
     private void setup(Player player) {
         player.setGameMode(GameMode.SURVIVAL);player.setGravity(false);player.setInvulnerable(false);player.setAllowFlight(false);

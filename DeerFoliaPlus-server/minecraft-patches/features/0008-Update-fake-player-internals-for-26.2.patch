@@ -17,7 +17,7 @@ index d46281d33d2c691f4d844f96a97bddd986fc03a4..7df4d1809b41aba646c9e34eb58cf929
  import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
  import net.minecraft.network.protocol.game.ClientboundPlayerCombatEndPacket;
 diff --git a/net/minecraft/world/entity/player/Player.java b/net/minecraft/world/entity/player/Player.java
-index 9ace3a98dc61a223f04bcb2400c59cf909552bda..4b7614d9b4930e32d0824d211320626bff8de00c 100644
+index a7de711ccbbab250c8a5fd3cb36d9b60fd211562..bafb929bb8474f066c0faecc46b651c45339505a 100644
 --- a/net/minecraft/world/entity/player/Player.java
 +++ b/net/minecraft/world/entity/player/Player.java
 @@ -155,7 +155,7 @@ public abstract class Player extends Avatar implements ContainerUser {

@@ -21,7 +21,7 @@ PORT = 25579
 NAME = 'UpgradeTester'
 
 
-def prepare(run, jar):
+def prepare(run, jar, defaults=False):
     run.mkdir(parents=True)
     with ZipFile(jar) as archive:
         digest, url, filename = archive.read('META-INF/download-context').decode().strip().split('\t')
@@ -53,7 +53,9 @@ generator-settings={{"layers":[{{"block":"minecraft:bedrock","height":1}},{{"blo
     (run / 'config').mkdir()
     (run / 'config/paper-global.yml').write_text('_version: 31\nthreaded-regions:\n  threads: 2\n')
     (run / 'config/deer-folia.yml').write_text('lithium-optimize:\n  enabled: true\nafk-network-optimization:\n  afk-threshold-ticks: 12000\n')
-    (run / 'config/deer-folia-plus.yml').write_text('''fake-player:
+    # Keep an old enabled section only in this upgrade fixture, never in production.
+    if not defaults:
+        (run / 'config/deer-folia-plus.yml').write_text('''fake-player:
   enable: true
   prefix: ""
   resident-bot: true
@@ -100,14 +102,14 @@ recipe-sync:
     (run / 'config/custom-recipes.yml').write_text(recipes)
 
 
-def execute(run, jar, restart=False):
-    logfile = OUT / ('restart.log' if restart else 'initial.log')
+def execute(run, jar, restart=False, defaults=False):
+    logfile = OUT / ('defaults.log' if defaults else 'restart.log' if restart else 'initial.log')
     stream = logfile.open('w')
     command = [java_tool('java'), '-Xms1G', '-Xmx3G', '--enable-native-access=ALL-UNNAMED', *jvm_properties(),
-               '-Dminecraft.api.discovery.host=http://127.0.0.1:25576/discovery', '-jar', str(jar), '--nogui']
+               '-Dminecraft.api.discovery.host=http://127.0.0.1:25576/discovery', f'-Dplus.e2e.defaults={str(defaults).lower()}', '-jar', str(jar), '--nogui']
     process = subprocess.Popen(command, cwd=run, stdin=subprocess.PIPE, stdout=stream, stderr=subprocess.STDOUT, text=True)
     client = None
-    result = {'restart': restart, 'jar_sha256': hashlib.sha256(jar.read_bytes()).hexdigest(), 'checks': [], 'status': 'failed'}
+    result = {'restart': restart, 'default_config_run': defaults, 'jar_sha256': hashlib.sha256(jar.read_bytes()).hexdigest(), 'checks': [], 'status': 'failed'}
 
     def content():
         stream.flush()
@@ -153,6 +155,13 @@ def execute(run, jar, restart=False):
     try:
         marker('Done (')
         marker('PLUS_PASS plugin-enabled')
+        if defaults:
+            generated=(run / 'config/deer-folia-plus.yml').read_text()
+            if re.search(r'(?m)^\s*posture\s*:',generated):
+                raise AssertionError('Fresh generated config still contains posture')
+            result['checks'].append('fresh-generated-default-config-has-no-posture')
+            result['status']='passed'
+            return result
         client = Client(NAME, PORT)
         until(lambda: client.ready.is_set(), 'real TCP login')
         result['checks'].append('tcp-login-protocol-777')
@@ -179,42 +188,25 @@ def execute(run, jar, restart=False):
             for menu, kind in [('workbench', 'WORKBENCH'), ('stonecutter', 'STONECUTTER'), ('anvil', 'ANVIL'), ('enderchest', 'ENDER_CHEST')]:
                 command(menu)
                 assertion('menu', kind)
-            for posture, kind in [('crawl', 'CRAWLING'), ('sit', 'SITTING'), ('lay', 'LYING')]:
-                command(posture)
-                assertion('posture', kind)
-                command('get-up')
-                assertion('posture', 'NONE')
-            # Exercise 26.3's shared movement helper through normal movement and
-            # the new position-bearing teleport acknowledgement, not only commands.
-            command('lay')
-            assertion('posture', 'LYING')
+            assertion('removed-posture')
+            # Preserve basic 26.3 movement and position-bearing teleport ACK coverage.
             before_look = len(client.teleports)
             client.look(33.0, 12.0)
             assertion('rotation', 33.0, 12.0)
             if len(client.teleports) != before_look:
                 raise AssertionError('Look-only packet unexpectedly caused a position correction')
-            result['checks'].append('lying-look-only-accepted-without-position-correction')
-            before_correction = len(client.teleports)
-            client.teleport_offset_once = (.25, 0., 0.)
-            client.move(9.25, 96., 8.5)
-            until(lambda: len(client.teleports) >= before_correction + 2, 'lying movement and displaced teleport ack corrections')
-            assertion('position', 8.5, 96., 8.5)
-            assertion('posture', 'LYING')
-            result['checks'].append('lying-move-and-teleport-ack-cannot-bypass-lock')
-            client.input(16)  # jump exits locked posture
-            assertion('posture', 'NONE')
-            client.input(0)
+            result['checks'].append('look-only-accepted-without-position-correction')
             client.move(9.0, 96., 8.5)
             assertion('position', 9.0, 96., 8.5)
-            result['checks'].append('jump-exits-lying-and-normal-movement-restored')
-            command('lay')
-            assertion('posture', 'LYING')
-            client.input(32)  # shift also exits locked posture
-            assertion('posture', 'NONE')
-            client.input(0)
+            result['checks'].append('ordinary-position-movement-accepted')
+            before_teleport = len(client.teleports)
+            client.teleport_offset_once = (.25, 0., 0.)
+            assertion('teleport', 9.0, 96., 8.5)
+            until(lambda: len(client.teleports) > before_teleport, 'native teleport packet and ack')
+            assertion('position', 9.25, 96., 8.5)
+            result['checks'].append('position-bearing-teleport-ack-accepted-without-posture-lock')
             client.move(8.5, 96., 8.5)
             assertion('position', 8.5, 96., 8.5)
-            result['checks'].append('shift-exits-lying-and-normal-movement-restored')
             for cmd, tick in [('day', 1000), ('noon', 6000), ('night', 13000)]:
                 command(cmd)
                 assertion('time', tick)
@@ -309,10 +301,18 @@ def main():
             relay_stream = (OUT / 'relay.log').open('w')
             relay = subprocess.Popen([sys.executable, str(HERE / 'services_proxy.py')], stdout=relay_stream, stderr=subprocess.STDOUT)
             time.sleep(.3)
+        legacy_config=(run / 'config/deer-folia-plus.yml').read_text()
+        if 'posture:\n  enabled: true' not in legacy_config:
+            raise AssertionError('Missing legacy enabled-posture fixture')
         results = [execute(run, args.jar.resolve())]
+        results[0]['legacy_enabled_posture_fixture']=True
         if results[0]['status'] == 'passed':
             results.append(execute(run, args.jar.resolve(), restart=True))
-        summary = {'status': 'passed' if len(results) == 2 and all(result['status'] == 'passed' for result in results) else 'failed', 'run_directory': str(run), 'results': results}
+        if len(results)==2 and all(result['status']=='passed' for result in results):
+            defaults_run=OUT / 'runs' / (args.tag+'-defaults')
+            prepare(defaults_run,args.jar.resolve(),defaults=True)
+            results.append(execute(defaults_run,args.jar.resolve(),defaults=True))
+        summary = {'status': 'passed' if len(results) == 3 and all(result['status'] == 'passed' for result in results) else 'failed', 'run_directory': str(run), 'results': results}
         (OUT / 'summary.json').write_text(json.dumps(summary, indent=2))
         return 0 if summary['status'] == 'passed' else 1
     finally:

@@ -16,7 +16,7 @@ public class UseItemToAction extends AbstractTimerAction<UseItemToAction> {
     public boolean doTick(@NotNull ServerBot bot) {
         Entity entity = bot.getTargetEntity(3, null);
         if (entity != null) {
-            bot.swing(InteractionHand.MAIN_HAND);
+            bot.swingAndResetAttackStrength(InteractionHand.MAIN_HAND, bot.getMainHandItem().getInteractAnimation(), false);
             bot.updateItemInHand(InteractionHand.MAIN_HAND);
             return bot.interactOn(entity, InteractionHand.MAIN_HAND, Vec3.atCenterOf(entity.blockPosition())).consumesAction();
         }

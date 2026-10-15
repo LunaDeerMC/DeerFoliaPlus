@@ -5,10 +5,10 @@ Subject: [PATCH] Posture system
 
 
 diff --git a/net/minecraft/commands/Commands.java b/net/minecraft/commands/Commands.java
-index 03ed64aa9c78d43618c6d87c8327d0cb2ff45ba2..6ddefbfb54d1678d71da57e47b2337f7c69aa600 100644
+index 584a6156727c3027e7c91719a6193b31c322f994..51e4d4a99aa74267273f572013e746ac6533f713 100644
 --- a/net/minecraft/commands/Commands.java
 +++ b/net/minecraft/commands/Commands.java
-@@ -280,6 +280,7 @@ public class Commands {
+@@ -284,6 +284,7 @@ public class Commands {
          cn.lunadeer.mc.deerfoliaplus.commands.SuicideCommand.register(this.dispatcher);
          cn.lunadeer.mc.deerfoliaplus.commands.InspectCommand.register(this.dispatcher);
          cn.lunadeer.mc.deerfoliaplus.commands.MenuShortcutCommand.register(this.dispatcher);
@@ -17,10 +17,10 @@ index 03ed64aa9c78d43618c6d87c8327d0cb2ff45ba2..6ddefbfb54d1678d71da57e47b2337f7
          if (JvmProfiler.INSTANCE.isAvailable()) {
              JfrCommand.register(this.dispatcher);
 diff --git a/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 209323db54734ad293761a37eed503d03b7e6f87..2ebf1f536a9be0e12df62a0dc0447f1bac54f140 100644
+index 5eb9c9488c1c87c588c2c0426f416f348ce1fe0b..bf40fe3ed7238e5af0f817e2afc4804e30aa3b95 100644
 --- a/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -540,7 +540,16 @@ public class ServerGamePacketListenerImpl
+@@ -550,7 +550,16 @@ public class ServerGamePacketListenerImpl
              }
          }
          // Paper end - PlayerToggleSneakEvent
@@ -36,34 +36,62 @@ index 209323db54734ad293761a37eed503d03b7e6f87..2ebf1f536a9be0e12df62a0dc0447f1b
 +        this.player.setLastClientInput(deerFoliaPlusInput);
 +        // DeerFoliaPlus end - posture exit keys and movement lock
          if (this.hasClientLoaded()) {
-             this.player.resetLastActionTime();
-             // this.player.setShiftKeyDown(packet.input().shift()); // Paper - move up and only set if event is not cancelled.
-@@ -1553,6 +1562,20 @@ public class ServerGamePacketListenerImpl
-                         double targetX = clampHorizontal(packet.getX(this.player.getX()));
-                         double targetY = clampVertical(packet.getY(this.player.getY()));
-                         double targetZ = clampHorizontal(packet.getZ(this.player.getZ()));
-+                        // DeerFoliaPlus start - lock lying movement in place
-+                        if (!this.player.isPassenger() && cn.lunadeer.mc.deerfoliaplus.posture.PostureService.getInstance().isLying(this.getCraftPlayer())) {
-+                            org.bukkit.Location lockedLocation = cn.lunadeer.mc.deerfoliaplus.posture.PostureService.getInstance().getLockedLocation(this.getCraftPlayer());
-+                            if (lockedLocation != null && packet.hasPosition()) {
-+                                double lockDeltaX = targetX - lockedLocation.getX();
-+                                double lockDeltaY = targetY - lockedLocation.getY();
-+                                double lockDeltaZ = targetZ - lockedLocation.getZ();
-+                                if (Math.abs(lockDeltaX) > 1.0E-4 || Math.abs(lockDeltaY) > 1.0E-4 || Math.abs(lockDeltaZ) > 1.0E-4) {
-+                                    this.internalTeleport(lockedLocation.getX(), lockedLocation.getY(), lockedLocation.getZ(), targetYRot, targetXRot);
-+                                    return;
-+                                }
-+                            }
-+                        }
-+                        // DeerFoliaPlus end - lock lying movement in place
-                         if (this.player.isPassenger()) {
-                             this.player.absSnapTo(this.player.getX(), this.player.getY(), this.player.getZ(), targetYRot, targetXRot);
-                             this.player.level().getChunkSource().move(this.player);
+             if (deerFoliaInputChanged) {
+                 cn.lunadeer.mc.deerfolia.afknetwork.AfkNetworkManager.handleBaseActivity(this.player); // DeerFolia - AFK network optimization
+@@ -868,7 +877,7 @@ public class ServerGamePacketListenerImpl
+             this.lastGoodZ = this.awaitingPositionFromClient.z;
+             this.player.hasChangedDimension();
+             this.awaitingPositionFromClient = null;
+-            this.handlePlayerPositionChange(packet.x(), packet.y(), packet.z(), packet.yRot(), packet.xRot(), false, false);
++            this.handlePlayerPositionChange(packet.x(), packet.y(), packet.z(), packet.yRot(), packet.xRot(), false, false, true); // DeerFoliaPlus - posture position lock
+         }
+     }
+ 
+@@ -1575,7 +1584,8 @@ public class ServerGamePacketListenerImpl
+                             requestedYRot,
+                             requestedXRot,
+                             packet.isOnGround(),
+-                            packet.horizontalCollision()
++                            packet.horizontalCollision(),
++                            packet.hasPosition() // DeerFoliaPlus - preserve rotation-only movement semantics
+                         );
+                     }
+                 }
+@@ -1590,13 +1600,28 @@ public class ServerGamePacketListenerImpl
+         final float requestedYRot,
+         final float requestedXRot,
+         final boolean isOnGround,
+-        final boolean horizontalCollision
++        final boolean horizontalCollision,
++        final boolean hasPosition // DeerFoliaPlus - posture position lock
+     ) {
+         double targetX = clampHorizontal(requestedX);
+         double targetY = clampVertical(requestedY);
+         double targetZ = clampHorizontal(requestedZ);
+         float targetYRot = Mth.wrapDegrees(requestedYRot);
+         float targetXRot = Mth.wrapDegrees(requestedXRot);
++        // DeerFoliaPlus start - lock lying movement in place
++        if (hasPosition && !this.player.isPassenger() && cn.lunadeer.mc.deerfoliaplus.posture.PostureService.getInstance().isLying(this.getCraftPlayer())) {
++            org.bukkit.Location lockedLocation = cn.lunadeer.mc.deerfoliaplus.posture.PostureService.getInstance().getLockedLocation(this.getCraftPlayer());
++            if (lockedLocation != null) {
++                double lockDeltaX = targetX - lockedLocation.getX();
++                double lockDeltaY = targetY - lockedLocation.getY();
++                double lockDeltaZ = targetZ - lockedLocation.getZ();
++                if (Math.abs(lockDeltaX) > 1.0E-4 || Math.abs(lockDeltaY) > 1.0E-4 || Math.abs(lockDeltaZ) > 1.0E-4) {
++                    this.internalTeleport(lockedLocation.getX(), lockedLocation.getY(), lockedLocation.getZ(), targetYRot, targetXRot);
++                    return;
++                }
++            }
++        }
++        // DeerFoliaPlus end - lock lying movement in place
+         if (this.player.isPassenger()) {
+             this.player.absSnapTo(this.player.getX(), this.player.getY(), this.player.getZ(), targetYRot, targetXRot);
+             this.player.level().getChunkSource().move(this.player);
 diff --git a/net/minecraft/world/entity/player/Player.java b/net/minecraft/world/entity/player/Player.java
-index e65fa32a7a7bc2b16fcd7eda0c006043fbd0433e..277cc55f66efbdf0618c8acba88900fb1d41171e 100644
+index a7de711ccbbab250c8a5fd3cb36d9b60fd211562..9ace3a98dc61a223f04bcb2400c59cf909552bda 100644
 --- a/net/minecraft/world/entity/player/Player.java
 +++ b/net/minecraft/world/entity/player/Player.java
-@@ -367,6 +367,18 @@ public abstract class Player extends Avatar implements ContainerUser {
+@@ -368,6 +368,18 @@ public abstract class Player extends Avatar implements ContainerUser {
      }
  
      public void updatePlayerPose() {
@@ -82,7 +110,7 @@ index e65fa32a7a7bc2b16fcd7eda0c006043fbd0433e..277cc55f66efbdf0618c8acba88900fb
          if (this.canPlayerFitWithinBlocksAndEntitiesWhen(Pose.SWIMMING)) {
              Pose desiredPose = this.getDesiredPose();
              Pose actualPose;
-@@ -1524,6 +1536,14 @@ public abstract class Player extends Avatar implements ContainerUser {
+@@ -1523,6 +1535,14 @@ public abstract class Player extends Avatar implements ContainerUser {
  
      @Override
      public void travel(final Vec3 input) {

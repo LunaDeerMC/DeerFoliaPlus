@@ -15,7 +15,7 @@ public class UseItemOffHandAction extends AbstractTimerAction<UseItemOffHandActi
         if (bot.isUsingItem()) {
             return false;
         }
-        bot.swing(InteractionHand.OFF_HAND);
+        bot.swingAndResetAttackStrength(InteractionHand.OFF_HAND, bot.getOffhandItem().getInteractAnimation(), false);
         bot.updateItemInHand(InteractionHand.OFF_HAND);
         return bot.gameMode.useItem(bot, bot.level(), bot.getItemInHand(InteractionHand.OFF_HAND), InteractionHand.OFF_HAND).consumesAction();
     }

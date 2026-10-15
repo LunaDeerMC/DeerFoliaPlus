@@ -16,7 +16,7 @@ public class UseItemToOffhandAction extends AbstractTimerAction<UseItemToOffhand
     public boolean doTick(@NotNull ServerBot bot) {
         Entity entity = bot.getTargetEntity(3, null);
         if (entity != null) {
-            bot.swing(InteractionHand.OFF_HAND);
+            bot.swingAndResetAttackStrength(InteractionHand.OFF_HAND, bot.getOffhandItem().getInteractAnimation(), false);
             bot.updateItemInHand(InteractionHand.OFF_HAND);
             return bot.interactOn(entity, InteractionHand.OFF_HAND, Vec3.atCenterOf(entity.blockPosition())).consumesAction();
         }

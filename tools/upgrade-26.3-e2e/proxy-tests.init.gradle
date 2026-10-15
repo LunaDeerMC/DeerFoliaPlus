@@ -1,0 +1,7 @@
+// Optional test-only discovery relay for environments requiring an HTTP proxy.
+// Start services_proxy.py first; normal network environments can run `./gradlew test`.
+allprojects {
+    tasks.withType(Test).configureEach {
+        systemProperty 'minecraft.api.discovery.host', 'http://127.0.0.1:25576/discovery'
+    }
+}

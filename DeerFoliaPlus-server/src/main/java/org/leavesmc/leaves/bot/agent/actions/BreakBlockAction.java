@@ -32,7 +32,7 @@ public class BreakBlockAction extends AbstractTimerAction<BreakBlockAction> {
 
             BlockState iblockdata = bot.level().getBlockState(pos);
             if (!iblockdata.isAir()) {
-                bot.swing(InteractionHand.MAIN_HAND);
+                bot.swingAndResetAttackStrength(InteractionHand.MAIN_HAND, bot.getMainHandItem().getAttackAnimation(), false);
 
                 if (iblockdata.getDestroyProgress(bot, bot.level(), pos) >= 1.0F) {
                     bot.gameMode.destroyAndAck(pos, 0, "insta mine");

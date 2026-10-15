@@ -22,13 +22,13 @@ public class GodCommand {
     }
 
     private static int toggleGod(CommandSourceStack source, ServerPlayer target) {
-        boolean newState = !target.isInvulnerable();
-        String name = target.getScoreboardName();
         target.getBukkitEntity().taskScheduler.schedule((nmsEntity) -> {
             ServerPlayer player = (ServerPlayer) nmsEntity;
-            player.setInvulnerable(newState);
+            boolean newState = !player.isPermanentlyInvulnerable();
+            player.setPermanentlyInvulnerable(newState);
+            String name = player.getScoreboardName();
+            source.sendSuccess(() -> Component.literal("God mode " + (newState ? "enabled" : "disabled") + " for " + name), true);
         }, null, 1L);
-        source.sendSuccess(() -> Component.literal("God mode " + (newState ? "enabled" : "disabled") + " for " + name), true);
         return 1;
     }
 }

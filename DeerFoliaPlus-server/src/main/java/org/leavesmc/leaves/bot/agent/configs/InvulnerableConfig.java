@@ -20,12 +20,12 @@ public class InvulnerableConfig extends BotConfig<Boolean>  {
 
     @Override
     public Boolean getValue() {
-        return bot.isInvulnerable();
+        return bot.isPermanentlyInvulnerable();
     }
 
     @Override
     public void setValue(@NotNull CommandArgumentResult result) throws IllegalArgumentException {
-        bot.setInvulnerable(result.readBoolean(bot.isInvulnerable()));
+        bot.setPermanentlyInvulnerable(result.readBoolean(bot.isPermanentlyInvulnerable()));
     }
 
     @Override

@@ -101,7 +101,7 @@ public class ServerBot extends ServerPlayer {
         this.notSleepTicks = 0;
         this.fauxSleeping = DeerFoliaPlusConfiguration.fakePlayer.skipSleepCheck;
 
-        this.setInvulnerable(DeerFoliaPlusConfiguration.fakePlayer.invulnerable);
+        this.setPermanentlyInvulnerable(DeerFoliaPlusConfiguration.fakePlayer.invulnerable);
     }
 
     public void sendPlayerInfo(ServerPlayer player) {
@@ -331,7 +331,7 @@ public class ServerBot extends ServerPlayer {
         if (strength > 0.0D) {
             Vec3 vec3d = this.getDeltaMovement();
             Vec3 vec3d1 = (new Vec3(x, 0.0D, z)).normalize().scale(strength);
-            this.hurtMarked = true;
+            this.markHurt();
             this.knockback = new Vec3(vec3d.x / 2.0D - vec3d1.x, this.onGround() ? Math.min(0.4D, vec3d.y / 2.0D + strength) : vec3d.y, vec3d.z / 2.0D - vec3d1.z).subtract(vec3d);
         }
     }
@@ -344,7 +344,7 @@ public class ServerBot extends ServerPlayer {
     @Override
     public void attack(@NotNull Entity target) {
         super.attack(target);
-        this.swing(InteractionHand.MAIN_HAND);
+        this.swingAndResetAttackStrength(InteractionHand.MAIN_HAND, this.getMainHandItem().getAttackAnimation(), false);
     }
 
     @Override

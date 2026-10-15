@@ -22,7 +22,7 @@ final class WorldStateCommandHelper {
 
         net.minecraft.core.Holder<WorldClock> clock = defaultClock.get();
         RegionizedServer.getInstance().addTask(() -> {
-            long currentTime = source.getLevel().clockManager().getTotalTicks(clock);
+            long currentTime = source.getLevel().clockManager().getInstance(clock).totalTicks();
             TimeSkipEvent event = new TimeSkipEvent(source.getLevel().getWorld(), TimeSkipEvent.SkipReason.COMMAND, totalTicks - currentTime);
             if (event.callEvent()) {
                 source.getLevel().clockManager().setTotalTicks(clock, currentTime + event.getSkipAmount());

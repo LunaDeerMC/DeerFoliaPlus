@@ -24,7 +24,7 @@ public class UseItemOnAction extends AbstractTimerAction<UseItemOnAction> {
         HitResult result = bot.getRayTrace(5, ClipContext.Fluid.NONE);
         if (result instanceof BlockHitResult blockHitResult) {
             BlockState state = bot.level().getBlockState(blockHitResult.getBlockPos());
-            bot.swing(InteractionHand.MAIN_HAND);
+            bot.swingAndResetAttackStrength(InteractionHand.MAIN_HAND, bot.getMainHandItem().getInteractAnimation(), false);
             if (state.getBlock() == Blocks.TRAPPED_CHEST) {
                 BlockEntity entity = bot.level().getBlockEntity(blockHitResult.getBlockPos());
                 if (entity instanceof TrappedChestBlockEntity chestBlockEntity) {

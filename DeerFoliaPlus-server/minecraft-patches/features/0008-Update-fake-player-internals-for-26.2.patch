@@ -5,10 +5,10 @@ Subject: [PATCH] Update fake player internals for 26.2
 
 
 diff --git a/net/minecraft/server/level/ServerPlayer.java b/net/minecraft/server/level/ServerPlayer.java
-index 879378f1beeb4016a090269f848cc00fce501381..5ebd43ad5122c6089edf76aa7cc414e4ea0feccc 100644
+index d46281d33d2c691f4d844f96a97bddd986fc03a4..7df4d1809b41aba646c9e34eb58cf929dd3fb15a 100644
 --- a/net/minecraft/server/level/ServerPlayer.java
 +++ b/net/minecraft/server/level/ServerPlayer.java
-@@ -66,6 +66,7 @@ import net.minecraft.network.protocol.game.ClientboundHurtAnimationPacket;
+@@ -67,6 +67,7 @@ import net.minecraft.network.protocol.game.ClientboundHurtAnimationPacket;
  import net.minecraft.network.protocol.game.ClientboundMerchantOffersPacket;
  import net.minecraft.network.protocol.game.ClientboundMountScreenOpenPacket;
  import net.minecraft.network.protocol.game.ClientboundOpenBookPacket;
@@ -17,10 +17,10 @@ index 879378f1beeb4016a090269f848cc00fce501381..5ebd43ad5122c6089edf76aa7cc414e4
  import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
  import net.minecraft.network.protocol.game.ClientboundPlayerCombatEndPacket;
 diff --git a/net/minecraft/world/entity/player/Player.java b/net/minecraft/world/entity/player/Player.java
-index 277cc55f66efbdf0618c8acba88900fb1d41171e..7c07cadba3965f349a914bdf9c2253b1446f1205 100644
+index 9ace3a98dc61a223f04bcb2400c59cf909552bda..4b7614d9b4930e32d0824d211320626bff8de00c 100644
 --- a/net/minecraft/world/entity/player/Player.java
 +++ b/net/minecraft/world/entity/player/Player.java
-@@ -156,7 +156,7 @@ public abstract class Player extends Avatar implements ContainerUser {
+@@ -155,7 +155,7 @@ public abstract class Player extends Avatar implements ContainerUser {
      protected FoodData foodData = new FoodData();
      protected int jumpTriggerTime;
      public int takeXpDelay;

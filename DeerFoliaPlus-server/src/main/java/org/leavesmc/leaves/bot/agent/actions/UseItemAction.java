@@ -15,7 +15,7 @@ public class UseItemAction extends AbstractTimerAction<UseItemAction> {
         if (bot.isUsingItem()) {
             return false;
         }
-        bot.swing(InteractionHand.MAIN_HAND);
+        bot.swingAndResetAttackStrength(InteractionHand.MAIN_HAND, bot.getMainHandItem().getInteractAnimation(), false);
         bot.updateItemInHand(InteractionHand.MAIN_HAND);
         return bot.gameMode.useItem(bot, bot.level(), bot.getItemInHand(InteractionHand.MAIN_HAND), InteractionHand.MAIN_HAND).consumesAction();
     }

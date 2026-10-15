@@ -5,7 +5,7 @@ Subject: [PATCH] DeerFoliaPlus configuration
 
 
 diff --git a/net/minecraft/server/dedicated/DedicatedServer.java b/net/minecraft/server/dedicated/DedicatedServer.java
-index 527aa58ca531b2eec6b762b1f24ed7783179efc9..3da8e9f9b0cc5c8e677322d12d1371689640f413 100644
+index 468d47020183fec0a605961c12ca54411392c3e6..289783a2f7e23df304f1697a49e922f5a7f199ba 100644
 --- a/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -241,6 +241,9 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface

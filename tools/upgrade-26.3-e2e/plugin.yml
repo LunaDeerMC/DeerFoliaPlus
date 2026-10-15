@@ -1,0 +1,12 @@
+name: PlusUpgradeE2E
+version: 1.0
+main: upgrade.UpgradePlugin
+api-version: '26.3'
+folia-supported: true
+commands:
+  pluse2e:
+    description: Local upgrade integration assertions
+    permission: pluse2e.admin
+permissions:
+  pluse2e.admin:
+    default: op

@@ -5,7 +5,7 @@ Subject: [PATCH] Leaves protocol core
 
 
 diff --git a/io/papermc/paper/threadedregions/RegionizedServer.java b/io/papermc/paper/threadedregions/RegionizedServer.java
-index aa3f0670e804554d23d850f39cf216ee2f00d016..67317525bc5318d5a2e594b8a21aba89ff6e20cf 100644
+index f096df168a58f5c617080d63e9455833e5b1f21f..9716f1879c65e4f5d5297679824a1e4df2ef9d72 100644
 --- a/io/papermc/paper/threadedregions/RegionizedServer.java
 +++ b/io/papermc/paper/threadedregions/RegionizedServer.java
 @@ -267,6 +267,10 @@ public final class RegionizedServer {
@@ -20,13 +20,13 @@ index aa3f0670e804554d23d850f39cf216ee2f00d016..67317525bc5318d5a2e594b8a21aba89
  
      private void tickPlayerSample() {
 diff --git a/net/minecraft/server/network/PlayerChunkSender.java b/net/minecraft/server/network/PlayerChunkSender.java
-index 196c01fe5f200ed57e6f23e0939cac616305571a..40962f02c7d15cef9a1b5cac0705c20db1f7d19d 100644
+index 319ec2e732fdd24dc4496f1ad1f4aa302c5b4333..b6ea2f56098237621e7c15168685c027813bea51 100644
 --- a/net/minecraft/server/network/PlayerChunkSender.java
 +++ b/net/minecraft/server/network/PlayerChunkSender.java
-@@ -83,6 +83,9 @@ public class PlayerChunkSender {
-         final boolean shouldModify = level.chunkPacketBlockController.shouldModify(connection.player, chunk);
-         connection.send(new ClientboundLevelChunkWithLightPacket(chunk, level.getLightEngine(), null, null, shouldModify));
-         // Paper end - Anti-Xray
+@@ -80,6 +80,9 @@ public class PlayerChunkSender {
+ 
+     public static void sendChunk(final ServerGamePacketListenerImpl connection, final ServerLevel level, final LevelChunk chunk) { // Paper - rewrite chunk system - public
+         deerFolia$resendChunkPacketOnly(connection, level, chunk); // DeerFolia - AFK network optimization
 +        // DeerFoliaPlus start - Servux structure tracking
 +        org.leavesmc.leaves.protocol.servux.ServuxStructuresProtocol.onStartedWatchingChunk(connection.player, chunk);
 +        // DeerFoliaPlus end - Servux structure tracking
@@ -54,10 +54,10 @@ index 010180899d69d0457dcc9feee4f1c062c5354995..0eaafdc22077eb43bff91c46a0557a28
          } catch (final Exception e) {
              LOGGER.error("Couldn't handle custom payload on channel {}", identifier, e);
 diff --git a/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 99f88777b2f5c484f5df000c626fa39a1304e959..209323db54734ad293761a37eed503d03b7e6f87 100644
+index 0c8f35db63f201183f89a003685b57e2160bda34..5eb9c9488c1c87c588c2c0426f416f348ce1fe0b 100644
 --- a/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -2357,6 +2357,9 @@ public class ServerGamePacketListenerImpl
+@@ -2420,6 +2420,9 @@ public class ServerGamePacketListenerImpl
  
      private void removePlayerFromWorld(net.kyori.adventure.text.@Nullable Component quitMessage) {
          // Paper end - Fix kick event leave message not being sent
@@ -68,10 +68,10 @@ index 99f88777b2f5c484f5df000c626fa39a1304e959..209323db54734ad293761a37eed503d0
          // CraftBukkit start - Replace vanilla quit message handling with our own.
          /*
 diff --git a/net/minecraft/server/players/PlayerList.java b/net/minecraft/server/players/PlayerList.java
-index 2adbb0fd2af361a6eabc34a928f5a4e5d90e2500..23767cb60a09a9e6c01f75fd92b9c907679904e7 100644
+index c40aa650db5dc252a85200b2ec5dc345c17afc49..aeb2192b5462d5e1da703cf6835f96711916a793 100644
 --- a/net/minecraft/server/players/PlayerList.java
 +++ b/net/minecraft/server/players/PlayerList.java
-@@ -330,6 +330,10 @@ public abstract class PlayerList {
+@@ -333,6 +333,10 @@ public abstract class PlayerList {
          }
          // Leaves end - bot support
  

@@ -1,12 +1,9 @@
 package org.leavesmc.leaves.protocol.servux;
 
 import io.netty.buffer.Unpooled;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-
-import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
 
 // Powered by Servux(https://github.com/sakura-ryoko/servux)
 
@@ -26,83 +23,52 @@ public class PacketSplitter {
     public static final int MAX_PAYLOAD_PER_PACKET_S2C = MAX_TOTAL_PER_PACKET_S2C - 5;
     public static final int MAX_TOTAL_PER_PACKET_C2S = 32767;
     public static final int MAX_PAYLOAD_PER_PACKET_C2S = MAX_TOTAL_PER_PACKET_C2S - 5;
-    public static final int DEFAULT_MAX_RECEIVE_SIZE_C2S = 1048576;
-    public static final int DEFAULT_MAX_RECEIVE_SIZE_S2C = 67108864;
-
-    private static final Map<Long, ReadingSession> READING_SESSIONS = new HashMap<>();
-
+    /** Takes ownership of packet, including when encoding or sending fails. */
     public static boolean send(IPacketSplitterHandler handler, FriendlyByteBuf packet, ServerPlayer player) {
         return send(handler, packet, player, MAX_PAYLOAD_PER_PACKET_S2C);
     }
 
-    private static boolean send(IPacketSplitterHandler handler, FriendlyByteBuf packet, ServerPlayer player, int payloadLimit) {
-        int len = packet.writerIndex();
-
-        packet.resetReaderIndex();
-
-        for (int offset = 0; offset < len; offset += payloadLimit) {
-            int thisLen = Math.min(len - offset, payloadLimit);
-            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer(thisLen));
-
-            buf.resetWriterIndex();
-
-            if (offset == 0) {
-                buf.writeVarInt(len);
-            }
-
-            buf.writeBytes(packet, thisLen);
-            handler.encode(player, buf);
+    public static boolean sendNbt(IPacketSplitterHandler handler, CompoundTag nbt, ServerPlayer player) {
+        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
+        try {
+            packet.writeNbt(nbt);
+        } catch (RuntimeException | Error failure) {
+            packet.release();
+            throw failure;
         }
-
-        packet.release();
-
-        return true;
+        return send(handler, packet, player);
     }
 
-    public static FriendlyByteBuf receive(long key, FriendlyByteBuf buf) {
-        return receive(key, buf, DEFAULT_MAX_RECEIVE_SIZE_S2C);
-    }
-
-    @Nullable
-    private static FriendlyByteBuf receive(long key, FriendlyByteBuf buf, int maxLength) {
-        return READING_SESSIONS.computeIfAbsent(key, ReadingSession::new).receive(buf, maxLength);
+    private static boolean send(IPacketSplitterHandler handler, FriendlyByteBuf packet, ServerPlayer player, int payloadLimit) {
+        try {
+            if (payloadLimit <= 0 || payloadLimit > MAX_PAYLOAD_PER_PACKET_S2C) {
+                throw new IllegalArgumentException("Invalid payload limit");
+            }
+            int len = packet.writerIndex();
+            packet.readerIndex(0);
+            int offset = 0;
+            do {
+                int thisLen = Math.min(len - offset, payloadLimit);
+                FriendlyByteBuf fragment = new FriendlyByteBuf(Unpooled.buffer(thisLen + 5));
+                try {
+                    if (offset == 0) {
+                        fragment.writeVarInt(len);
+                    }
+                    fragment.writeBytes(packet, thisLen);
+                    handler.encode(player, fragment);
+                } finally {
+                    fragment.release();
+                }
+                offset += thisLen;
+            } while (offset < len);
+            return true;
+        } finally {
+            packet.release();
+        }
     }
 
     public interface IPacketSplitterHandler {
+        /** The fragment is borrowed for this call only; copy its bytes before retaining a payload. */
         void encode(ServerPlayer player, FriendlyByteBuf buf);
-    }
-
-    private static class ReadingSession {
-        private final long key;
-        private int expectedSize = -1;
-        private FriendlyByteBuf received;
-
-        private ReadingSession(long key) {
-            this.key = key;
-        }
-
-        @Nullable
-        private FriendlyByteBuf receive(FriendlyByteBuf data, int maxLength) {
-            data.readerIndex(0);
-
-            if (this.expectedSize < 0) {
-                this.expectedSize = data.readVarInt();
-
-                if (this.expectedSize > maxLength) {
-                    throw new IllegalArgumentException("Payload too large");
-                }
-
-                this.received = new FriendlyByteBuf(Unpooled.buffer(this.expectedSize));
-            }
-
-            this.received.writeBytes(data.readBytes(data.readableBytes()));
-
-            if (this.received.writerIndex() >= this.expectedSize) {
-                READING_SESSIONS.remove(this.key);
-                return this.received;
-            }
-
-            return null;
-        }
     }
 }

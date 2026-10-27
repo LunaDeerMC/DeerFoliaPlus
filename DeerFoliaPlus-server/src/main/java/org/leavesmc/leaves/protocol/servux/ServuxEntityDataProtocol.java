@@ -1,14 +1,13 @@
 package org.leavesmc.leaves.protocol.servux;
 
 import cn.lunadeer.mc.deerfoliaplus.configurations.DeerFoliaPlusConfiguration;
-import io.netty.buffer.Unpooled;
+import io.netty.buffer.ByteBufUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.bukkit.Bukkit;
@@ -21,7 +20,6 @@ import org.leavesmc.leaves.util.TagUtil;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 // Powered by Servux(https://github.com/sakura-ryoko/servux)
 
@@ -30,16 +28,9 @@ public class ServuxEntityDataProtocol implements LeavesProtocol {
 
     public static final int PROTOCOL_VERSION = 1;
 
-    private static final Map<UUID, Long> readingSessionKeys = new HashMap<>();
-
     @ProtocolHandler.PlayerJoin
     public static void onPlayerJoin(ServerPlayer player) {
         sendMetadata(player);
-    }
-
-    @ProtocolHandler.PlayerLeave
-    public static void onPlayerLeave(ServerPlayer player) {
-        readingSessionKeys.remove(player.getUUID());
     }
 
     @ProtocolHandler.PayloadReceiver(payload = EntityDataPayload.class)
@@ -48,23 +39,8 @@ public class ServuxEntityDataProtocol implements LeavesProtocol {
             case PACKET_C2S_METADATA_REQUEST -> sendMetadata(player);
             case PACKET_C2S_BLOCK_ENTITY_REQUEST -> onBlockEntityRequest(player, payload.pos);
             case PACKET_C2S_ENTITY_REQUEST -> onEntityRequest(player, payload.entityId);
-            case PACKET_C2S_NBT_RESPONSE_DATA -> {
-                UUID uuid = player.getUUID();
-                long readingSessionKey;
-
-                if (!readingSessionKeys.containsKey(uuid)) {
-                    readingSessionKey = RandomSource.create(System.currentTimeMillis()).nextLong();
-                    readingSessionKeys.put(uuid, readingSessionKey);
-                } else {
-                    readingSessionKey = readingSessionKeys.get(uuid);
-                }
-
-                FriendlyByteBuf fullPacket = PacketSplitter.receive(readingSessionKey, payload.buffer);
-
-                if (fullPacket != null) {
-                    readingSessionKeys.remove(uuid);
-                    ServuxProtocol.LOGGER.warn("ServuxEntityDataProtocol,PACKET_C2S_NBT_RESPONSE_DATA NOT Implemented!");
-                }
+            case PACKET_C2S_NBT_RESPONSE_START, PACKET_C2S_NBT_RESPONSE_DATA -> {
+                // Client NBT uploads are not implemented. Do not retain partial uploads.
             }
         }
     }
@@ -110,9 +86,7 @@ public class ServuxEntityDataProtocol implements LeavesProtocol {
 
     public static void sendPacket(ServerPlayer player, EntityDataPayload payload) {
         if (payload.packetType == EntityDataPayloadType.PACKET_S2C_NBT_RESPONSE_START) {
-            FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
-            buffer.writeNbt(payload.nbt);
-            PacketSplitter.send(ServuxEntityDataProtocol::sendWithSplitter, buffer, player);
+            PacketSplitter.sendNbt(ServuxEntityDataProtocol::sendWithSplitter, payload.nbt, player);
         } else {
             ProtocolUtils.sendPayloadPacket(player, payload);
         }
@@ -120,7 +94,7 @@ public class ServuxEntityDataProtocol implements LeavesProtocol {
 
     private static void sendWithSplitter(ServerPlayer player, FriendlyByteBuf buf) {
         EntityDataPayload payload = new EntityDataPayload(EntityDataPayloadType.PACKET_S2C_NBT_RESPONSE_DATA);
-        payload.buffer = buf;
+        payload.data = ByteBufUtil.getBytes(buf);
         payload.nbt = new CompoundTag();
         sendPacket(player, payload);
     }
@@ -187,7 +161,7 @@ public class ServuxEntityDataProtocol implements LeavesProtocol {
                         buf.writeNbt(payload.nbt);
                     }
                     case PACKET_S2C_NBT_RESPONSE_DATA, PACKET_C2S_NBT_RESPONSE_DATA ->
-                        buf.writeBytes(payload.buffer.copy());
+                        buf.writeBytes(payload.data);
                     case PACKET_C2S_METADATA_REQUEST, PACKET_S2C_METADATA ->
                         buf.writeNbt(payload.nbt);
                 }
@@ -221,9 +195,13 @@ public class ServuxEntityDataProtocol implements LeavesProtocol {
                             payload.nbt.merge(nbt);
                         }
                     }
-                    case PACKET_S2C_NBT_RESPONSE_DATA, PACKET_C2S_NBT_RESPONSE_DATA -> {
-                        payload.buffer = new FriendlyByteBuf(buf.readBytes(buf.readableBytes()));
-                        payload.nbt = new CompoundTag();
+                    case PACKET_S2C_NBT_RESPONSE_DATA -> {
+                        payload.data = new byte[buf.readableBytes()];
+                        buf.readBytes(payload.data);
+                    }
+                    case PACKET_C2S_NBT_RESPONSE_START, PACKET_C2S_NBT_RESPONSE_DATA -> {
+                        // Ignore unsupported uploads without allocating buffers or sessions.
+                        buf.skipBytes(buf.readableBytes());
                     }
                     case PACKET_C2S_METADATA_REQUEST, PACKET_S2C_METADATA -> {
                         CompoundTag nbt = buf.readNbt();
@@ -241,7 +219,7 @@ public class ServuxEntityDataProtocol implements LeavesProtocol {
         private int entityId;
         private BlockPos pos;
         private CompoundTag nbt;
-        private FriendlyByteBuf buffer;
+        private byte[] data = new byte[0];
 
         private EntityDataPayload(EntityDataPayloadType type) {
             this.packetType = type;
@@ -249,14 +227,6 @@ public class ServuxEntityDataProtocol implements LeavesProtocol {
             this.entityId = -1;
             this.pos = BlockPos.ZERO;
             this.nbt = new CompoundTag();
-            this.clearPacket();
-        }
-
-        private void clearPacket() {
-            if (this.buffer != null) {
-                this.buffer.clear();
-                this.buffer = new FriendlyByteBuf(Unpooled.buffer());
-            }
         }
     }
 }

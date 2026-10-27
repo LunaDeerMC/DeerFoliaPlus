@@ -1,7 +1,7 @@
 package org.leavesmc.leaves.protocol.servux;
 
 import cn.lunadeer.mc.deerfoliaplus.configurations.DeerFoliaPlusConfiguration;
-import io.netty.buffer.Unpooled;
+import io.netty.buffer.ByteBufUtil;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
@@ -385,9 +385,7 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
 
     public static void sendPacket(ServerPlayer player, StructuresPayload payload) {
         if (payload.packetType() == StructuresPayloadType.PACKET_S2C_STRUCTURE_DATA_START) {
-            FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
-            buffer.writeNbt(payload.nbt());
-            PacketSplitter.send(ServuxStructuresProtocol::sendWithSplitter, buffer, player);
+            PacketSplitter.sendNbt(ServuxStructuresProtocol::sendWithSplitter, payload.nbt(), player);
         } else {
             ProtocolUtils.sendPayloadPacket(player, payload);
         }
@@ -433,7 +431,7 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
     }
 
     public record StructuresPayload(StructuresPayloadType packetType, CompoundTag nbt,
-                                     FriendlyByteBuf buffer) implements LeavesCustomPayload {
+                                     byte[] data) implements LeavesCustomPayload {
 
         @ID
         public static final Identifier CHANNEL = ServuxProtocol.id("structures");
@@ -443,7 +441,7 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
             (buf, payload) -> {
                 buf.writeVarInt(payload.packetType().type);
                 if (payload.packetType().equals(StructuresPayloadType.PACKET_S2C_STRUCTURE_DATA)) {
-                    buf.writeBytes(payload.buffer().readBytes(payload.buffer().readableBytes()));
+                    buf.writeBytes(payload.data());
                 } else {
                     buf.writeNbt(payload.nbt());
                 }
@@ -454,7 +452,9 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
                 if (type == null) {
                     throw new IllegalStateException("invalid packet type received");
                 } else if (type.equals(StructuresPayloadType.PACKET_S2C_STRUCTURE_DATA)) {
-                    return new StructuresPayload(type, new FriendlyByteBuf(buf.readBytes(buf.readableBytes())));
+                    byte[] data = new byte[buf.readableBytes()];
+                    buf.readBytes(data);
+                    return new StructuresPayload(type, new CompoundTag(), data);
                 } else {
                     return new StructuresPayload(type, buf.readNbt());
                 }
@@ -466,7 +466,8 @@ public class ServuxStructuresProtocol implements LeavesProtocol {
         }
 
         public StructuresPayload(StructuresPayloadType packetType, FriendlyByteBuf buffer) {
-            this(packetType, new CompoundTag(), buffer);
+            // Payloads can outlive their source buffer and be encoded more than once.
+            this(packetType, new CompoundTag(), ByteBufUtil.getBytes(buffer));
         }
     }
 

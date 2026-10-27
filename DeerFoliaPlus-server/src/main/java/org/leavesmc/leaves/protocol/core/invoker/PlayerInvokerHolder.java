@@ -11,6 +11,7 @@ public class PlayerInvokerHolder<T> extends AbstractInvokerHolder<T> {
     }
 
     public void invoke(ServerPlayer player) {
-        invoke0(false, player);
+        // Disabling a protocol must not prevent it from releasing a departing player's state.
+        invoke0(handler instanceof org.leavesmc.leaves.protocol.core.ProtocolHandler.PlayerLeave, player);
     }
 }

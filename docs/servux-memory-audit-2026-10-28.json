@@ -1,0 +1,602 @@
+{
+  "localDate": "2026-10-28",
+  "timezone": "Asia/Shanghai",
+  "metadata": {
+    "checkoutCommit": "16d1dffce779e8db573a0d85d52fa21cec4a1764",
+    "serverJar": "/workspace/.cloud-setup/run/DeerFoliaPlus-cli/versions/26.2/DeerFoliaPlus-26.2.jar",
+    "serverJarSha256": "8b70e13cb09e8b09ee8df3025463b9473e50d6331b55e84b9c65c87bc3ebc976",
+    "javaVersion": "java version \"25.0.4.1\" 2026-08-18 LTS\nJava(TM) SE Runtime Environment (build 25.0.4.1+1-LTS-5)\nJava HotSpot(TM) 64-Bit Server VM (build 25.0.4.1+1-LTS-5, mixed mode, sharing)\n",
+    "nettyJars": {
+      "/workspace/.cloud-setup/run/DeerFoliaPlus-cli/libraries/io/netty/netty-buffer/4.2.15.Final/netty-buffer-4.2.15.Final.jar": "1361fd9c9ba85b9831cf54a1b2e45ddc3ce34a768931726c099d3f5ef0efe4a3",
+      "/workspace/.cloud-setup/run/DeerFoliaPlus-cli/libraries/io/netty/netty-common/4.2.15.Final/netty-common-4.2.15.Final.jar": "78206aa7f6d197caa926291408c01889b6b910ca0f74017d3fcbdaccf9562959"
+    },
+    "compileOnlyJars": {
+      "/workspace/.cloud-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/26.1.0/c1e9226d7ca6661020c58c94397da0cc3673d5e4/annotations-26.1.0.jar": "ebc7aec252ed0c7d2d04c039d7f00e69f7b86b1f493c741d67b3ef31b986b054",
+      "/workspace/.cloud-setup/gradle-home/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar": "766ad2a0783f2687962c8ad74ceecc38a28b9f72a2d085ee438b7813e928d0c7"
+    },
+    "probeSources": {
+      "tools/servux-memory-audit/MemoryProbe.java": "bc2240867f65c8f1301ae1afc19ed3e62bfca64dea5a3422ccbd1cf578450bf4",
+      "tools/servux-memory-audit/SplitterProbe.java": "4296274c1707e531812f07fcb7c33b76758b058402baf3e4ab3ee13ced47d774"
+    },
+    "sources": {
+      "DeerFoliaPlus-server/src/main/java/org/leavesmc/leaves/protocol/servux/PacketSplitter.java": "c4126d9b583240ffcf4bc3b83ba067cf8bd59d957db7a44790b3829c3c304b4c",
+      "DeerFoliaPlus-server/src/main/java/org/leavesmc/leaves/protocol/servux/ServuxEntityDataProtocol.java": "43541b9bdcadc2d4bca52ea1e66fa48a4f0d72944fe192ee0f8881609ee53e7e",
+      "DeerFoliaPlus-server/src/main/java/org/leavesmc/leaves/protocol/servux/ServuxProtocol.java": "c669b58829351b65f42c87c46efde5c6df3cf57368d4f7f791874cfa448865f7",
+      "DeerFoliaPlus-server/src/main/java/org/leavesmc/leaves/protocol/servux/ServuxStructuresProtocol.java": "507d479b88873fecaf187ae7be27767c40e1177574444fcb98a1f009829c4dc9"
+    },
+    "servuxCommitsUnchangedSinceF24ea8b": true,
+    "servuxWorktreeMatchesHead": true,
+    "scope": "Actual cached server JAR; then unmodified current Servux sources compiled against that runtime. No complete 26.3 build, world, production server, or production JAR.",
+    "jvmArgs": [
+      "--enable-native-access=ALL-UNNAMED",
+      "-Xmx256m",
+      "-XX:MaxDirectMemorySize=128m"
+    ]
+  },
+  "results": [
+    {
+      "target": "jar",
+      "probe": "MemoryProbe",
+      "mode": "allocator",
+      "exitCode": 0,
+      "events": [
+        {
+          "test": "environment",
+          "java": "25.0.4.1",
+          "netty": "4.2.15.Final",
+          "cleaner": "io.netty.util.internal.CleanerJava24Linker",
+          "preferDirect": true,
+          "codecLocation": "file:/workspace/.cloud-setup/run/DeerFoliaPlus-cli/versions/26.2/DeerFoliaPlus-26.2.jar"
+        },
+        {
+          "readBytesRefCnt": 1,
+          "copyRefCnt": 1,
+          "test": "allocator_semantics",
+          "heapSourceIsDirect": false,
+          "copyIsDirect": false,
+          "readBytesIsDirect": true
+        }
+      ]
+    },
+    {
+      "target": "jar",
+      "probe": "MemoryProbe",
+      "mode": "structures",
+      "exitCode": 0,
+      "events": [
+        {
+          "test": "environment",
+          "java": "25.0.4.1",
+          "netty": "4.2.15.Final",
+          "cleaner": "io.netty.util.internal.CleanerJava24Linker",
+          "preferDirect": true,
+          "codecLocation": "file:/workspace/.cloud-setup/run/DeerFoliaPlus-cli/versions/26.2/DeerFoliaPlus-26.2.jar"
+        },
+        {
+          "test": "structures",
+          "directBufferPoolDelta": 0,
+          "unreleasedDirectBytes": 16777216,
+          "payloadBytes": 262144,
+          "iterations": 64
+        },
+        {
+          "test": "structures",
+          "directBufferPoolDelta": 0,
+          "unreleasedDirectBytes": 33554432,
+          "payloadBytes": 262144,
+          "iterations": 128
+        },
+        {
+          "test": "structures",
+          "directBufferPoolDelta": 0,
+          "unreleasedDirectBytes": 67108864,
+          "payloadBytes": 262144,
+          "iterations": 256
+        },
+        {
+          "gcWitnessCollected": true,
+          "unreleasedDirectBytes": 67108864,
+          "directBufferPoolDelta": 0,
+          "test": "structures_gc"
+        }
+      ]
+    },
+    {
+      "target": "jar",
+      "probe": "MemoryProbe",
+      "mode": "control",
+      "exitCode": 0,
+      "events": [
+        {
+          "test": "environment",
+          "java": "25.0.4.1",
+          "netty": "4.2.15.Final",
+          "cleaner": "io.netty.util.internal.CleanerJava24Linker",
+          "preferDirect": true,
+          "codecLocation": "file:/workspace/.cloud-setup/run/DeerFoliaPlus-cli/versions/26.2/DeerFoliaPlus-26.2.jar"
+        },
+        {
+          "unreleasedDirectBytes": 0,
+          "payloadBytes": 262144,
+          "iterations": 64,
+          "test": "control",
+          "directBufferPoolDelta": 0
+        },
+        {
+          "unreleasedDirectBytes": 0,
+          "payloadBytes": 262144,
+          "iterations": 128,
+          "test": "control",
+          "directBufferPoolDelta": 0
+        },
+        {
+          "unreleasedDirectBytes": 0,
+          "payloadBytes": 262144,
+          "iterations": 256,
+          "test": "control",
+          "directBufferPoolDelta": 0
+        },
+        {
+          "directBufferPoolDelta": 0,
+          "test": "control_gc",
+          "gcWitnessCollected": true,
+          "unreleasedDirectBytes": 0
+        }
+      ]
+    },
+    {
+      "target": "jar",
+      "probe": "MemoryProbe",
+      "mode": "equivalence",
+      "exitCode": 0,
+      "events": [
+        {
+          "test": "environment",
+          "java": "25.0.4.1",
+          "netty": "4.2.15.Final",
+          "cleaner": "io.netty.util.internal.CleanerJava24Linker",
+          "preferDirect": true,
+          "codecLocation": "file:/workspace/.cloud-setup/run/DeerFoliaPlus-cli/versions/26.2/DeerFoliaPlus-26.2.jar"
+        },
+        {
+          "test": "wire_equivalence",
+          "bytesEqual": true,
+          "readerIndexEqual": true,
+          "payloadBytes": 0
+        },
+        {
+          "test": "wire_equivalence",
+          "bytesEqual": true,
+          "readerIndexEqual": true,
+          "payloadBytes": 1
+        },
+        {
+          "test": "wire_equivalence",
+          "bytesEqual": true,
+          "readerIndexEqual": true,
+          "payloadBytes": 127
+        },
+        {
+          "test": "wire_equivalence",
+          "bytesEqual": true,
+          "readerIndexEqual": true,
+          "payloadBytes": 128
+        },
+        {
+          "test": "wire_equivalence",
+          "bytesEqual": true,
+          "readerIndexEqual": true,
+          "payloadBytes": 32762
+        },
+        {
+          "test": "wire_equivalence",
+          "bytesEqual": true,
+          "readerIndexEqual": true,
+          "payloadBytes": 262144
+        },
+        {
+          "test": "wire_equivalence",
+          "bytesEqual": true,
+          "readerIndexEqual": true,
+          "payloadBytes": 1048571
+        },
+        {
+          "test": "wire_equivalence",
+          "bytesEqual": true,
+          "readerIndexEqual": true,
+          "payloadBytes": 1048572
+        },
+        {
+          "test": "wire_equivalence",
+          "bytesEqual": true,
+          "readerIndexEqual": true,
+          "payloadBytes": 2097149
+        }
+      ]
+    },
+    {
+      "target": "jar",
+      "probe": "MemoryProbe",
+      "mode": "splitter",
+      "exitCode": 0,
+      "events": [
+        {
+          "test": "environment",
+          "java": "25.0.4.1",
+          "netty": "4.2.15.Final",
+          "cleaner": "io.netty.util.internal.CleanerJava24Linker",
+          "preferDirect": true,
+          "codecLocation": "file:/workspace/.cloud-setup/run/DeerFoliaPlus-cli/versions/26.2/DeerFoliaPlus-26.2.jar"
+        },
+        {
+          "test": "actual_splitter_to_codec",
+          "wireEqual": true,
+          "fragments": 3,
+          "unreleasedDirectBytes": 2097177,
+          "payloadBytes": 2097173
+        }
+      ]
+    },
+    {
+      "target": "jar",
+      "probe": "SplitterProbe",
+      "mode": null,
+      "exitCode": 0,
+      "events": [
+        {
+          "scenario": "normal_multifragment",
+          "observation_confirmed": true,
+          "bytes": 6,
+          "wire_equal": true,
+          "session_removed": true,
+          "output_refcnt_before_cleanup": 1,
+          "retained_direct_bytes_after_owned_buffers_released": 6
+        },
+        {
+          "scenario": "incomplete_session_retained",
+          "observation_confirmed": true,
+          "declared_bytes": 128,
+          "received_bytes": 4,
+          "retained_capacity": 128,
+          "session_remains_after_input_release": true
+        },
+        {
+          "scenario": "receive_uses_64_mib_limit",
+          "observation_confirmed": true,
+          "accepted_declared_bytes": 2097152,
+          "body_bytes": 0,
+          "allocated_heap_bytes": 2097152,
+          "defined_c2s_limit_bytes": 1048576,
+          "used_default_limit_bytes": 67108864
+        },
+        {
+          "scenario": "negative_declared_length",
+          "observation_confirmed": true,
+          "exception": "IllegalArgumentException",
+          "retained_sessions": 1,
+          "allocated_body_bytes": 0
+        },
+        {
+          "scenario": "oversize_header_session_retained",
+          "observation_confirmed": true,
+          "header_only": true,
+          "allocated_body_bytes": 0,
+          "retained_sessions": 1,
+          "first_exception": "IllegalArgumentException",
+          "followup_exception": "NullPointerException"
+        },
+        {
+          "scenario": "cumulative_length_overrun_accepted",
+          "observation_confirmed": true,
+          "declared_bytes": 4,
+          "returned_bytes": 5,
+          "overrun_rejected": false
+        },
+        {
+          "scenario": "send_multifragment_ownership",
+          "observation_confirmed": true,
+          "fragments": 2,
+          "input_refcnt": 0,
+          "fragment_refcnt": 1,
+          "wire_equal": true
+        },
+        {
+          "scenario": "send_callback_exception_retains_buffers",
+          "observation_confirmed": true,
+          "exception": "IllegalStateException",
+          "input_refcnt_after_failure": 1,
+          "fragment_refcnt_after_failure": 1
+        },
+        {
+          "suite": "PacketSplitter",
+          "scenarios": 8,
+          "all_observations_confirmed": true,
+          "cleanup": "test_owned_buffers_and_reflective_session_cleanup",
+          "not_tested": "real_player_disconnect_or_concurrent_region_threads"
+        }
+      ]
+    },
+    {
+      "target": "current-source",
+      "probe": "MemoryProbe",
+      "mode": "allocator",
+      "exitCode": 0,
+      "events": [
+        {
+          "test": "environment",
+          "java": "25.0.4.1",
+          "netty": "4.2.15.Final",
+          "cleaner": "io.netty.util.internal.CleanerJava24Linker",
+          "preferDirect": true,
+          "codecLocation": "file:/workspace/DeerFoliaPlus/build/servux-memory-audit/20261027T174920341037Z/current-source-classes/"
+        },
+        {
+          "copyIsDirect": false,
+          "heapSourceIsDirect": false,
+          "test": "allocator_semantics",
+          "copyRefCnt": 1,
+          "readBytesRefCnt": 1,
+          "readBytesIsDirect": true
+        }
+      ]
+    },
+    {
+      "target": "current-source",
+      "probe": "MemoryProbe",
+      "mode": "structures",
+      "exitCode": 0,
+      "events": [
+        {
+          "test": "environment",
+          "java": "25.0.4.1",
+          "netty": "4.2.15.Final",
+          "cleaner": "io.netty.util.internal.CleanerJava24Linker",
+          "preferDirect": true,
+          "codecLocation": "file:/workspace/DeerFoliaPlus/build/servux-memory-audit/20261027T174920341037Z/current-source-classes/"
+        },
+        {
+          "directBufferPoolDelta": 0,
+          "test": "structures",
+          "iterations": 64,
+          "payloadBytes": 262144,
+          "unreleasedDirectBytes": 16777216
+        },
+        {
+          "directBufferPoolDelta": 0,
+          "test": "structures",
+          "iterations": 128,
+          "payloadBytes": 262144,
+          "unreleasedDirectBytes": 33554432
+        },
+        {
+          "directBufferPoolDelta": 0,
+          "test": "structures",
+          "iterations": 256,
+          "payloadBytes": 262144,
+          "unreleasedDirectBytes": 67108864
+        },
+        {
+          "test": "structures_gc",
+          "directBufferPoolDelta": 0,
+          "unreleasedDirectBytes": 67108864,
+          "gcWitnessCollected": true
+        }
+      ]
+    },
+    {
+      "target": "current-source",
+      "probe": "MemoryProbe",
+      "mode": "control",
+      "exitCode": 0,
+      "events": [
+        {
+          "test": "environment",
+          "java": "25.0.4.1",
+          "netty": "4.2.15.Final",
+          "cleaner": "io.netty.util.internal.CleanerJava24Linker",
+          "preferDirect": true,
+          "codecLocation": "file:/workspace/DeerFoliaPlus/build/servux-memory-audit/20261027T174920341037Z/current-source-classes/"
+        },
+        {
+          "unreleasedDirectBytes": 0,
+          "payloadBytes": 262144,
+          "iterations": 64,
+          "test": "control",
+          "directBufferPoolDelta": 0
+        },
+        {
+          "unreleasedDirectBytes": 0,
+          "payloadBytes": 262144,
+          "iterations": 128,
+          "test": "control",
+          "directBufferPoolDelta": 0
+        },
+        {
+          "unreleasedDirectBytes": 0,
+          "payloadBytes": 262144,
+          "iterations": 256,
+          "test": "control",
+          "directBufferPoolDelta": 0
+        },
+        {
+          "gcWitnessCollected": true,
+          "unreleasedDirectBytes": 0,
+          "directBufferPoolDelta": 0,
+          "test": "control_gc"
+        }
+      ]
+    },
+    {
+      "target": "current-source",
+      "probe": "MemoryProbe",
+      "mode": "equivalence",
+      "exitCode": 0,
+      "events": [
+        {
+          "test": "environment",
+          "java": "25.0.4.1",
+          "netty": "4.2.15.Final",
+          "cleaner": "io.netty.util.internal.CleanerJava24Linker",
+          "preferDirect": true,
+          "codecLocation": "file:/workspace/DeerFoliaPlus/build/servux-memory-audit/20261027T174920341037Z/current-source-classes/"
+        },
+        {
+          "readerIndexEqual": true,
+          "payloadBytes": 0,
+          "test": "wire_equivalence",
+          "bytesEqual": true
+        },
+        {
+          "readerIndexEqual": true,
+          "payloadBytes": 1,
+          "test": "wire_equivalence",
+          "bytesEqual": true
+        },
+        {
+          "readerIndexEqual": true,
+          "payloadBytes": 127,
+          "test": "wire_equivalence",
+          "bytesEqual": true
+        },
+        {
+          "readerIndexEqual": true,
+          "payloadBytes": 128,
+          "test": "wire_equivalence",
+          "bytesEqual": true
+        },
+        {
+          "readerIndexEqual": true,
+          "payloadBytes": 32762,
+          "test": "wire_equivalence",
+          "bytesEqual": true
+        },
+        {
+          "readerIndexEqual": true,
+          "payloadBytes": 262144,
+          "test": "wire_equivalence",
+          "bytesEqual": true
+        },
+        {
+          "readerIndexEqual": true,
+          "payloadBytes": 1048571,
+          "test": "wire_equivalence",
+          "bytesEqual": true
+        },
+        {
+          "readerIndexEqual": true,
+          "payloadBytes": 1048572,
+          "test": "wire_equivalence",
+          "bytesEqual": true
+        },
+        {
+          "readerIndexEqual": true,
+          "payloadBytes": 2097149,
+          "test": "wire_equivalence",
+          "bytesEqual": true
+        }
+      ]
+    },
+    {
+      "target": "current-source",
+      "probe": "MemoryProbe",
+      "mode": "splitter",
+      "exitCode": 0,
+      "events": [
+        {
+          "test": "environment",
+          "java": "25.0.4.1",
+          "netty": "4.2.15.Final",
+          "cleaner": "io.netty.util.internal.CleanerJava24Linker",
+          "preferDirect": true,
+          "codecLocation": "file:/workspace/DeerFoliaPlus/build/servux-memory-audit/20261027T174920341037Z/current-source-classes/"
+        },
+        {
+          "wireEqual": true,
+          "test": "actual_splitter_to_codec",
+          "payloadBytes": 2097173,
+          "unreleasedDirectBytes": 2097177,
+          "fragments": 3
+        }
+      ]
+    },
+    {
+      "target": "current-source",
+      "probe": "SplitterProbe",
+      "mode": null,
+      "exitCode": 0,
+      "events": [
+        {
+          "scenario": "normal_multifragment",
+          "observation_confirmed": true,
+          "bytes": 6,
+          "wire_equal": true,
+          "session_removed": true,
+          "output_refcnt_before_cleanup": 1,
+          "retained_direct_bytes_after_owned_buffers_released": 6
+        },
+        {
+          "scenario": "incomplete_session_retained",
+          "observation_confirmed": true,
+          "declared_bytes": 128,
+          "received_bytes": 4,
+          "retained_capacity": 128,
+          "session_remains_after_input_release": true
+        },
+        {
+          "scenario": "receive_uses_64_mib_limit",
+          "observation_confirmed": true,
+          "accepted_declared_bytes": 2097152,
+          "body_bytes": 0,
+          "allocated_heap_bytes": 2097152,
+          "defined_c2s_limit_bytes": 1048576,
+          "used_default_limit_bytes": 67108864
+        },
+        {
+          "scenario": "negative_declared_length",
+          "observation_confirmed": true,
+          "exception": "IllegalArgumentException",
+          "retained_sessions": 1,
+          "allocated_body_bytes": 0
+        },
+        {
+          "scenario": "oversize_header_session_retained",
+          "observation_confirmed": true,
+          "header_only": true,
+          "allocated_body_bytes": 0,
+          "retained_sessions": 1,
+          "first_exception": "IllegalArgumentException",
+          "followup_exception": "NullPointerException"
+        },
+        {
+          "scenario": "cumulative_length_overrun_accepted",
+          "observation_confirmed": true,
+          "declared_bytes": 4,
+          "returned_bytes": 5,
+          "overrun_rejected": false
+        },
+        {
+          "scenario": "send_multifragment_ownership",
+          "observation_confirmed": true,
+          "fragments": 2,
+          "input_refcnt": 0,
+          "fragment_refcnt": 1,
+          "wire_equal": true
+        },
+        {
+          "scenario": "send_callback_exception_retains_buffers",
+          "observation_confirmed": true,
+          "exception": "IllegalStateException",
+          "input_refcnt_after_failure": 1,
+          "fragment_refcnt_after_failure": 1
+        },
+        {
+          "suite": "PacketSplitter",
+          "scenarios": 8,
+          "all_observations_confirmed": true,
+          "cleanup": "test_owned_buffers_and_reflective_session_cleanup",
+          "not_tested": "real_player_disconnect_or_concurrent_region_threads"
+        }
+      ]
+    }
+  ]
+}

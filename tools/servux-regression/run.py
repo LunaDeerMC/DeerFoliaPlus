@@ -74,6 +74,7 @@ def main():
     source_dir = root / "DeerFoliaPlus-server/src/main/java/org/leavesmc/leaves/protocol"
     sources = sorted((source_dir / "servux").glob("*.java"))
     sources.append(source_dir / "core/invoker/PlayerInvokerHolder.java")
+    sources.append(source_dir / "fabric/FabricRecipeSyncProtocol.java")
     checked_command([javac, "--release", str(args.release), "-proc:none", "-implicit:none",
                      "-sourcepath", "", "-cp", compile_classpath, "-d", str(fixed), *map(str, sources)],
                     root, output / "compile-production.log")
@@ -101,7 +102,7 @@ def main():
     (output / "metadata.json").write_text(json.dumps(metadata, indent=2) + "\n")
     cp = os.pathsep.join(map(str, [tests, fixed])) + os.pathsep + classpath
     results = []
-    for mode in ("wire", "pressure", "decode", "entity", "uploads", "splitter", "nbt", "lifecycle", "concurrent"):
+    for mode in ("wire", "pressure", "decode", "entity", "uploads", "splitter", "nbt", "lifecycle", "concurrent", "protocols"):
         case_dir = output / mode
         case_dir.mkdir()
         result = subprocess.run([java, *metadata["jvmArgs"], "-cp", cp, "ServuxRegression", mode],

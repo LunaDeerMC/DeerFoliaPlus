@@ -22,6 +22,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import org.leavesmc.leaves.protocol.core.LeavesProtocol;
+import org.leavesmc.leaves.protocol.core.LeavesProtocolManager;
 import org.leavesmc.leaves.protocol.core.ProtocolHandler;
 import org.leavesmc.leaves.protocol.core.invoker.PlayerInvokerHolder;
 import org.leavesmc.leaves.protocol.servux.PacketSplitter;
@@ -424,6 +425,25 @@ public final class ServuxRegression {
             "unreleasedDirectBytes", direct() - nativeBefore, "unreleasedHeapBufferBytes", heap() - heapBefore));
     }
 
+    private static void protocolRegistration() throws Exception {
+        // Registration validates every handler even when its feature is disabled.
+        cn.lunadeer.mc.deerfoliaplus.configurations.DeerFoliaPlusConfiguration.recipeSync.fabric = false;
+        LeavesProtocolManager.init();
+        Field codecsField = LeavesProtocolManager.class.getDeclaredField("ID2CODEC");
+        codecsField.setAccessible(true);
+        Map<?, ?> codecs = (Map<?, ?>) codecsField.get(null);
+        List<String> identifiers = codecs.keySet().stream().map(Object::toString).toList();
+        require(identifiers.containsAll(List.of("servux:structures", "servux:entity_data", "syncmatica:main")),
+            "Protocol initialization must register every Servux/Syncmatica codec: " + identifiers);
+        Field receiversField = LeavesProtocolManager.class.getDeclaredField("STRICT_BYTEBUF_RECEIVERS");
+        receiversField.setAccessible(true);
+        Map<?, ?> receivers = (Map<?, ?>) receiversField.get(null);
+        require(receivers.containsKey("fabric:recipe_sync/supported_serializers"),
+            "Fabric serializer receiver was not registered");
+        emit(Map.of("test", "complete_protocol_registration", "identifiers", identifiers,
+            "fabricReceiverRegistered", true, "fabricDisabledDuringRegistration", true));
+    }
+
     public static void main(String[] args) throws Exception {
         SharedConstants.tryDetectVersion();
         // Initialize both codecs outside the allocator baselines.
@@ -442,6 +462,7 @@ public final class ServuxRegression {
             case "nbt" -> nbtSerialization();
             case "lifecycle" -> disabledCleanup();
             case "concurrent" -> concurrent();
+            case "protocols" -> protocolRegistration();
             default -> throw new IllegalArgumentException(args[0]);
         }
     }

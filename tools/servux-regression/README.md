@@ -1,6 +1,6 @@
 # Servux resource regression tests
 
-These tests compile the branch's four Servux production sources and `PlayerInvokerHolder` against an extracted, version-matched server JAR and its real dependencies. They then run nine independent, bounded JVMs. They do not start a world, connect to a server, replace a production JAR, or modify the tested branch's sources.
+These tests compile the branch's four Servux production sources, `PlayerInvokerHolder`, and `FabricRecipeSyncProtocol` against an extracted, version-matched server JAR and its real dependencies. They then run ten independent, bounded JVMs. They do not start a world, connect to a server, replace a production JAR, or modify the tested branch's sources.
 
 For the prepared 1.21.11 runtime:
 
@@ -36,6 +36,7 @@ Each JVM has `-Xmx256m`, `-XX:MaxDirectMemorySize=128m`, native access enabled, 
 - `sendNbt`: a normal NBT round trip and a real serialization exception caused by an oversized modified-UTF string; no callback or retained allocation on failure.
 - A disabled protocol skips join behavior but still runs player-leave cleanup through the actual invoker.
 - Four concurrent workers repeatedly encode one shared structure payload and decode entity fragments without retained Netty allocations.
+- Complete protocol-manager initialization with Fabric recipe sync disabled still validates and registers its receiver, both Servux codecs, and the Syncmatica codec. This catches handler signature errors that abort startup before Servux is registered.
 
 Fresh evidence goes to `build/servux-regression/<UTC timestamp>/` in the selected source worktree. It includes compiler logs, per-mode logs, `results.json`, and `metadata.json` with source/runtime hashes, class-file major versions, Java/Netty versions and actual loaded class locations. The compiled production classes take precedence over the release JAR on the test classpath.
 

@@ -1,0 +1,89 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Colde Zhang <coldezhang051300@gmail.com>
+Date: Mon, 2 Nov 2026 03:41:18 +0000
+Subject: [PATCH] Configurable vanilla structure generation repairs
+
+
+diff --git a/net/minecraft/world/level/levelgen/feature/BlockPileFeature.java b/net/minecraft/world/level/levelgen/feature/BlockPileFeature.java
+index 8872a5e189a997aef2638e33b87e619fcc99dc53..94fa560b25eed0bb280d92e85ef3987ff0fe5a54 100644
+--- a/net/minecraft/world/level/levelgen/feature/BlockPileFeature.java
++++ b/net/minecraft/world/level/levelgen/feature/BlockPileFeature.java
+@@ -26,7 +26,7 @@ public record BlockPileFeature(Holder<BlockStateProvider> stateProvider) impleme
+ 
+     @Override
+     public boolean place(final WorldGenLevel level, final ChunkGenerator chunkGenerator, final RandomSource random, final BlockPos origin) {
+-        if (origin.getY() < level.getMinY() + 5) {
++        if (origin.getY() < level.getMinY() + cn.lunadeer.mc.deerfoliaplus.worldgen.VillagePileRepairs.minimumClearance(this)) { // DeerFoliaPlus - Retain a support block for repaired village piles
+             return false;
+         }
+ 
+diff --git a/net/minecraft/world/level/levelgen/structure/pools/FeaturePoolElement.java b/net/minecraft/world/level/levelgen/structure/pools/FeaturePoolElement.java
+index 75af21aa5e1fc45b69db65a434545e649a8c9b26..a68a34fef1400fba92fd05efca4efda136f85db0 100644
+--- a/net/minecraft/world/level/levelgen/structure/pools/FeaturePoolElement.java
++++ b/net/minecraft/world/level/levelgen/structure/pools/FeaturePoolElement.java
+@@ -79,7 +79,7 @@ public class FeaturePoolElement extends StructurePoolElement {
+         final LiquidSettings liquidSettings,
+         final boolean keepJigsaws
+     ) {
+-        return this.feature.value().place(level, generator, random, position);
++        return cn.lunadeer.mc.deerfoliaplus.worldgen.VillagePileRepairs.place(this.feature, structureTemplateManager.resourceManagerSource.deerFoliaPlusResourceManager(), level, generator, random, position); // DeerFoliaPlus - Scope shallow-world pile repairs to vanilla village features
+     }
+ 
+     @Override
+diff --git a/net/minecraft/world/level/levelgen/structure/pools/JigsawPlacement.java b/net/minecraft/world/level/levelgen/structure/pools/JigsawPlacement.java
+index bc519bd6472959addac4d66a35c1a92a7fadc780..18eda913fedf770280993cb9d1849a794ab9a796 100644
+--- a/net/minecraft/world/level/levelgen/structure/pools/JigsawPlacement.java
++++ b/net/minecraft/world/level/levelgen/structure/pools/JigsawPlacement.java
+@@ -371,6 +371,8 @@ public class JigsawPlacement {
+                                     break;
+                                 }
+ 
++                                targetElement = cn.lunadeer.mc.deerfoliaplus.worldgen.AncientCityCampRepairs.select(targetElement, poolName, this.structureTemplateManager, this.random); // DeerFoliaPlus - Independent ancient city camp variants
++
+                                 for (Rotation targetRotation : Rotation.getShuffled(this.random)) {
+                                     List<StructureTemplate.JigsawBlockInfo> targetJigsaws = targetElement.getShuffledJigsawBlocks(
+                                         this.structureTemplateManager, BlockPos.ZERO, targetRotation, this.random
+@@ -441,9 +443,20 @@ public class JigsawPlacement {
+                                                 targetBB.encapsulate(new BlockPos(targetBB.minX(), targetBB.minY() + newSize, targetBB.minZ()));
+                                             }
+ 
++                                            // DeerFoliaPlus start - restore selected village foundations without moving their entrances
++                                            VoxelShape candidateFree = cn.lunadeer.mc.deerfoliaplus.worldgen.VillageStructureRepairs.candidateSpace(
++                                                this.structureTemplateManager, sourceElement, targetElement, attachInsideSource,
++                                                sourceBB, targetBB, childrenFree.get(), contextFree.get(), heightAccessor.getMinY(), heightAccessor.getMaxY()
++                                            );
+                                             if (!Shapes.joinIsNotEmpty(
+-                                                childrenFree.get(), Shapes.create(AABB.of(targetBB).deflate(0.25)), BooleanOp.ONLY_SECOND
++                                                candidateFree, Shapes.create(AABB.of(targetBB).deflate(0.25)), BooleanOp.ONLY_SECOND
+                                             )) {
++                                                if (candidateFree != childrenFree.get()) {
++                                                    contextFree.setValue(
++                                                        Shapes.joinUnoptimized(contextFree.get(), Shapes.create(AABB.of(targetBB)), BooleanOp.ONLY_FIRST)
++                                                    );
++                                                }
++                                                // DeerFoliaPlus end - restore selected village foundations without moving their entrances
+                                                 childrenFree.setValue(
+                                                     Shapes.joinUnoptimized(childrenFree.get(), Shapes.create(AABB.of(targetBB)), BooleanOp.ONLY_FIRST)
+                                                 );
+diff --git a/net/minecraft/world/level/levelgen/structure/templatesystem/loader/ResourceManagerTemplateSource.java b/net/minecraft/world/level/levelgen/structure/templatesystem/loader/ResourceManagerTemplateSource.java
+index e0540e883b8d7e3de941ef5abeddf45050a95e2a..187cc459ec5e7de3e421f8f97e8bc4662563a6e0 100644
+--- a/net/minecraft/world/level/levelgen/structure/templatesystem/loader/ResourceManagerTemplateSource.java
++++ b/net/minecraft/world/level/levelgen/structure/templatesystem/loader/ResourceManagerTemplateSource.java
+@@ -29,10 +29,16 @@ public class ResourceManagerTemplateSource extends TemplateSource {
+         this.resourceManager = resourceManager;
+     }
+ 
++    // DeerFoliaPlus start - Configurable vanilla structure generation repairs
++    public ResourceManager deerFoliaPlusResourceManager() {
++        return this.resourceManager;
++    }
++    // DeerFoliaPlus end - Configurable vanilla structure generation repairs
++
+     @Override
+     public Optional<StructureTemplate> load(final Identifier id) {
+         Identifier identifier = this.fileToIdConverter.idToFile(id);
+-        return this.load(() -> this.resourceManager.open(identifier), false, e -> LOGGER.error("Couldn't load structure {}", id, e));
++        return this.load(() -> cn.lunadeer.mc.deerfoliaplus.worldgen.StructureGenerationFixes.openTemplate(id, this.resourceManager.getResourceOrThrow(identifier), this.resourceManager), false, e -> LOGGER.error("Couldn't load structure {}", id, e)); // DeerFoliaPlus - Configurable vanilla structure generation repairs
+     }
+ 
+     @Override

@@ -1,0 +1,1875 @@
+{
+  "minecraft-version": "26.3",
+  "vanilla-server-sha256": "a362163eec5d1612d520772bc16e5b39c09e3b234fdc045f56bf544284ee8ae6",
+  "templates": {
+    "minecraft:abandoned_camp/camp/old_growth_pine_taiga/campsite_old_growth_pine_taiga_1": "CAMP_OLD_GROWTH_PINE_TAIGA_1_TREE",
+    "minecraft:abandoned_camp/camp/old_growth_spruce_taiga/campsite_old_growth_spruce_taiga_4": "CAMP_OLD_GROWTH_SPRUCE_TAIGA_4_TREE",
+    "minecraft:abandoned_camp/camp/pale_garden/campsite_pale_garden_2": "PALE_GARDEN_CAMPSITE_2",
+    "minecraft:abandoned_camp/camp/snowy_taiga/campsite_snowy_taiga_3": "CAMP_SNOWY_TAIGA_3_TREE",
+    "minecraft:abandoned_camp/tent/cherry_grove/tent_cherry_grove_1": "TENT_CHERRY_GROVE_1_TREE",
+    "minecraft:abandoned_camp/tent/dappled_forest/tent_dappled_forest_1": "TENT_DAPPLED_FOREST_1_TREE",
+    "minecraft:abandoned_camp/tent/dappled_forest/tent_dappled_forest_2": "TENT_DAPPLED_FOREST_2_TREE",
+    "minecraft:abandoned_camp/tent/dappled_forest/tent_dappled_forest_3": "TENT_DAPPLED_FOREST_3_TREE",
+    "minecraft:abandoned_camp/tent/dappled_forest/tent_dappled_forest_4": "TENT_DAPPLED_FOREST_4_TREE",
+    "minecraft:abandoned_camp/tent/dappled_forest/tent_dappled_forest_6": "TENT_DAPPLED_FOREST_6_TREE",
+    "minecraft:abandoned_camp/tent/savanna/tent_savanna_1": "TENT_SAVANNA_1_TREE",
+    "minecraft:abandoned_camp/tent/snowy_taiga/tent_snowy_taiga_10": "TENT_SNOWY_TAIGA_10_TREE",
+    "minecraft:abandoned_camp/tent/taiga/tent_taiga_2": "TENT_TAIGA_2_TREE",
+    "minecraft:abandoned_camp/tent/taiga/tent_taiga_7": "TENT_TAIGA_7_TREE",
+    "minecraft:abandoned_camp/tent/windswept_forest/tent_windswept_forest_6": "TENT_WINDSWEPT_FOREST_6_TREE",
+    "minecraft:ancient_city/walls/intact_horizontal_wall_bridge": "ANCIENT_CITY_WALL_BRIDGE",
+    "minecraft:bastion/units/pathways/pathway_wall_0": "BASTION_PATHWAY_WALL",
+    "minecraft:trail_ruins/buildings/group_upper_1": "TRAIL_RUINS_GROUP_UPPER_1",
+    "minecraft:trail_ruins/buildings/group_upper_2": "TRAIL_RUINS_GROUP_UPPER_2",
+    "minecraft:trail_ruins/buildings/group_upper_3": "TRAIL_RUINS_GROUP_UPPER_3",
+    "minecraft:trail_ruins/buildings/group_upper_4": "TRAIL_RUINS_GROUP_UPPER_4",
+    "minecraft:trail_ruins/buildings/group_upper_5": "TRAIL_RUINS_GROUP_UPPER_5",
+    "minecraft:trail_ruins/roads/road_end_1": "TRAIL_RUINS_ROAD_END",
+    "minecraft:trial_chambers/chamber/addon/walkway_with_bridge_1": "TRIAL_WALKWAY_BRIDGE",
+    "minecraft:trial_chambers/chamber/chamber_8": "TRIAL_CHAMBER_8_DISPOSAL",
+    "minecraft:trial_chambers/corridor/addon/wall": "TRIAL_CORRIDOR_WALL",
+    "minecraft:village/snowy/houses/snowy_shepherds_house_1": "SNOWY_SHEPHERDS_HOUSE"
+  },
+  "resources": {
+    "minecraft:structure/abandoned_camp/camp/old_growth_pine_taiga/campsite_old_growth_pine_taiga_1.nbt": {
+      "kind": "nbt",
+      "sha256": "731b52bcdb3582083d919ac5128e09f4527a24adc06b7c9cf398df59b114ac4b",
+      "bytes": 1269
+    },
+    "minecraft:structure/abandoned_camp/camp/old_growth_spruce_taiga/campsite_old_growth_spruce_taiga_4.nbt": {
+      "kind": "nbt",
+      "sha256": "43f8e7ad2618b022587b693974092dd5ffacd018066436aa84e3b50413466ebc",
+      "bytes": 1129
+    },
+    "minecraft:structure/abandoned_camp/camp/pale_garden/campsite_pale_garden_2.nbt": {
+      "kind": "nbt",
+      "sha256": "a90f644ccc26d7c0bd18096af6e00a1c6dad2dbb7dcf25a6005c5deb728d5899",
+      "bytes": 1429
+    },
+    "minecraft:structure/abandoned_camp/camp/snowy_taiga/campsite_snowy_taiga_3.nbt": {
+      "kind": "nbt",
+      "sha256": "8178053c262401335a1a808fbde0f27093f5049a90323f0a517e8365c68f68a7",
+      "bytes": 1203
+    },
+    "minecraft:structure/abandoned_camp/tent/cherry_grove/tent_cherry_grove_1.nbt": {
+      "kind": "nbt",
+      "sha256": "4b8f1fd84b51e69d7a65ae8ab1f9bea002c8931f05643adc4fe102eac397d1f2",
+      "bytes": 2195
+    },
+    "minecraft:structure/abandoned_camp/tent/dappled_forest/tent_dappled_forest_1.nbt": {
+      "kind": "nbt",
+      "sha256": "e03043128c1f4fd85cf918994eb2e2fae729dd8f3b2dc065be47bc01a920e171",
+      "bytes": 2119
+    },
+    "minecraft:structure/abandoned_camp/tent/dappled_forest/tent_dappled_forest_2.nbt": {
+      "kind": "nbt",
+      "sha256": "bf3c1683cc5d42ce107765d1feccb61ab89362fc182fa10617833a876a6584ad",
+      "bytes": 2303
+    },
+    "minecraft:structure/abandoned_camp/tent/dappled_forest/tent_dappled_forest_3.nbt": {
+      "kind": "nbt",
+      "sha256": "413c9de8ccbaba801fa167bd79635d2eae7083f868f4c661f4785de36d5d2bb9",
+      "bytes": 1772
+    },
+    "minecraft:structure/abandoned_camp/tent/dappled_forest/tent_dappled_forest_4.nbt": {
+      "kind": "nbt",
+      "sha256": "cf78192a3a5d65c0739a5e48a6c5c816f1e816d83ecaeec6dbf0da1791654907",
+      "bytes": 2301
+    },
+    "minecraft:structure/abandoned_camp/tent/dappled_forest/tent_dappled_forest_6.nbt": {
+      "kind": "nbt",
+      "sha256": "4a064a91f15013cc7e271373d7fb7342ab727202335175815b491b80fea4dab8",
+      "bytes": 2177
+    },
+    "minecraft:structure/abandoned_camp/tent/savanna/tent_savanna_1.nbt": {
+      "kind": "nbt",
+      "sha256": "6d74f677206e9f87d0764c97dfc38d060b4fcba084308ae11d844faecc22fac8",
+      "bytes": 2327
+    },
+    "minecraft:structure/abandoned_camp/tent/snowy_taiga/tent_snowy_taiga_10.nbt": {
+      "kind": "nbt",
+      "sha256": "ac25503892c586e62c2061836bbf000042365ae6575387ae31b2755eec4a6577",
+      "bytes": 2788
+    },
+    "minecraft:structure/abandoned_camp/tent/taiga/tent_taiga_2.nbt": {
+      "kind": "nbt",
+      "sha256": "b97c478a80eb3051110e6bdea0596010bf192cba5ce4b51520829de0578efb48",
+      "bytes": 2240
+    },
+    "minecraft:structure/abandoned_camp/tent/taiga/tent_taiga_7.nbt": {
+      "kind": "nbt",
+      "sha256": "defe15cf007632e404aa0aefbe62378362b6fe6d1e0b1163c626839fed53d360",
+      "bytes": 2287
+    },
+    "minecraft:structure/abandoned_camp/tent/windswept_forest/tent_windswept_forest_6.nbt": {
+      "kind": "nbt",
+      "sha256": "7d2d894dd30cdf59175ec9d1170fea6095fdfdaad85be99ca7e66ee5a93e901e",
+      "bytes": 2548
+    },
+    "minecraft:structure/ancient_city/structures/camp_1.nbt": {
+      "kind": "nbt",
+      "sha256": "f1616722af8ac7dd2753c2a38cdf38c0a17666d6b6aa741202b2e1e514d0b5ef",
+      "bytes": 1157
+    },
+    "minecraft:structure/ancient_city/structures/camp_2.nbt": {
+      "kind": "nbt",
+      "sha256": "b51f7caf26f9c975e02d5201a34ce5d0526d98c1cdf4eb56fc22e84ba0e8b13f",
+      "bytes": 1264
+    },
+    "minecraft:structure/ancient_city/structures/camp_3.nbt": {
+      "kind": "nbt",
+      "sha256": "a161f73129935c34dbf00a5609408aef642c3e9cbde40b00ed77dc0a5a3f1532",
+      "bytes": 1009
+    },
+    "minecraft:structure/ancient_city/walls/intact_horizontal_wall_bridge.nbt": {
+      "kind": "nbt",
+      "sha256": "bcca82389728d05a5466dac57e0d22295e0ef54ff6120005ca8a716eda270746",
+      "bytes": 2714
+    },
+    "minecraft:structure/bastion/units/pathways/pathway_wall_0.nbt": {
+      "kind": "nbt",
+      "sha256": "e9c23b1cd46f244b380944bb4beebfcb77e54e47f25b8758dac7cfae709d6217",
+      "bytes": 350
+    },
+    "minecraft:structure/trail_ruins/buildings/group_upper_1.nbt": {
+      "kind": "nbt",
+      "sha256": "9e723e7016ee64f2139332cf3c1444bce9bc3d3d983108fbb52b984064de902c",
+      "bytes": 1260
+    },
+    "minecraft:structure/trail_ruins/buildings/group_upper_2.nbt": {
+      "kind": "nbt",
+      "sha256": "5bdc4a968fdef38a12f63b34d0ec373c00b91156b72ee8fcec66f404f0402810",
+      "bytes": 1256
+    },
+    "minecraft:structure/trail_ruins/buildings/group_upper_3.nbt": {
+      "kind": "nbt",
+      "sha256": "4a1f30de539b2e3d41f8c2a4ed7b62932256265926439168a091c71245769f89",
+      "bytes": 1265
+    },
+    "minecraft:structure/trail_ruins/buildings/group_upper_4.nbt": {
+      "kind": "nbt",
+      "sha256": "b0319563e220c7326cfb2036b576c129015ff69dde9174a23830447ef718c341",
+      "bytes": 1172
+    },
+    "minecraft:structure/trail_ruins/buildings/group_upper_5.nbt": {
+      "kind": "nbt",
+      "sha256": "19e8c561d56556c4b91b5765f9bf32abbf2393437092d6f197a0052a411b353d",
+      "bytes": 1170
+    },
+    "minecraft:structure/trail_ruins/roads/road_end_1.nbt": {
+      "kind": "nbt",
+      "sha256": "260e8736e6e766656b865637b8d9ea3bab6504df512b6b262e8162d8c185e2d4",
+      "bytes": 459
+    },
+    "minecraft:structure/trial_chambers/chamber/addon/walkway_with_bridge_1.nbt": {
+      "kind": "nbt",
+      "sha256": "3736fdaf487fd328cbdcdf7dbd49de358160149281cf9ba4d4ecec814bed5b4c",
+      "bytes": 6220
+    },
+    "minecraft:structure/trial_chambers/chamber/chamber_8.nbt": {
+      "kind": "nbt",
+      "sha256": "8298b884fe289bae540feb9ea9411bd0eb18cda213bdf4e979005ab619c1bf49",
+      "bytes": 19193
+    },
+    "minecraft:structure/trial_chambers/corridor/addon/wall.nbt": {
+      "kind": "nbt",
+      "sha256": "1eb8c76a02db792e3e4eefd57f943d2a6701847797ae4ee509eb431f2192142c",
+      "bytes": 907
+    },
+    "minecraft:structure/village/desert/houses/desert_large_farm_1.nbt": {
+      "kind": "nbt",
+      "sha256": "58c77567a351d574aae69bdd2c5abf89cd3933645a9357197130b6b4c6385c07",
+      "bytes": 1606
+    },
+    "minecraft:structure/village/desert/houses/desert_tannery_1.nbt": {
+      "kind": "nbt",
+      "sha256": "4cdd1e28155e24f2ff1d11cc33fdc71e132b09c4f1ac1097bea26c22a43b5ec4",
+      "bytes": 1832
+    },
+    "minecraft:structure/village/desert/streets/corner_01.nbt": {
+      "kind": "nbt",
+      "sha256": "1026e48c3ac6c15030b29f5f49dff3c7dd9e15cf8f3a782531d541a9fb12f86b",
+      "bytes": 746
+    },
+    "minecraft:structure/village/desert/streets/corner_02.nbt": {
+      "kind": "nbt",
+      "sha256": "7c6f2b0277bc23a959c0498d8449e56575e2a93a7a0513b1a5fe6d6ffc93b1da",
+      "bytes": 464
+    },
+    "minecraft:structure/village/desert/streets/crossroad_01.nbt": {
+      "kind": "nbt",
+      "sha256": "8a13eb03659e217db2acf4788c3102519ae08dc5150509bd892a63dd44869faf",
+      "bytes": 1265
+    },
+    "minecraft:structure/village/desert/streets/crossroad_02.nbt": {
+      "kind": "nbt",
+      "sha256": "7f0b0636a22ad1accd265a1a97f122cf12649ef84e27ec83eae794a90d3f02f4",
+      "bytes": 775
+    },
+    "minecraft:structure/village/desert/streets/crossroad_03.nbt": {
+      "kind": "nbt",
+      "sha256": "2fe4f924e0ee909f664dd4728ede6657baac82b7a9021b370696740a3f196c02",
+      "bytes": 438
+    },
+    "minecraft:structure/village/desert/streets/square_01.nbt": {
+      "kind": "nbt",
+      "sha256": "feabcb081c15bccc65d3e2f880e483143e0901907ff4cb1c53b0089cb68fdf9d",
+      "bytes": 1573
+    },
+    "minecraft:structure/village/desert/streets/square_02.nbt": {
+      "kind": "nbt",
+      "sha256": "08b7d21f73e9bd16440106ee64e0e61aa2ddd7ba0056816a939b0d93acb2d0bd",
+      "bytes": 1304
+    },
+    "minecraft:structure/village/desert/streets/straight_01.nbt": {
+      "kind": "nbt",
+      "sha256": "c31a2b618c5fca8d52f7453453a67628bef7075f2f71b8d55314b13c1cb82e40",
+      "bytes": 980
+    },
+    "minecraft:structure/village/desert/streets/straight_02.nbt": {
+      "kind": "nbt",
+      "sha256": "0c67db4d5dd36afc16aa423b25187348be74e2d60750a9beb24e5c7b330bc4f1",
+      "bytes": 1223
+    },
+    "minecraft:structure/village/desert/streets/straight_03.nbt": {
+      "kind": "nbt",
+      "sha256": "bc433b98c95354d1f7df8e7e2aad8c966c0e478006601129841aeb7297b0bb60",
+      "bytes": 317
+    },
+    "minecraft:structure/village/desert/streets/turn_01.nbt": {
+      "kind": "nbt",
+      "sha256": "a062c4d8fe83104a72578610f58cba9b36760d9bdc2e11904fe7d07c617f86c5",
+      "bytes": 396
+    },
+    "minecraft:structure/village/desert/zombie/streets/corner_01.nbt": {
+      "kind": "nbt",
+      "sha256": "8f6cd38172bf85cb312f87f7d230fa6458d2cbaab004b35e0d6e96d48253b718",
+      "bytes": 751
+    },
+    "minecraft:structure/village/desert/zombie/streets/corner_02.nbt": {
+      "kind": "nbt",
+      "sha256": "1791b0a8d151a7f9ec132789415a02b4a8805871d75ea60a82a68b4ca99198fd",
+      "bytes": 468
+    },
+    "minecraft:structure/village/desert/zombie/streets/crossroad_01.nbt": {
+      "kind": "nbt",
+      "sha256": "193bc3ede2cbdc93870fb1aa932329f509feb74b5794848a4d0e2f2ab8d1f6c5",
+      "bytes": 1271
+    },
+    "minecraft:structure/village/desert/zombie/streets/crossroad_02.nbt": {
+      "kind": "nbt",
+      "sha256": "db8dc3ecceccd89df7d4844585583983ba9d04e175e8dc103136291b9741ca26",
+      "bytes": 781
+    },
+    "minecraft:structure/village/desert/zombie/streets/crossroad_03.nbt": {
+      "kind": "nbt",
+      "sha256": "a3ecd13c22e2b85a93e54c27ff74ace5b9193d8fc4d5aa4d837772c969b7d5cd",
+      "bytes": 444
+    },
+    "minecraft:structure/village/desert/zombie/streets/square_01.nbt": {
+      "kind": "nbt",
+      "sha256": "21df5abada591c994bc7a0f2b253a787a5dc6eef94b28e8a85310e0779886e8d",
+      "bytes": 1579
+    },
+    "minecraft:structure/village/desert/zombie/streets/square_02.nbt": {
+      "kind": "nbt",
+      "sha256": "0cf1795422396e5e49418fac15814986a191dc82628b3a7e88b544ce1e1f7382",
+      "bytes": 1310
+    },
+    "minecraft:structure/village/desert/zombie/streets/straight_01.nbt": {
+      "kind": "nbt",
+      "sha256": "82d29a1f164c60a6427689f3fcad08ebfe3ad38fe6f89fb8a73b2cd57bd02673",
+      "bytes": 982
+    },
+    "minecraft:structure/village/desert/zombie/streets/straight_02.nbt": {
+      "kind": "nbt",
+      "sha256": "6307d687be8484a86baf19a8b6c9b3167e2b8fdb6dd28a020a029c73f7c31dd1",
+      "bytes": 1229
+    },
+    "minecraft:structure/village/desert/zombie/streets/straight_03.nbt": {
+      "kind": "nbt",
+      "sha256": "b79663076e59dfebbaf57cba171db698cb8d4d72fa0468ad806466ac91fbf4ac",
+      "bytes": 322
+    },
+    "minecraft:structure/village/desert/zombie/streets/turn_01.nbt": {
+      "kind": "nbt",
+      "sha256": "43cee5e27f3e3a69fb48d48dd7f9c042fe4bb670d0f0d80a27a09ec04401a138",
+      "bytes": 400
+    },
+    "minecraft:structure/village/plains/houses/plains_fisher_cottage_1.nbt": {
+      "kind": "nbt",
+      "sha256": "40301a254cedec7224ed677c6d1824388bbdcce1f3e118353276704194b9b784",
+      "bytes": 3506
+    },
+    "minecraft:structure/village/plains/houses/plains_small_house_8.nbt": {
+      "kind": "nbt",
+      "sha256": "25c86413aa094f852c2f1ca5f6c4f2cfeab0ddf40662df60530eb77157d48bd0",
+      "bytes": 2664
+    },
+    "minecraft:structure/village/plains/streets/corner_01.nbt": {
+      "kind": "nbt",
+      "sha256": "6a2c6f3dca7c59a1240c18e2504e1b38d6f6c4e87ef51d3259e1a46292a2e295",
+      "bytes": 1177
+    },
+    "minecraft:structure/village/plains/streets/corner_02.nbt": {
+      "kind": "nbt",
+      "sha256": "647594aca22d2b74a44add57ba3f8b2ca42a2bcb96edf7e174f8ff18d4840dc4",
+      "bytes": 1103
+    },
+    "minecraft:structure/village/plains/streets/corner_03.nbt": {
+      "kind": "nbt",
+      "sha256": "ad534b0dc3c18ee609325d10deeea1173c9b199de8c3e3901be7b178c9f6507a",
+      "bytes": 345
+    },
+    "minecraft:structure/village/plains/streets/crossroad_01.nbt": {
+      "kind": "nbt",
+      "sha256": "66eb88f3df55b8f547c7bffff8d1ff0ccf2b30fbc561134e13de66b47ca24a8c",
+      "bytes": 1209
+    },
+    "minecraft:structure/village/plains/streets/crossroad_02.nbt": {
+      "kind": "nbt",
+      "sha256": "fbbe446cbbf8ea9b039982277e15bc30819cb735edc1d249d6356b0374e383fd",
+      "bytes": 1153
+    },
+    "minecraft:structure/village/plains/streets/crossroad_03.nbt": {
+      "kind": "nbt",
+      "sha256": "bd56d316e47551c62fca3d8943dc77d838f465dbb321a074d0a2e47bfe430cc6",
+      "bytes": 1197
+    },
+    "minecraft:structure/village/plains/streets/crossroad_04.nbt": {
+      "kind": "nbt",
+      "sha256": "7361c3bcffa776f972f1bb82b00c3a876e981c026b78581f3fd6b12cdb583d3d",
+      "bytes": 371
+    },
+    "minecraft:structure/village/plains/streets/crossroad_05.nbt": {
+      "kind": "nbt",
+      "sha256": "d312f5c4416377d0d2dadf852de8aa636522758966b020ddbfad33a4f04f2556",
+      "bytes": 404
+    },
+    "minecraft:structure/village/plains/streets/crossroad_06.nbt": {
+      "kind": "nbt",
+      "sha256": "a3cc10a6b6a13cbe34b3845e9beb9430c4a6ce3bcf84b18acea82935983e6cce",
+      "bytes": 463
+    },
+    "minecraft:structure/village/plains/streets/straight_01.nbt": {
+      "kind": "nbt",
+      "sha256": "119da41fce7a6fad02d862ad9594888733f56e272560742c58b9c7af76db891e",
+      "bytes": 1125
+    },
+    "minecraft:structure/village/plains/streets/straight_02.nbt": {
+      "kind": "nbt",
+      "sha256": "a44c60ed97c15819e3cd4701afca12c4a0c0101e44673d033f5a4ccdbc8680c0",
+      "bytes": 1079
+    },
+    "minecraft:structure/village/plains/streets/straight_03.nbt": {
+      "kind": "nbt",
+      "sha256": "efc390e7306dfea69b280c74849456514d0d65b94929c60fe65e43377520da4b",
+      "bytes": 771
+    },
+    "minecraft:structure/village/plains/streets/straight_04.nbt": {
+      "kind": "nbt",
+      "sha256": "7890f3de335eb351b2e6618ba02b83f03c1a473a9c40e33a17e9c73901d419c0",
+      "bytes": 629
+    },
+    "minecraft:structure/village/plains/streets/straight_05.nbt": {
+      "kind": "nbt",
+      "sha256": "475e19a3bbdac1161e214029e64ea73d41b821a1c8434eb8c0376434edf551d0",
+      "bytes": 1323
+    },
+    "minecraft:structure/village/plains/streets/straight_06.nbt": {
+      "kind": "nbt",
+      "sha256": "93c385555fb1d572153a904c548e3f47909da0a0634160b3a4271a576f1933b5",
+      "bytes": 1697
+    },
+    "minecraft:structure/village/plains/streets/turn_01.nbt": {
+      "kind": "nbt",
+      "sha256": "980515d7946c192fc940a2ea35116c1276ba1499ad1a6aaf512599065efcc7f4",
+      "bytes": 783
+    },
+    "minecraft:structure/village/plains/zombie/houses/plains_small_house_8.nbt": {
+      "kind": "nbt",
+      "sha256": "39a9672922f673376150bc0ae716cae64e1e57755049e40fa3473da19034d2ea",
+      "bytes": 2671
+    },
+    "minecraft:structure/village/plains/zombie/streets/corner_01.nbt": {
+      "kind": "nbt",
+      "sha256": "82e1cac8e637e00fe85ebe10fd1a714623ad79d2cbe16874d3423337435055d4",
+      "bytes": 1183
+    },
+    "minecraft:structure/village/plains/zombie/streets/corner_02.nbt": {
+      "kind": "nbt",
+      "sha256": "bc417eb9564f33542b18f5211ce0a9be487670b5867d07279cb1881710e19747",
+      "bytes": 1109
+    },
+    "minecraft:structure/village/plains/zombie/streets/corner_03.nbt": {
+      "kind": "nbt",
+      "sha256": "7b35bf561ed2f7d661cc2ed10cf34b421890b8803d2466be829a1e306818b896",
+      "bytes": 351
+    },
+    "minecraft:structure/village/plains/zombie/streets/crossroad_01.nbt": {
+      "kind": "nbt",
+      "sha256": "2013b82e456432fa934be0464efd1a21b3f3e5c5770508a85f277b39e74610ca",
+      "bytes": 1214
+    },
+    "minecraft:structure/village/plains/zombie/streets/crossroad_02.nbt": {
+      "kind": "nbt",
+      "sha256": "48e1d65791db5720a846d19e7146019a045ab4b80e1a8b86b0c2e96a63fb778f",
+      "bytes": 1159
+    },
+    "minecraft:structure/village/plains/zombie/streets/crossroad_03.nbt": {
+      "kind": "nbt",
+      "sha256": "1318eca7537adc0db3a898fdd3efd741637499be167d0560eca90e69b2986f64",
+      "bytes": 1203
+    },
+    "minecraft:structure/village/plains/zombie/streets/crossroad_04.nbt": {
+      "kind": "nbt",
+      "sha256": "88c15959fd2a9970c0624c46ff974bf72ac4c3c44b585881e2dfe21621910e66",
+      "bytes": 377
+    },
+    "minecraft:structure/village/plains/zombie/streets/crossroad_05.nbt": {
+      "kind": "nbt",
+      "sha256": "69ee033ad90fc02d32cfb9b54e168f55fa882a318ed303398c2436a9e6dbb674",
+      "bytes": 408
+    },
+    "minecraft:structure/village/plains/zombie/streets/crossroad_06.nbt": {
+      "kind": "nbt",
+      "sha256": "101ec4ceef2263bfe452b15f59755e21fc33dcdba36c0914d8e1c748bef530c8",
+      "bytes": 470
+    },
+    "minecraft:structure/village/plains/zombie/streets/straight_01.nbt": {
+      "kind": "nbt",
+      "sha256": "7311335b822d66acdd8bd0a8251a1546503897a3b431b47dcafc99ab55ac8e1f",
+      "bytes": 1130
+    },
+    "minecraft:structure/village/plains/zombie/streets/straight_02.nbt": {
+      "kind": "nbt",
+      "sha256": "c5c6948629a4aa0495cf957a5dc7a06609af638cb9814d9f5dca27a3fe92ac36",
+      "bytes": 1085
+    },
+    "minecraft:structure/village/plains/zombie/streets/straight_03.nbt": {
+      "kind": "nbt",
+      "sha256": "e4ed6f8c9cf4d178b6c7b7cfc7307279a7103c913cb17c379d8c9b1eb4e1c6f4",
+      "bytes": 777
+    },
+    "minecraft:structure/village/plains/zombie/streets/straight_04.nbt": {
+      "kind": "nbt",
+      "sha256": "0f5d4a329f65d9f215bfaa259052c9e1ea4891e86b373c8f292e5755bc1ad3c8",
+      "bytes": 634
+    },
+    "minecraft:structure/village/plains/zombie/streets/straight_05.nbt": {
+      "kind": "nbt",
+      "sha256": "1a8ec16cb351cada70c286dea942f9c8e1d03a6a462df134604cc54ae6734792",
+      "bytes": 1329
+    },
+    "minecraft:structure/village/plains/zombie/streets/straight_06.nbt": {
+      "kind": "nbt",
+      "sha256": "4e8d7840b7eda203e00046fe52a336d28c16b515b10e308f060f45c1f7e50779",
+      "bytes": 1703
+    },
+    "minecraft:structure/village/plains/zombie/streets/turn_01.nbt": {
+      "kind": "nbt",
+      "sha256": "4b3f3c392fca3aa4ee665b39f4745c4d8b68eda47e95e7b6a91c945ce4e5a66a",
+      "bytes": 789
+    },
+    "minecraft:structure/village/savanna/houses/savanna_animal_pen_2.nbt": {
+      "kind": "nbt",
+      "sha256": "fb5c40c2955e127538158f8977ac5e5e93acc37f90460339782b5daba6ed78e0",
+      "bytes": 3474
+    },
+    "minecraft:structure/village/savanna/houses/savanna_fisher_cottage_1.nbt": {
+      "kind": "nbt",
+      "sha256": "7d5a17fa0e87da79ed211b6a781e52fcb9d86aaf18142428b25475cd92ab285e",
+      "bytes": 3164
+    },
+    "minecraft:structure/village/savanna/houses/savanna_large_farm_2.nbt": {
+      "kind": "nbt",
+      "sha256": "ac127628712e6043f318571bb5ac501881618f304d55fee28a38a4924b836c19",
+      "bytes": 2148
+    },
+    "minecraft:structure/village/savanna/houses/savanna_shepherd_1.nbt": {
+      "kind": "nbt",
+      "sha256": "66ee919e070efe9f066e6ddc2adfab97158c94e14e60dfcdf8d7891f8b952884",
+      "bytes": 6314
+    },
+    "minecraft:structure/village/savanna/houses/savanna_small_farm.nbt": {
+      "kind": "nbt",
+      "sha256": "247284ca324197e2c0545f7ac94356ad126bb0dbe4c5fa070859db982a21395f",
+      "bytes": 1125
+    },
+    "minecraft:structure/village/savanna/streets/corner_01.nbt": {
+      "kind": "nbt",
+      "sha256": "0fb2fbbfc0f3437b61d76181046dd534aac6ffae5a3874b0131b6dd490593233",
+      "bytes": 1192
+    },
+    "minecraft:structure/village/savanna/streets/corner_03.nbt": {
+      "kind": "nbt",
+      "sha256": "734b7ea85baf03b8ce409ab854a5943b7336a7e1f5d63d656f64afe6a67e95a4",
+      "bytes": 346
+    },
+    "minecraft:structure/village/savanna/streets/crossroad_02.nbt": {
+      "kind": "nbt",
+      "sha256": "74bac087b7d8c350b23687722f0fc8c2b5e9f743ff8297ea29ef46d4705d48f2",
+      "bytes": 620
+    },
+    "minecraft:structure/village/savanna/streets/crossroad_03.nbt": {
+      "kind": "nbt",
+      "sha256": "607665fb582a289cfbba430f188888f44c5288ef3b101105d59558b20708977f",
+      "bytes": 1220
+    },
+    "minecraft:structure/village/savanna/streets/crossroad_04.nbt": {
+      "kind": "nbt",
+      "sha256": "0ab07b085c7116bb261b725bc57140db350a683d35bc4c192a153ace1cb9d71f",
+      "bytes": 372
+    },
+    "minecraft:structure/village/savanna/streets/crossroad_05.nbt": {
+      "kind": "nbt",
+      "sha256": "1446a8ac033b8591c0946198903324d72f627e653ccf527828b1fa8922379b00",
+      "bytes": 404
+    },
+    "minecraft:structure/village/savanna/streets/crossroad_06.nbt": {
+      "kind": "nbt",
+      "sha256": "ee551821b398c954d6dd184572918bcfbb02dce930b08074ce12ba79c29b686a",
+      "bytes": 457
+    },
+    "minecraft:structure/village/savanna/streets/crossroad_07.nbt": {
+      "kind": "nbt",
+      "sha256": "3e5d6a6d5bfd7131c78d55bf107a14406ac478cec945c6fcc7ce858ece8afbd8",
+      "bytes": 1375
+    },
+    "minecraft:structure/village/savanna/streets/split_01.nbt": {
+      "kind": "nbt",
+      "sha256": "68c4b478a09a214b4f1483c564a1e00703fde3d536de18f9b9bbb3795f6f61c5",
+      "bytes": 518
+    },
+    "minecraft:structure/village/savanna/streets/split_02.nbt": {
+      "kind": "nbt",
+      "sha256": "8039a402d0c2d87b21c388436382c337b875bfc3dbc7aaeabbb3945b47edd931",
+      "bytes": 730
+    },
+    "minecraft:structure/village/savanna/streets/straight_02.nbt": {
+      "kind": "nbt",
+      "sha256": "fa5f6707a8d24d81adaf6e1aa466e6b3a68a547b23af32aa39f2a93f067ebfa4",
+      "bytes": 1117
+    },
+    "minecraft:structure/village/savanna/streets/straight_04.nbt": {
+      "kind": "nbt",
+      "sha256": "d98ced84c45db9bcdcf3ee3ebd97793826fd7d59263f09bb831e2c285740e8ac",
+      "bytes": 636
+    },
+    "minecraft:structure/village/savanna/streets/straight_05.nbt": {
+      "kind": "nbt",
+      "sha256": "a3ed028e3076f3e2f659ab7386fae1263f3661143ca01effd1831428455f63cf",
+      "bytes": 1923
+    },
+    "minecraft:structure/village/savanna/streets/straight_06.nbt": {
+      "kind": "nbt",
+      "sha256": "01baa59909de3a18228872eace31044f6a14a6e13355ff681394dd81c6989f6e",
+      "bytes": 1082
+    },
+    "minecraft:structure/village/savanna/streets/straight_08.nbt": {
+      "kind": "nbt",
+      "sha256": "226c32593dd07798060ce98aaae187c52162a5e545a1edaf4a9ec93efe92efea",
+      "bytes": 935
+    },
+    "minecraft:structure/village/savanna/streets/straight_09.nbt": {
+      "kind": "nbt",
+      "sha256": "7d2d00be9246b5dc3bd5086aa9376e76d2f85b2804f1531ce281661c830d02db",
+      "bytes": 1517
+    },
+    "minecraft:structure/village/savanna/streets/straight_10.nbt": {
+      "kind": "nbt",
+      "sha256": "818ae5f77d441cccc18cc155093ba7c4f0a7c8a27d421723b57b436007556d33",
+      "bytes": 518
+    },
+    "minecraft:structure/village/savanna/streets/straight_11.nbt": {
+      "kind": "nbt",
+      "sha256": "3f46043ea296a074299a7ce4a8ce5c399b2a2ae2f97adf5b8bef60ac97930be7",
+      "bytes": 1559
+    },
+    "minecraft:structure/village/savanna/streets/turn_01.nbt": {
+      "kind": "nbt",
+      "sha256": "f7086d3b1d680fd22af6f75618a957670e7b995648bf27a03ffa8a42d37f241c",
+      "bytes": 1152
+    },
+    "minecraft:structure/village/savanna/zombie/houses/savanna_animal_pen_2.nbt": {
+      "kind": "nbt",
+      "sha256": "9f3dc989ec8f2bfcd2e23ef7323696b43fd74cd9d9dca2b66dd394133052acbf",
+      "bytes": 3482
+    },
+    "minecraft:structure/village/savanna/zombie/houses/savanna_large_farm_2.nbt": {
+      "kind": "nbt",
+      "sha256": "3fdc9a949389310528155a20e4e4c410fa9a17d2f7503b37ba5d3bd63d202412",
+      "bytes": 2152
+    },
+    "minecraft:structure/village/savanna/zombie/streets/corner_01.nbt": {
+      "kind": "nbt",
+      "sha256": "e624ed00a38e767476b63b30e2d20d5e69f3ea432212427882581dd71ce88b62",
+      "bytes": 1198
+    },
+    "minecraft:structure/village/savanna/zombie/streets/corner_03.nbt": {
+      "kind": "nbt",
+      "sha256": "af034be27bfce0beb3d09fe8e299d946d4eeca1c39764236647dbca0e3ac1f04",
+      "bytes": 352
+    },
+    "minecraft:structure/village/savanna/zombie/streets/crossroad_02.nbt": {
+      "kind": "nbt",
+      "sha256": "c76c0ab26c9ffecd16f30380ee22b541206b81d58c2ab985d98fafd470be8133",
+      "bytes": 627
+    },
+    "minecraft:structure/village/savanna/zombie/streets/crossroad_03.nbt": {
+      "kind": "nbt",
+      "sha256": "62d3f27f3b0cf6a6451657d87bacfc080efcee2a6c455e18306a6fbd5a12b2c5",
+      "bytes": 1225
+    },
+    "minecraft:structure/village/savanna/zombie/streets/crossroad_04.nbt": {
+      "kind": "nbt",
+      "sha256": "f43af2e4058825e955e15c1a2eb7069139baeaf7ed7fac09f48048983503ef00",
+      "bytes": 378
+    },
+    "minecraft:structure/village/savanna/zombie/streets/crossroad_05.nbt": {
+      "kind": "nbt",
+      "sha256": "5a670b1e6cb0f22a158be5333c0caf520d1fc073125504101b209f300ff46f6d",
+      "bytes": 409
+    },
+    "minecraft:structure/village/savanna/zombie/streets/crossroad_06.nbt": {
+      "kind": "nbt",
+      "sha256": "79628191b7a95b3de9cf003a1e30aa41a1de2a3f8a00f51e555d61567a3c46c0",
+      "bytes": 466
+    },
+    "minecraft:structure/village/savanna/zombie/streets/crossroad_07.nbt": {
+      "kind": "nbt",
+      "sha256": "4a335d360ea5439b4564492440b68fba0914cffad1440929ee62461cfe4d9998",
+      "bytes": 1381
+    },
+    "minecraft:structure/village/savanna/zombie/streets/split_01.nbt": {
+      "kind": "nbt",
+      "sha256": "9609c8c41cb654cf35a893be512e7d47e04f21b5c6f005b4250b9aa5c7055460",
+      "bytes": 524
+    },
+    "minecraft:structure/village/savanna/zombie/streets/split_02.nbt": {
+      "kind": "nbt",
+      "sha256": "2760f1a3a1a1e459a724d0df7d49916374c3b9d10074682e40b36bfd853f10a3",
+      "bytes": 736
+    },
+    "minecraft:structure/village/savanna/zombie/streets/straight_02.nbt": {
+      "kind": "nbt",
+      "sha256": "23a90168da5853d4d73284bb2da0632f1759928db740f92db6e5ac6f4583b7b8",
+      "bytes": 1124
+    },
+    "minecraft:structure/village/savanna/zombie/streets/straight_04.nbt": {
+      "kind": "nbt",
+      "sha256": "5273a47c93f9fb154d009a96e65343991b0f1f52a4050ff9b9bbffa41f785b03",
+      "bytes": 641
+    },
+    "minecraft:structure/village/savanna/zombie/streets/straight_05.nbt": {
+      "kind": "nbt",
+      "sha256": "b99068c7281d86285913534d6c59c32dc9381af916f5bbc08036cd4a0d656b18",
+      "bytes": 1931
+    },
+    "minecraft:structure/village/savanna/zombie/streets/straight_06.nbt": {
+      "kind": "nbt",
+      "sha256": "f4cb3a484987c7ec7f832b6a11e99ae7f6f5a191f6dbe8acee146a06a5e99d3e",
+      "bytes": 1088
+    },
+    "minecraft:structure/village/savanna/zombie/streets/straight_08.nbt": {
+      "kind": "nbt",
+      "sha256": "c1af5d22c769856dc09679f9efb7c44fd2fd1264e41098d552f3f94685b9c688",
+      "bytes": 940
+    },
+    "minecraft:structure/village/savanna/zombie/streets/straight_09.nbt": {
+      "kind": "nbt",
+      "sha256": "25ec1c595413822194d928ad9fdf1c1170f4084a9664d4b7348b11a00553f6f3",
+      "bytes": 1522
+    },
+    "minecraft:structure/village/savanna/zombie/streets/straight_10.nbt": {
+      "kind": "nbt",
+      "sha256": "7ccbb1227396d94bfc59adeb33a4215b69b076fb585c7b42e13cde4eb4325e71",
+      "bytes": 523
+    },
+    "minecraft:structure/village/savanna/zombie/streets/straight_11.nbt": {
+      "kind": "nbt",
+      "sha256": "8732b4104f6be65592313c11018e379910e9964914b94be31a42a46370fe262f",
+      "bytes": 1566
+    },
+    "minecraft:structure/village/savanna/zombie/streets/turn_01.nbt": {
+      "kind": "nbt",
+      "sha256": "e4f445793b0e6ce8a489d63078d824c59ba8d57808203ca731315e8558800898",
+      "bytes": 1159
+    },
+    "minecraft:structure/village/snowy/houses/snowy_shepherds_house_1.nbt": {
+      "kind": "nbt",
+      "sha256": "9a5fde35e981daccc8be5a43d50756ecf92557729da00877571819ab0d99fa56",
+      "bytes": 2162
+    },
+    "minecraft:worldgen/block_state_provider/podzol_beneath_tree.json": {
+      "kind": "json",
+      "value": {
+        "type": "minecraft:rule_based",
+        "rules": [
+          {
+            "if_true": {
+              "type": "minecraft:matching_block_tag",
+              "tag": "minecraft:beneath_tree_podzol_replaceable"
+            },
+            "then": {
+              "id": "minecraft:podzol",
+              "properties": {
+                "snowy": "false"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "minecraft:worldgen/block_state_provider/soil_beneath_tree.json": {
+      "kind": "json",
+      "value": {
+        "type": "minecraft:rule_based",
+        "rules": [
+          {
+            "if_true": {
+              "type": "minecraft:not",
+              "predicate": {
+                "type": "minecraft:matching_block_tag",
+                "tag": "minecraft:cannot_replace_below_tree_trunk"
+              }
+            },
+            "then": {
+              "id": "minecraft:dirt"
+            }
+          }
+        ]
+      }
+    },
+    "minecraft:worldgen/feature/acacia.json": {
+      "kind": "json",
+      "value": {
+        "type": "minecraft:tree",
+        "below_trunk_provider": "minecraft:soil_beneath_tree",
+        "decorators": [],
+        "foliage_placer": {
+          "type": "minecraft:acacia_foliage_placer",
+          "offset": 0,
+          "radius": 2
+        },
+        "foliage_provider": {
+          "id": "minecraft:acacia_leaves",
+          "properties": {
+            "distance": "7",
+            "persistent": "false",
+            "waterlogged": "false"
+          }
+        },
+        "ignore_vines": true,
+        "minimum_size": {
+          "type": "minecraft:two_layers_feature_size",
+          "upper_size": 2
+        },
+        "trunk_placer": {
+          "type": "minecraft:forking_trunk_placer",
+          "base_height": 5,
+          "height_rand_a": 2,
+          "height_rand_b": 2
+        },
+        "trunk_provider": {
+          "id": "minecraft:acacia_log",
+          "properties": {
+            "axis": "y"
+          }
+        }
+      }
+    },
+    "minecraft:worldgen/feature/cherry.json": {
+      "kind": "json",
+      "value": {
+        "type": "minecraft:tree",
+        "below_trunk_provider": "minecraft:soil_beneath_tree",
+        "decorators": [],
+        "foliage_placer": {
+          "type": "minecraft:cherry_foliage_placer",
+          "corner_hole_chance": 0.25,
+          "hanging_leaves_chance": 0.16666667,
+          "hanging_leaves_extension_chance": 0.33333334,
+          "height": 5,
+          "offset": 0,
+          "radius": 4,
+          "wide_bottom_layer_hole_chance": 0.25
+        },
+        "foliage_provider": {
+          "id": "minecraft:cherry_leaves",
+          "properties": {
+            "distance": "7",
+            "persistent": "false",
+            "waterlogged": "false"
+          }
+        },
+        "ignore_vines": true,
+        "minimum_size": {
+          "type": "minecraft:two_layers_feature_size",
+          "upper_size": 2
+        },
+        "trunk_placer": {
+          "type": "minecraft:cherry_trunk_placer",
+          "base_height": 7,
+          "branch_count": {
+            "type": "minecraft:weighted_list",
+            "distribution": [
+              {
+                "data": 1,
+                "weight": 1
+              },
+              {
+                "data": 2,
+                "weight": 1
+              },
+              {
+                "data": 3,
+                "weight": 1
+              }
+            ]
+          },
+          "branch_end_offset_from_top": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 0,
+            "min_inclusive": -1
+          },
+          "branch_horizontal_length": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 4,
+            "min_inclusive": 2
+          },
+          "branch_start_offset_from_top": {
+            "max_inclusive": -3,
+            "min_inclusive": -4
+          },
+          "height_rand_a": 1,
+          "height_rand_b": 0
+        },
+        "trunk_provider": {
+          "id": "minecraft:cherry_log",
+          "properties": {
+            "axis": "y"
+          }
+        }
+      }
+    },
+    "minecraft:worldgen/feature/mega_pine.json": {
+      "kind": "json",
+      "value": {
+        "type": "minecraft:tree",
+        "below_trunk_provider": "minecraft:soil_beneath_tree",
+        "decorators": [
+          {
+            "type": "minecraft:alter_ground",
+            "provider": "minecraft:podzol_beneath_tree"
+          }
+        ],
+        "foliage_placer": {
+          "type": "minecraft:mega_pine_foliage_placer",
+          "crown_height": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 7,
+            "min_inclusive": 3
+          },
+          "offset": 0,
+          "radius": 0
+        },
+        "foliage_provider": {
+          "id": "minecraft:spruce_leaves",
+          "properties": {
+            "distance": "7",
+            "persistent": "false",
+            "waterlogged": "false"
+          }
+        },
+        "ignore_vines": false,
+        "minimum_size": {
+          "type": "minecraft:two_layers_feature_size",
+          "lower_size": 1,
+          "upper_size": 2
+        },
+        "trunk_placer": {
+          "type": "minecraft:giant_trunk_placer",
+          "base_height": 13,
+          "height_rand_a": 2,
+          "height_rand_b": 14
+        },
+        "trunk_provider": {
+          "id": "minecraft:spruce_log",
+          "properties": {
+            "axis": "y"
+          }
+        }
+      }
+    },
+    "minecraft:worldgen/feature/mega_spruce.json": {
+      "kind": "json",
+      "value": {
+        "type": "minecraft:tree",
+        "below_trunk_provider": "minecraft:soil_beneath_tree",
+        "decorators": [
+          {
+            "type": "minecraft:alter_ground",
+            "provider": "minecraft:podzol_beneath_tree"
+          }
+        ],
+        "foliage_placer": {
+          "type": "minecraft:mega_pine_foliage_placer",
+          "crown_height": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 17,
+            "min_inclusive": 13
+          },
+          "offset": 0,
+          "radius": 0
+        },
+        "foliage_provider": {
+          "id": "minecraft:spruce_leaves",
+          "properties": {
+            "distance": "7",
+            "persistent": "false",
+            "waterlogged": "false"
+          }
+        },
+        "ignore_vines": false,
+        "minimum_size": {
+          "type": "minecraft:two_layers_feature_size",
+          "lower_size": 1,
+          "upper_size": 2
+        },
+        "trunk_placer": {
+          "type": "minecraft:giant_trunk_placer",
+          "base_height": 13,
+          "height_rand_a": 2,
+          "height_rand_b": 14
+        },
+        "trunk_provider": {
+          "id": "minecraft:spruce_log",
+          "properties": {
+            "axis": "y"
+          }
+        }
+      }
+    },
+    "minecraft:worldgen/feature/orange_poplar.json": {
+      "kind": "json",
+      "value": {
+        "type": "minecraft:tree",
+        "below_trunk_provider": "minecraft:soil_beneath_tree",
+        "decorators": [
+          {
+            "type": "minecraft:shelf_mushroom",
+            "probability": 0.4
+          }
+        ],
+        "foliage_placer": {
+          "type": "minecraft:poplar_foliage_placer",
+          "height": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 6,
+            "min_inclusive": 5
+          },
+          "offset": 0,
+          "radius": {
+            "type": "minecraft:weighted_list",
+            "distribution": [
+              {
+                "data": 5,
+                "weight": 5
+              },
+              {
+                "data": 6,
+                "weight": 5
+              },
+              {
+                "data": 7,
+                "weight": 1
+              },
+              {
+                "data": 8,
+                "weight": 1
+              }
+            ]
+          },
+          "side_hole_chance": 0.15
+        },
+        "foliage_provider": {
+          "id": "minecraft:orange_poplar_leaves",
+          "properties": {
+            "distance": "7",
+            "persistent": "false",
+            "waterlogged": "false"
+          }
+        },
+        "ignore_vines": true,
+        "minimum_size": {
+          "type": "minecraft:two_layers_feature_size",
+          "upper_size": 2
+        },
+        "trunk_placer": {
+          "type": "minecraft:poplar_trunk_placer",
+          "base_height": 7,
+          "branch_amount": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 4,
+            "min_inclusive": 1
+          },
+          "height_rand_a": 4,
+          "height_rand_b": 0,
+          "trunk_height_above_branches": 4
+        },
+        "trunk_provider": {
+          "id": "minecraft:poplar_log",
+          "properties": {
+            "axis": "y"
+          }
+        }
+      }
+    },
+    "minecraft:worldgen/feature/pile_hay.json": {
+      "kind": "json",
+      "value": {
+        "type": "minecraft:block_pile",
+        "state_provider": {
+          "type": "minecraft:rotated",
+          "state": {
+            "id": "minecraft:hay_block",
+            "properties": {
+              "axis": "y"
+            }
+          }
+        }
+      }
+    },
+    "minecraft:worldgen/feature/pile_ice.json": {
+      "kind": "json",
+      "value": {
+        "type": "minecraft:block_pile",
+        "state_provider": {
+          "type": "minecraft:weighted",
+          "entries": [
+            {
+              "data": "minecraft:blue_ice",
+              "weight": 1
+            },
+            {
+              "data": "minecraft:packed_ice",
+              "weight": 5
+            }
+          ]
+        }
+      }
+    },
+    "minecraft:worldgen/feature/pile_melon.json": {
+      "kind": "json",
+      "value": {
+        "type": "minecraft:block_pile",
+        "state_provider": {
+          "id": "minecraft:melon"
+        }
+      }
+    },
+    "minecraft:worldgen/feature/pile_pumpkin.json": {
+      "kind": "json",
+      "value": {
+        "type": "minecraft:block_pile",
+        "state_provider": {
+          "type": "minecraft:weighted",
+          "entries": [
+            {
+              "data": "minecraft:pumpkin",
+              "weight": 19
+            },
+            {
+              "data": "minecraft:jack_o_lantern",
+              "weight": 1
+            }
+          ]
+        }
+      }
+    },
+    "minecraft:worldgen/feature/pile_snow.json": {
+      "kind": "json",
+      "value": {
+        "type": "minecraft:block_pile",
+        "state_provider": {
+          "id": "minecraft:snow",
+          "properties": {
+            "layers": "1"
+          }
+        }
+      }
+    },
+    "minecraft:worldgen/feature/pine.json": {
+      "kind": "json",
+      "value": {
+        "type": "minecraft:tree",
+        "below_trunk_provider": "minecraft:soil_beneath_tree",
+        "decorators": [],
+        "foliage_placer": {
+          "type": "minecraft:pine_foliage_placer",
+          "height": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 4,
+            "min_inclusive": 3
+          },
+          "offset": 1,
+          "radius": 1
+        },
+        "foliage_provider": {
+          "id": "minecraft:spruce_leaves",
+          "properties": {
+            "distance": "7",
+            "persistent": "false",
+            "waterlogged": "false"
+          }
+        },
+        "ignore_vines": true,
+        "minimum_size": {
+          "type": "minecraft:two_layers_feature_size",
+          "limit": 2,
+          "upper_size": 2
+        },
+        "trunk_placer": {
+          "type": "minecraft:straight_trunk_placer",
+          "base_height": 6,
+          "height_rand_a": 4,
+          "height_rand_b": 0
+        },
+        "trunk_provider": {
+          "id": "minecraft:spruce_log",
+          "properties": {
+            "axis": "y"
+          }
+        }
+      }
+    },
+    "minecraft:worldgen/feature/red_poplar.json": {
+      "kind": "json",
+      "value": {
+        "type": "minecraft:tree",
+        "below_trunk_provider": "minecraft:soil_beneath_tree",
+        "decorators": [
+          {
+            "type": "minecraft:shelf_mushroom",
+            "probability": 0.4
+          }
+        ],
+        "foliage_placer": {
+          "type": "minecraft:poplar_foliage_placer",
+          "height": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 6,
+            "min_inclusive": 5
+          },
+          "offset": 0,
+          "radius": {
+            "type": "minecraft:weighted_list",
+            "distribution": [
+              {
+                "data": 5,
+                "weight": 5
+              },
+              {
+                "data": 6,
+                "weight": 5
+              },
+              {
+                "data": 7,
+                "weight": 1
+              },
+              {
+                "data": 8,
+                "weight": 1
+              }
+            ]
+          },
+          "side_hole_chance": 0.15
+        },
+        "foliage_provider": {
+          "id": "minecraft:red_poplar_leaves",
+          "properties": {
+            "distance": "7",
+            "persistent": "false",
+            "waterlogged": "false"
+          }
+        },
+        "ignore_vines": true,
+        "minimum_size": {
+          "type": "minecraft:two_layers_feature_size",
+          "upper_size": 2
+        },
+        "trunk_placer": {
+          "type": "minecraft:poplar_trunk_placer",
+          "base_height": 7,
+          "branch_amount": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 4,
+            "min_inclusive": 1
+          },
+          "height_rand_a": 4,
+          "height_rand_b": 0,
+          "trunk_height_above_branches": 4
+        },
+        "trunk_provider": {
+          "id": "minecraft:poplar_log",
+          "properties": {
+            "axis": "y"
+          }
+        }
+      }
+    },
+    "minecraft:worldgen/feature/spruce.json": {
+      "kind": "json",
+      "value": {
+        "type": "minecraft:tree",
+        "below_trunk_provider": "minecraft:soil_beneath_tree",
+        "decorators": [],
+        "foliage_placer": {
+          "type": "minecraft:spruce_foliage_placer",
+          "offset": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 2,
+            "min_inclusive": 0
+          },
+          "radius": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 3,
+            "min_inclusive": 2
+          },
+          "trunk_height": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 2,
+            "min_inclusive": 1
+          }
+        },
+        "foliage_provider": {
+          "id": "minecraft:spruce_leaves",
+          "properties": {
+            "distance": "7",
+            "persistent": "false",
+            "waterlogged": "false"
+          }
+        },
+        "ignore_vines": true,
+        "minimum_size": {
+          "type": "minecraft:two_layers_feature_size",
+          "limit": 2,
+          "upper_size": 2
+        },
+        "trunk_placer": {
+          "type": "minecraft:straight_trunk_placer",
+          "base_height": 5,
+          "height_rand_a": 2,
+          "height_rand_b": 1
+        },
+        "trunk_provider": {
+          "id": "minecraft:spruce_log",
+          "properties": {
+            "axis": "y"
+          }
+        }
+      }
+    },
+    "minecraft:worldgen/feature/yellow_poplar.json": {
+      "kind": "json",
+      "value": {
+        "type": "minecraft:tree",
+        "below_trunk_provider": "minecraft:soil_beneath_tree",
+        "decorators": [
+          {
+            "type": "minecraft:shelf_mushroom",
+            "probability": 0.4
+          }
+        ],
+        "foliage_placer": {
+          "type": "minecraft:poplar_foliage_placer",
+          "height": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 6,
+            "min_inclusive": 5
+          },
+          "offset": 0,
+          "radius": {
+            "type": "minecraft:weighted_list",
+            "distribution": [
+              {
+                "data": 5,
+                "weight": 5
+              },
+              {
+                "data": 6,
+                "weight": 5
+              },
+              {
+                "data": 7,
+                "weight": 1
+              },
+              {
+                "data": 8,
+                "weight": 1
+              }
+            ]
+          },
+          "side_hole_chance": 0.15
+        },
+        "foliage_provider": {
+          "id": "minecraft:yellow_poplar_leaves",
+          "properties": {
+            "distance": "7",
+            "persistent": "false",
+            "waterlogged": "false"
+          }
+        },
+        "ignore_vines": true,
+        "minimum_size": {
+          "type": "minecraft:two_layers_feature_size",
+          "upper_size": 2
+        },
+        "trunk_placer": {
+          "type": "minecraft:poplar_trunk_placer",
+          "base_height": 7,
+          "branch_amount": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 4,
+            "min_inclusive": 1
+          },
+          "height_rand_a": 4,
+          "height_rand_b": 0,
+          "trunk_height_above_branches": 4
+        },
+        "trunk_provider": {
+          "id": "minecraft:poplar_log",
+          "properties": {
+            "axis": "y"
+          }
+        }
+      }
+    },
+    "minecraft:worldgen/placed_feature/acacia_checked.json": {
+      "kind": "json",
+      "value": {
+        "feature": "minecraft:acacia",
+        "placement": [
+          {
+            "type": "minecraft:block_predicate_filter",
+            "predicate": {
+              "type": "minecraft:would_survive",
+              "state": "minecraft:acacia_sapling"
+            }
+          }
+        ]
+      }
+    },
+    "minecraft:worldgen/placed_feature/cherry_checked.json": {
+      "kind": "json",
+      "value": {
+        "feature": "minecraft:cherry",
+        "placement": [
+          {
+            "type": "minecraft:block_predicate_filter",
+            "predicate": {
+              "type": "minecraft:would_survive",
+              "state": "minecraft:cherry_sapling"
+            }
+          }
+        ]
+      }
+    },
+    "minecraft:worldgen/placed_feature/mega_pine_checked.json": {
+      "kind": "json",
+      "value": {
+        "feature": "minecraft:mega_pine",
+        "placement": [
+          {
+            "type": "minecraft:block_predicate_filter",
+            "predicate": {
+              "type": "minecraft:would_survive",
+              "state": "minecraft:spruce_sapling"
+            }
+          }
+        ]
+      }
+    },
+    "minecraft:worldgen/placed_feature/mega_spruce_checked.json": {
+      "kind": "json",
+      "value": {
+        "feature": "minecraft:mega_spruce",
+        "placement": [
+          {
+            "type": "minecraft:block_predicate_filter",
+            "predicate": {
+              "type": "minecraft:would_survive",
+              "state": "minecraft:spruce_sapling"
+            }
+          }
+        ]
+      }
+    },
+    "minecraft:worldgen/placed_feature/orange_poplar.json": {
+      "kind": "json",
+      "value": {
+        "feature": "minecraft:orange_poplar",
+        "placement": [
+          {
+            "type": "minecraft:block_predicate_filter",
+            "predicate": {
+              "type": "minecraft:would_survive",
+              "state": "minecraft:poplar_sapling"
+            }
+          }
+        ]
+      }
+    },
+    "minecraft:worldgen/placed_feature/pile_hay.json": {
+      "kind": "json",
+      "value": {
+        "feature": "minecraft:pile_hay",
+        "placement": []
+      }
+    },
+    "minecraft:worldgen/placed_feature/pile_ice.json": {
+      "kind": "json",
+      "value": {
+        "feature": "minecraft:pile_ice",
+        "placement": []
+      }
+    },
+    "minecraft:worldgen/placed_feature/pile_melon.json": {
+      "kind": "json",
+      "value": {
+        "feature": "minecraft:pile_melon",
+        "placement": []
+      }
+    },
+    "minecraft:worldgen/placed_feature/pile_pumpkin.json": {
+      "kind": "json",
+      "value": {
+        "feature": "minecraft:pile_pumpkin",
+        "placement": []
+      }
+    },
+    "minecraft:worldgen/placed_feature/pile_snow.json": {
+      "kind": "json",
+      "value": {
+        "feature": "minecraft:pile_snow",
+        "placement": []
+      }
+    },
+    "minecraft:worldgen/placed_feature/pine_checked.json": {
+      "kind": "json",
+      "value": {
+        "feature": "minecraft:pine",
+        "placement": [
+          {
+            "type": "minecraft:block_predicate_filter",
+            "predicate": {
+              "type": "minecraft:would_survive",
+              "state": "minecraft:spruce_sapling"
+            }
+          }
+        ]
+      }
+    },
+    "minecraft:worldgen/placed_feature/red_poplar.json": {
+      "kind": "json",
+      "value": {
+        "feature": "minecraft:red_poplar",
+        "placement": [
+          {
+            "type": "minecraft:block_predicate_filter",
+            "predicate": {
+              "type": "minecraft:would_survive",
+              "state": "minecraft:poplar_sapling"
+            }
+          }
+        ]
+      }
+    },
+    "minecraft:worldgen/placed_feature/spruce_checked.json": {
+      "kind": "json",
+      "value": {
+        "feature": "minecraft:spruce",
+        "placement": [
+          {
+            "type": "minecraft:block_predicate_filter",
+            "predicate": {
+              "type": "minecraft:would_survive",
+              "state": "minecraft:spruce_sapling"
+            }
+          }
+        ]
+      }
+    },
+    "minecraft:worldgen/placed_feature/yellow_poplar.json": {
+      "kind": "json",
+      "value": {
+        "feature": "minecraft:yellow_poplar",
+        "placement": [
+          {
+            "type": "minecraft:block_predicate_filter",
+            "predicate": {
+              "type": "minecraft:would_survive",
+              "state": "minecraft:poplar_sapling"
+            }
+          }
+        ]
+      }
+    },
+    "minecraft:worldgen/template_pool/abandoned_camp/trees/acacia.json": {
+      "kind": "json",
+      "value": {
+        "elements": [
+          {
+            "element": {
+              "element_type": "minecraft:feature_pool_element",
+              "feature": "minecraft:acacia_checked",
+              "projection": "rigid"
+            },
+            "weight": 1
+          }
+        ],
+        "fallback": "minecraft:empty"
+      }
+    },
+    "minecraft:worldgen/template_pool/abandoned_camp/trees/cherry.json": {
+      "kind": "json",
+      "value": {
+        "elements": [
+          {
+            "element": {
+              "element_type": "minecraft:feature_pool_element",
+              "feature": "minecraft:cherry_checked",
+              "projection": "rigid"
+            },
+            "weight": 1
+          }
+        ],
+        "fallback": "minecraft:empty"
+      }
+    },
+    "minecraft:worldgen/template_pool/abandoned_camp/trees/mega_pine.json": {
+      "kind": "json",
+      "value": {
+        "elements": [
+          {
+            "element": {
+              "element_type": "minecraft:feature_pool_element",
+              "feature": "minecraft:mega_pine_checked",
+              "projection": "rigid"
+            },
+            "weight": 1
+          }
+        ],
+        "fallback": "minecraft:empty"
+      }
+    },
+    "minecraft:worldgen/template_pool/abandoned_camp/trees/orange_poplar.json": {
+      "kind": "json",
+      "value": {
+        "elements": [
+          {
+            "element": {
+              "element_type": "minecraft:feature_pool_element",
+              "feature": "minecraft:orange_poplar",
+              "projection": "rigid"
+            },
+            "weight": 1
+          }
+        ],
+        "fallback": "minecraft:empty"
+      }
+    },
+    "minecraft:worldgen/template_pool/abandoned_camp/trees/pine.json": {
+      "kind": "json",
+      "value": {
+        "elements": [
+          {
+            "element": {
+              "element_type": "minecraft:feature_pool_element",
+              "feature": "minecraft:pine_checked",
+              "projection": "rigid"
+            },
+            "weight": 1
+          }
+        ],
+        "fallback": "minecraft:empty"
+      }
+    },
+    "minecraft:worldgen/template_pool/abandoned_camp/trees/red_poplar.json": {
+      "kind": "json",
+      "value": {
+        "elements": [
+          {
+            "element": {
+              "element_type": "minecraft:feature_pool_element",
+              "feature": "minecraft:red_poplar",
+              "projection": "rigid"
+            },
+            "weight": 1
+          }
+        ],
+        "fallback": "minecraft:empty"
+      }
+    },
+    "minecraft:worldgen/template_pool/abandoned_camp/trees/spruce.json": {
+      "kind": "json",
+      "value": {
+        "elements": [
+          {
+            "element": {
+              "element_type": "minecraft:feature_pool_element",
+              "feature": "minecraft:spruce_checked",
+              "projection": "rigid"
+            },
+            "weight": 1
+          }
+        ],
+        "fallback": "minecraft:empty"
+      }
+    },
+    "minecraft:worldgen/template_pool/abandoned_camp/trees/thick_spruce.json": {
+      "kind": "json",
+      "value": {
+        "elements": [
+          {
+            "element": {
+              "element_type": "minecraft:feature_pool_element",
+              "feature": "minecraft:mega_spruce_checked",
+              "projection": "rigid"
+            },
+            "weight": 1
+          }
+        ],
+        "fallback": "minecraft:empty"
+      }
+    },
+    "minecraft:worldgen/template_pool/abandoned_camp/trees/yellow_poplar.json": {
+      "kind": "json",
+      "value": {
+        "elements": [
+          {
+            "element": {
+              "element_type": "minecraft:feature_pool_element",
+              "feature": "minecraft:yellow_poplar",
+              "projection": "rigid"
+            },
+            "weight": 1
+          }
+        ],
+        "fallback": "minecraft:empty"
+      }
+    },
+    "minecraft:worldgen/template_pool/ancient_city/structures.json": {
+      "kind": "json",
+      "value": {
+        "elements": [
+          {
+            "element": {
+              "element_type": "minecraft:empty_pool_element"
+            },
+            "weight": 7
+          },
+          {
+            "element": {
+              "element_type": "minecraft:single_pool_element",
+              "location": "minecraft:ancient_city/structures/barracks",
+              "processors": "minecraft:ancient_city_generic_degradation",
+              "projection": "rigid"
+            },
+            "weight": 4
+          },
+          {
+            "element": {
+              "element_type": "minecraft:single_pool_element",
+              "location": "minecraft:ancient_city/structures/chamber_1",
+              "processors": "minecraft:ancient_city_generic_degradation",
+              "projection": "rigid"
+            },
+            "weight": 4
+          },
+          {
+            "element": {
+              "element_type": "minecraft:single_pool_element",
+              "location": "minecraft:ancient_city/structures/chamber_2",
+              "processors": "minecraft:ancient_city_generic_degradation",
+              "projection": "rigid"
+            },
+            "weight": 4
+          },
+          {
+            "element": {
+              "element_type": "minecraft:single_pool_element",
+              "location": "minecraft:ancient_city/structures/chamber_3",
+              "processors": "minecraft:ancient_city_generic_degradation",
+              "projection": "rigid"
+            },
+            "weight": 4
+          },
+          {
+            "element": {
+              "element_type": "minecraft:single_pool_element",
+              "location": "minecraft:ancient_city/structures/sauna_1",
+              "processors": "minecraft:ancient_city_generic_degradation",
+              "projection": "rigid"
+            },
+            "weight": 4
+          },
+          {
+            "element": {
+              "element_type": "minecraft:single_pool_element",
+              "location": "minecraft:ancient_city/structures/small_statue",
+              "processors": "minecraft:ancient_city_generic_degradation",
+              "projection": "rigid"
+            },
+            "weight": 4
+          },
+          {
+            "element": {
+              "element_type": "minecraft:single_pool_element",
+              "location": "minecraft:ancient_city/structures/large_ruin_1",
+              "processors": "minecraft:ancient_city_generic_degradation",
+              "projection": "rigid"
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "element_type": "minecraft:single_pool_element",
+              "location": "minecraft:ancient_city/structures/tall_ruin_1",
+              "processors": "minecraft:ancient_city_generic_degradation",
+              "projection": "rigid"
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "element_type": "minecraft:single_pool_element",
+              "location": "minecraft:ancient_city/structures/tall_ruin_2",
+              "processors": "minecraft:ancient_city_generic_degradation",
+              "projection": "rigid"
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "element_type": "minecraft:single_pool_element",
+              "location": "minecraft:ancient_city/structures/tall_ruin_3",
+              "processors": "minecraft:ancient_city_generic_degradation",
+              "projection": "rigid"
+            },
+            "weight": 2
+          },
+          {
+            "element": {
+              "element_type": "minecraft:single_pool_element",
+              "location": "minecraft:ancient_city/structures/tall_ruin_4",
+              "processors": "minecraft:ancient_city_generic_degradation",
+              "projection": "rigid"
+            },
+            "weight": 2
+          },
+          {
+            "element": {
+              "element_type": "minecraft:list_pool_element",
+              "elements": [
+                {
+                  "element_type": "minecraft:single_pool_element",
+                  "location": "minecraft:ancient_city/structures/camp_1",
+                  "processors": "minecraft:ancient_city_generic_degradation",
+                  "projection": "rigid"
+                },
+                {
+                  "element_type": "minecraft:single_pool_element",
+                  "location": "minecraft:ancient_city/structures/camp_2",
+                  "processors": "minecraft:ancient_city_generic_degradation",
+                  "projection": "rigid"
+                },
+                {
+                  "element_type": "minecraft:single_pool_element",
+                  "location": "minecraft:ancient_city/structures/camp_3",
+                  "processors": "minecraft:ancient_city_generic_degradation",
+                  "projection": "rigid"
+                }
+              ],
+              "projection": "rigid"
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "element_type": "minecraft:single_pool_element",
+              "location": "minecraft:ancient_city/structures/medium_ruin_1",
+              "processors": "minecraft:ancient_city_generic_degradation",
+              "projection": "rigid"
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "element_type": "minecraft:single_pool_element",
+              "location": "minecraft:ancient_city/structures/medium_ruin_2",
+              "processors": "minecraft:ancient_city_generic_degradation",
+              "projection": "rigid"
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "element_type": "minecraft:single_pool_element",
+              "location": "minecraft:ancient_city/structures/small_ruin_1",
+              "processors": "minecraft:ancient_city_generic_degradation",
+              "projection": "rigid"
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "element_type": "minecraft:single_pool_element",
+              "location": "minecraft:ancient_city/structures/small_ruin_2",
+              "processors": "minecraft:ancient_city_generic_degradation",
+              "projection": "rigid"
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "element_type": "minecraft:single_pool_element",
+              "location": "minecraft:ancient_city/structures/large_pillar_1",
+              "processors": "minecraft:ancient_city_generic_degradation",
+              "projection": "rigid"
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "element_type": "minecraft:single_pool_element",
+              "location": "minecraft:ancient_city/structures/medium_pillar_1",
+              "processors": "minecraft:ancient_city_generic_degradation",
+              "projection": "rigid"
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "element_type": "minecraft:list_pool_element",
+              "elements": [
+                {
+                  "element_type": "minecraft:single_pool_element",
+                  "location": "minecraft:ancient_city/structures/ice_box_1",
+                  "processors": {
+                    "processors": []
+                  },
+                  "projection": "rigid"
+                }
+              ],
+              "projection": "rigid"
+            },
+            "weight": 1
+          }
+        ],
+        "fallback": "minecraft:empty"
+      }
+    }
+  }
+}

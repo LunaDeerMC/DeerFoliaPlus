@@ -10,6 +10,7 @@ DeerFoliaPlus 相比于 DeerFolia 引入了更多额外功能，这些功能并�
 - Servux Protocol — 为 MiniHUD/Litematica 提供结构边界框叠加层和实体 NBT 数据查看
 - Recipe Sync Protocol — 向 NeoForge/Fabric 客户端同步完整配方数据，支持 JEI 等模组显示服务器配方
 - Custom Recipe System — 通过配置文件定义自定义合成、烧炼、营火烹饪、高炉、切石机等配方
+- 原版结构生成修复 — 恢复缺失的结构连接、营地样式和树木；总开关与每项独立开关默认开启
 - 实用快捷命令 — 快速设置时间/天气、飞行、无敌、帽子、复制物品、自杀、查看玩家背包，以及快速打开末影箱和各类工作台
 
 ## 额外配置
@@ -70,6 +71,21 @@ DeerFoliaPlus 相比于 DeerFolia 引入了更多额外功能，这些功能并�
 | `custom-recipe.enabled` | `false` | 是否启用自定义配方系统，启用后会从配置文件加载自定义配方 |
 
 自定义配方内容定义在 `config/custom-recipes.yml` 中，可用于添加自定义合成、烧炼、高炉、营火烹饪、切石机等配方。
+
+### 原版结构生成修复
+
+| 配置项 | 默认值 | 说明 |
+|---|---|---|
+| `structure-generation-fixes.enabled` | `true` | 结构生成修复总开关；关闭时保持原版生成逻辑 |
+| `structure-generation-fixes.villages.*` | `true` | 雪原牧羊人房屋、九种房屋/农场/围栏的道路内连接空间，以及五种堆放装饰 |
+| `structure-generation-fixes.trail-ruins.*` | `true` | 古迹废墟五种上层建筑与道路端头 |
+| `structure-generation-fixes.trial-chambers.*` | `true` | 试炼密室墙段、带桥走道及上层漏斗木桶 |
+| `structure-generation-fixes.bastions.*` | `true` | 堡垒遗迹道路末端墙体 |
+| `structure-generation-fixes.ancient-cities.*` | `true` | 远古城市墙桥连接与三种独立营地样式 |
+| `structure-generation-fixes.abandoned-camps.campsite-pale-garden2` | `true` | 苍白之园第二种营地的连接 |
+| `structure-generation-fixes.abandoned-camps.trees.*` | `true` | 14 种营地或帐篷内部的树木 |
+
+44 个分项均可单独开关，只有总开关也开启时才生效。修改需要重启，只影响后续生成，不覆盖既有世界。完整默认 YAML、各项对应的模板和问题编号，以及远古城市营地开关的组合语义，见 [原版结构生成修复配置文档](docs/structure-generation-fixes.md)。
 
 ### 实用快捷命令
 

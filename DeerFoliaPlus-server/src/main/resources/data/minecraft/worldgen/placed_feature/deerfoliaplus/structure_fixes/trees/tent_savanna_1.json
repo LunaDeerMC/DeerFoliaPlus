@@ -1,0 +1,12 @@
+{
+  "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_savanna_1",
+  "placement": [
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:would_survive",
+        "state": "minecraft:acacia_sapling"
+      }
+    }
+  ]
+}

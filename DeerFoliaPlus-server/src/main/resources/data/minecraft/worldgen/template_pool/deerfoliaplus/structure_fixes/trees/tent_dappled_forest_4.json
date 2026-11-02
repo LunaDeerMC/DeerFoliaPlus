@@ -1,0 +1,13 @@
+{
+  "elements": [
+    {
+      "element": {
+        "element_type": "minecraft:feature_pool_element",
+        "feature": "minecraft:deerfoliaplus/structure_fixes/trees/tent_dappled_forest_4",
+        "projection": "rigid"
+      },
+      "weight": 1
+    }
+  ],
+  "fallback": "minecraft:empty"
+}

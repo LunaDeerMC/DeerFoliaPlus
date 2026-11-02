@@ -15,13 +15,20 @@ public class DeerFoliaPlusConfiguration extends ConfigurationFile {
 
     public static void load() {
         try {
-            ConfigurationManager.load(DeerFoliaPlusConfiguration.class, new File(PaperConfigurations.CONFIG_DIR, "deer-folia-plus.yml"));
+            File file = new File(PaperConfigurations.CONFIG_DIR, "deer-folia-plus.yml");
+            StructureGenerationFixesConfiguration.validate(file);
+            ConfigurationManager.load(DeerFoliaPlusConfiguration.class, file);
         } catch (Exception e) {
-            LOGGER.error("Failed to load DeerFolia configuration", e);
+            structureGenerationFixes.enabled = false;
+            LOGGER.error("Failed to load DeerFoliaPlus configuration; structure generation repairs have been disabled", e);
         }
+        cn.lunadeer.mc.deerfoliaplus.worldgen.StructureGenerationFixes.initialize(structureGenerationFixes);
     }
 
     public static FakePlayerConfiguration fakePlayer = new FakePlayerConfiguration();
+
+    @Comments("Vanilla structure generation repairs - master and individual switches; restart required")
+    public static StructureGenerationFixesConfiguration structureGenerationFixes = new StructureGenerationFixesConfiguration();
 
     @PostProcess
     public void registerFakePlayer() {
